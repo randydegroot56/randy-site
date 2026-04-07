@@ -7,10 +7,11 @@ import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
 
 const NAV_LINKS = [
-  { label: 'Home',  href: '/' },
-  { label: 'Work',  href: '/work' },
-  { label: 'About', href: '/about' },
-  { label: 'Blog',  href: '/blog' },
+  { label: 'Home',     href: '/' },
+  { label: 'Work',     href: '/work' },
+  { label: 'About',    href: '/about' },
+  { label: 'Blog',     href: '/blog' },
+  { label: 'CALENDAR', href: '/calendar' },
 ];
 
 export default function Navbar() {
