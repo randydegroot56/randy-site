@@ -142,7 +142,7 @@ export default function CalendarHeader({ view, onViewChange, currentDate, onPrev
             fontSize: 'var(--text-xs)',
             fontWeight: 700,
             letterSpacing: '0.1em',
-            color: '#1A1714',
+            color: 'var(--bg-primary)',
             backgroundColor: 'var(--accent-primary)',
             border: 'none',
             padding: 'var(--space-2) var(--space-4)',

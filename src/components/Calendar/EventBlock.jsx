@@ -13,7 +13,7 @@ export default function EventBlock({ event, onClick, compact = true }) {
       title={`${time} — ${title}`}
       style={{
         backgroundColor: 'var(--accent-primary)',
-        color: '#1A1714',
+        color: 'var(--bg-primary)',
         padding: compact ? '2px var(--space-2)' : 'var(--space-2) var(--space-3)',
         borderRadius: 'var(--radius-sm)',
         fontSize: 'var(--text-xs)',

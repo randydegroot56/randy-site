@@ -1,15 +1,6 @@
 import { getServerSession } from 'next-auth/next';
-import { google } from 'googleapis';
 import { authOptions } from '../../../../lib/authOptions';
-
-function getCalendarClient(accessToken) {
-  const auth = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-  );
-  auth.setCredentials({ access_token: accessToken });
-  return google.calendar({ version: 'v3', auth });
-}
+import { getCalendarClient } from '../../../../lib/calendarClient';
 
 export async function GET(request) {
   const session = await getServerSession(authOptions);

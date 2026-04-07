@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useSession, signIn } from 'next-auth/react';
+import { AnimatePresence } from 'framer-motion';
 import AnimateIn from '../../components/AnimateIn';
 import CalendarHeader from '../../components/Calendar/CalendarHeader';
 import CalendarGrid from '../../components/Calendar/CalendarGrid';
@@ -249,14 +250,17 @@ export default function CalendarPage() {
         </AnimateIn>
       </div>
 
-      {selectedEvent && (
-        <EventDetailPanel
-          event={selectedEvent}
-          onClose={() => setSelectedEvent(null)}
-          onEdit={openEditForm}
-          onDelete={handleDelete}
-        />
-      )}
+      <AnimatePresence>
+        {selectedEvent && (
+          <EventDetailPanel
+            key="detail-panel"
+            event={selectedEvent}
+            onClose={() => setSelectedEvent(null)}
+            onEdit={openEditForm}
+            onDelete={handleDelete}
+          />
+        )}
+      </AnimatePresence>
 
       {formOpen && (
         <EventForm
