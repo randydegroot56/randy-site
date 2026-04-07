@@ -2,25 +2,11 @@
 
 import AnimateIn from '../../components/AnimateIn';
 
-/* ── Tech stack data ─────────────────────────────────────────── */
-
 const stack = [
-  {
-    category: 'Frontend',
-    skills: ['React', 'Next.js', 'Vite', 'HTML/CSS', 'Framer Motion'],
-  },
-  {
-    category: 'Backend',
-    skills: ['Python', 'FastAPI', 'Node.js'],
-  },
-  {
-    category: 'AI & Data',
-    skills: ['LangChain', 'ChromaDB', 'Claude API', 'OpenAI', 'Vector Embeddings'],
-  },
-  {
-    category: 'Tools',
-    skills: ['Git', 'Claude Code', 'VS Code', 'Vercel'],
-  },
+  { category: 'AI & LLMs', skills: ['LangChain', 'RAG Systems', 'Claude API', 'OpenAI', 'Vector Embeddings'] },
+  { category: 'Data & Analysis', skills: ['Python', 'pandas', 'scikit-learn', 'FastAPI', 'PostgreSQL'] },
+  { category: 'Frontend', skills: ['React', 'Next.js', 'Framer Motion', 'TypeScript'] },
+  { category: 'Tools & Infra', skills: ['Git', 'Vercel', 'Claude Code', 'VS Code'] },
 ];
 
 const contactLinks = [
@@ -29,109 +15,48 @@ const contactLinks = [
   { label: 'Email', href: 'mailto:hello@randy.dev' },
 ];
 
-/* ── Page ─────────────────────────────────────────────────────── */
-
 export default function AboutPage() {
   return (
-    <section
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 'var(--space-20) var(--space-6)',
-      }}
-    >
+    <section style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'var(--space-20) var(--space-6)' }}>
       <div style={{ width: '100%', maxWidth: '960px' }}>
 
-        {/* Page label */}
         <AnimateIn delay={0.05}>
-          <p
-            style={{
-              fontFamily: 'var(--font-heading)',
-              color: 'var(--accent-secondary)',
-              fontSize: 'var(--text-xs)',
-              fontWeight: 600,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              marginBottom: 'var(--space-10)',
-            }}
-          >
-            Introductie
-          </p>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 'var(--space-10)' }}>
+            <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-primary)', boxShadow: '0 0 8px rgba(232,185,49,0.7)' }} />
+            <span style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--accent-secondary)' }}>
+              SYS.PROFILE // OPERATOR
+            </span>
+          </div>
         </AnimateIn>
 
-        {/* Two-column grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: 'var(--space-16)',
-            alignItems: 'start',
-          }}
-        >
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--space-16)', alignItems: 'start' }}>
+
           {/* LEFT — Bio */}
           <AnimateIn direction="left" delay={0.1}>
-            <h1
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-3xl)',
-                color: 'var(--text-primary)',
-                marginBottom: 'var(--space-8)',
-              }}
-            >
-              Over mij
-            </h1>
+            <div style={{ marginBottom: 'var(--space-8)' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-3xl)', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>ABOUT</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-3xl)', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.03em', color: 'transparent', WebkitTextStroke: '1px rgba(232,185,49,0.5)' }}>ME.</div>
+            </div>
 
-            <p
-              style={{
-                color: 'var(--text-secondary)',
-                lineHeight: 1.8,
-                marginBottom: 'var(--space-4)',
-              }}
-            >
-              Ik ben Randy — een developer die zichzelf heeft leren programmeren door dingen
-              te bouwen. Mijn focus ligt op het toepassen van AI-tools in praktische
-              projecten: van chatbots tot persoonlijke dashboards die mijn dagelijkse
-              workflow verbeteren.
+            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 'var(--space-4)' }}>
+              I&apos;m Randy — a self-taught developer specialising in AI automation for the real estate sector. I build the systems that turn raw property data into decisions.
             </p>
-            <p
-              style={{
-                color: 'var(--text-secondary)',
-                lineHeight: 1.8,
-                marginBottom: 'var(--space-4)',
-              }}
-            >
-              Ik leer het liefst door te bouwen. Elke tool, elke API, elk concept dat ik
-              interessant vind vertaalt zich in een project. Zo begrijp ik het echt — niet
-              door tutorials te kijken, maar door zelf te proberen, te falen, en opnieuw
-              te beginnen.
+            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 'var(--space-4)' }}>
+              Ik leer het liefst door te bouwen. Elk concept dat ik interessant vind vertaalt zich in een project — zo begrijp ik het echt.
             </p>
-            <p
-              style={{
-                color: 'var(--text-secondary)',
-                lineHeight: 1.8,
-                marginBottom: 'var(--space-10)',
-              }}
-            >
-              Op dit moment verdiep ik me in LLM-integraties, RAG-systemen en het bouwen
-              van tools die echt nuttig zijn — voor mezelf en voor anderen.
+            <p style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: 'var(--space-4)' }}>
+              Currently exploring: automated valuation models, Dutch property data APIs, and LLM pipelines for lease contract analysis.
             </p>
 
-            {/* Contact links */}
+            <div style={{ marginBottom: 'var(--space-8)', padding: 'var(--space-4) var(--space-5)', borderLeft: '2px solid var(--accent-primary)', backgroundColor: 'rgba(232,185,49,0.03)' }}>
+              <p style={{ fontFamily: 'monospace', fontSize: 'var(--text-sm)', color: 'var(--accent-secondary)', margin: 0, lineHeight: 1.6 }}>
+                &ldquo;Geen buzzwords — alleen pipelines die draaien.&rdquo;
+              </p>
+            </div>
+
             <div>
-              <p
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'var(--text-xs)',
-                  fontWeight: 600,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  color: 'var(--text-muted)',
-                  marginBottom: 'var(--space-4)',
-                }}
-              >
-                Contact
+              <p style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 'var(--space-4)' }}>
+                CONTACT
               </p>
               <div style={{ display: 'flex', gap: 'var(--space-6)', flexWrap: 'wrap' }}>
                 {contactLinks.map(link => (
@@ -139,87 +64,47 @@ export default function AboutPage() {
                     key={link.label}
                     href={link.href}
                     style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: 'var(--text-sm)',
-                      fontWeight: 500,
-                      color: 'var(--accent-secondary)',
-                      textDecoration: 'none',
+                      fontFamily: 'var(--font-heading)', fontSize: 'var(--text-xs)', fontWeight: 700,
+                      letterSpacing: '0.1em', color: 'var(--accent-secondary)', textDecoration: 'none',
                       borderBottom: '1px solid transparent',
                       transition: 'border-color var(--transition-fast), color var(--transition-fast)',
                     }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.borderBottomColor = 'var(--accent-primary)';
-                      e.currentTarget.style.color = 'var(--accent-primary)';
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.borderBottomColor = 'transparent';
-                      e.currentTarget.style.color = 'var(--accent-secondary)';
-                    }}
+                    onMouseEnter={e => { e.currentTarget.style.borderBottomColor = 'var(--accent-primary)'; e.currentTarget.style.color = 'var(--accent-primary)'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderBottomColor = 'transparent'; e.currentTarget.style.color = 'var(--accent-secondary)'; }}
                   >
-                    {link.label}
+                    {link.label.toUpperCase()}
                   </a>
                 ))}
               </div>
             </div>
           </AnimateIn>
 
-          {/* RIGHT — Tech stack */}
+          {/* RIGHT — Stack */}
           <AnimateIn direction="right" delay={0.2}>
-            <h2
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-2xl)',
-                color: 'var(--text-primary)',
-                marginBottom: 'var(--space-8)',
-              }}
-            >
-              Tech stack
-            </h2>
+            <p style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 'var(--space-8)' }}>
+              TECH STACK
+            </p>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
               {stack.map((group, i) => (
                 <div key={group.category}>
-                  <p
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: 'var(--text-xs)',
-                      fontWeight: 600,
-                      letterSpacing: '0.08em',
-                      textTransform: 'uppercase',
-                      color: 'var(--text-muted)',
-                      marginBottom: 'var(--space-3)',
-                    }}
-                  >
+                  <p style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--accent-secondary)', marginBottom: 'var(--space-3)' }}>
                     {group.category}
                   </p>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
                     {group.skills.map(skill => (
-                      <span
-                        key={skill}
-                        style={{
-                          padding: 'var(--space-1) var(--space-3)',
-                          borderRadius: 'var(--radius-full)',
-                          fontSize: 'var(--text-sm)',
-                          fontFamily: 'var(--font-heading)',
-                          fontWeight: 500,
-                          color: 'var(--accent-secondary)',
-                          backgroundColor: 'rgba(232, 185, 49, 0.06)',
-                          border: '1px solid rgba(232, 185, 49, 0.2)',
-                        }}
-                      >
+                      <span key={skill} style={{
+                        padding: 'var(--space-1) var(--space-3)',
+                        fontSize: 'var(--text-sm)', fontFamily: 'var(--font-heading)', fontWeight: 500,
+                        color: 'var(--accent-secondary)',
+                        backgroundColor: 'rgba(232,185,49,0.05)',
+                        border: '1px solid rgba(232,185,49,0.18)',
+                      }}>
                         {skill}
                       </span>
                     ))}
                   </div>
-                  {i < stack.length - 1 && (
-                    <div
-                      style={{
-                        marginTop: 'var(--space-8)',
-                        height: '1px',
-                        backgroundColor: 'var(--border-subtle)',
-                      }}
-                    />
-                  )}
+                  {i < stack.length - 1 && <div style={{ marginTop: 'var(--space-8)', height: '1px', backgroundColor: 'rgba(232,185,49,0.08)' }} />}
                 </div>
               ))}
             </div>

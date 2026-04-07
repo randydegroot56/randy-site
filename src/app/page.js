@@ -1,693 +1,475 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import AnimateIn from '../components/AnimateIn';
 import StaggerChildren from '../components/StaggerChildren';
-import ParallaxBackground from '../components/ParallaxBackground';
-import { useTheme } from '../components/ThemeProvider';
 
-/* ============================================================
-   PROJECT DATA
-   ============================================================ */
+/* ── Data ───────────────────────────────────────────────────── */
+
+const capabilities = [
+  {
+    icon: '⬡',
+    title: 'Document AI',
+    desc: 'RAG pipelines for lease contracts, valuation reports & due diligence packages.',
+    accent: 'full',
+  },
+  {
+    icon: '◈',
+    title: 'Market Intelligence',
+    desc: 'Automated data pipelines that surface pricing trends and location insights.',
+    accent: 'mid',
+  },
+  {
+    icon: '⟳',
+    title: 'Workflow Automation',
+    desc: 'LLM-powered tools that eliminate repetitive broker and property manager tasks.',
+    accent: 'low',
+  },
+];
 
 const projects = [
   {
-    title: 'RAG Chatbot',
-    description:
-      'Een intelligente chatbot die PDF documenten doorzoekt met vector embeddings. Upload een PDF, stel vragen, en krijg antwoorden inclusief bronverwijzingen.',
+    title: 'Property Document AI',
     tags: ['Python', 'LangChain', 'ChromaDB', 'OpenAI'],
     status: 'Afgerond',
-    statusStyle: {
-      bg: 'rgba(34, 197, 94, 0.12)',
-      border: 'rgba(34, 197, 94, 0.28)',
-      text: 'rgba(34, 197, 94, 0.95)',
-      dot: 'rgba(34, 197, 94, 0.9)',
-    },
+    statusStyle: { bg: 'rgba(34,197,94,0.10)', border: 'rgba(34,197,94,0.25)', text: 'rgba(34,197,94,0.9)', dot: 'rgba(34,197,94,0.9)' },
   },
   {
-    title: 'Personal Command Center',
-    description:
-      'Een persoonlijk dashboard met AI-gegenereerde briefings, weer, taken en nieuws. Dagelijks startpunt met real-time data.',
+    title: 'RE Intelligence Dashboard',
     tags: ['React', 'FastAPI', 'Claude API', 'Python'],
     status: 'In ontwikkeling',
-    statusStyle: {
-      bg: 'rgba(232, 185, 49, 0.12)',
-      border: 'rgba(232, 185, 49, 0.30)',
-      text: 'var(--accent-secondary)',
-      dot: 'var(--accent-primary)',
-    },
+    statusStyle: { bg: 'rgba(232,185,49,0.10)', border: 'rgba(232,185,49,0.25)', text: 'var(--accent-secondary)', dot: 'var(--accent-primary)' },
+  },
+  {
+    title: 'Automated Valuation Model',
+    tags: ['Python', 'scikit-learn', 'FastAPI'],
+    status: 'Concept',
+    statusStyle: { bg: 'rgba(232,185,49,0.08)', border: 'rgba(232,185,49,0.2)', text: 'var(--accent-secondary)', dot: 'var(--accent-primary)' },
   },
   {
     title: 'randy.dev',
-    description:
-      'Deze website — van scratch gebouwd met Next.js. Custom theming, Framer Motion animaties en een generatief 3D netwerk-achtergrond.',
-    tags: ['Next.js', 'React', 'Framer Motion', 'Canvas API'],
+    tags: ['Next.js', 'Framer Motion', 'Canvas API'],
     status: 'Live',
-    statusStyle: {
-      bg: 'rgba(232, 185, 49, 0.12)',
-      border: 'rgba(232, 185, 49, 0.30)',
-      text: 'var(--accent-secondary)',
-      dot: 'var(--accent-primary)',
-    },
+    statusStyle: { bg: 'rgba(232,185,49,0.10)', border: 'rgba(232,185,49,0.25)', text: 'var(--accent-secondary)', dot: 'var(--accent-primary)' },
   },
 ];
 
-/* ============================================================
-   LATEST BLOG POSTS (2 newest)
-   ============================================================ */
+/* ── Reusable section eyebrow ────────────────────────────────── */
 
-const latestPosts = [
-  {
-    date: '28 maart 2026',
-    readTime: '8 min',
-    title: 'Hoe ik mijn eerste RAG chatbot bouwde',
-    preview:
-      'Van PDF naar antwoord — een deep dive in embeddings, vector databases, en waarom context alles is.',
-    href: '/blog',
-  },
-  {
-    date: '15 maart 2026',
-    readTime: '5 min',
-    title: 'Claude Code als development partner',
-    preview:
-      'Mijn ervaringen met AI-assisted coding: wat werkt, wat niet, en hoe je het beste uit Claude Code haalt.',
-    href: '/blog',
-  },
-];
-
-/* ============================================================
-   GLASS CARD (parallax + theme-aware frosted glass)
-   ============================================================ */
-
-function GlassCard({ children, variant = 'default' }) {
-  const { theme } = useTheme();
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  });
-  const y = useTransform(scrollYProgress, [0, 1], [30, -30]);
-  const opacityFade = useTransform(scrollYProgress, [0, 0.10, 0.90, 1], [0, 1, 1, 0]);
-  const isDark = theme === 'dark';
-
-  const bgMap = {
-    hero:    { dark: 'rgba(18, 17, 16, 0.002)', light: 'rgba(251, 248, 240, 0.003)' },
-    tinted:  { dark: 'rgba(42, 38, 34, 0.003)', light: 'rgba(240, 234, 219, 0.004)' },
-    plain:   { dark: 'rgba(18, 17, 16, 0.002)', light: 'rgba(251, 248, 240, 0.003)' },
-    default: { dark: 'rgba(42, 38, 34, 0.003)', light: 'rgba(255, 255, 255, 0.004)' },
-  };
-  const bg = bgMap[variant][isDark ? 'dark' : 'light'];
-
+function Eyebrow({ children }) {
   return (
-    <motion.div
-      ref={ref}
-      style={{
-        y,
-        opacity: variant === 'hero' ? 1 : opacityFade,
-        background: `linear-gradient(to right, transparent 6px, var(--accent-primary) 6px, var(--accent-primary) 8px, transparent 8px), ${bg}`,
-        backdropFilter: 'blur(40px)',
-        WebkitBackdropFilter: 'blur(40px)',
-        boxShadow: isDark ? 'none' : '0 8px 32px rgba(26,23,20,0.03)',
-        width: '50%',
-        marginLeft: 'var(--space-12)',
-        padding: 'var(--space-24) var(--space-16)',
-        position: 'relative',
-        zIndex: 1,
-        ...(variant === 'hero' && {
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          padding: 0,
-          width: '100%',
-          marginLeft: 0,
-        }),
-      }}
-    >
-      {children}
-    </motion.div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 'var(--space-6)' }}>
+      <span style={{
+        display: 'inline-block',
+        width: 6, height: 6, borderRadius: '50%',
+        background: 'var(--accent-primary)',
+        boxShadow: '0 0 8px rgba(232,185,49,0.7)',
+        flexShrink: 0,
+      }} />
+      <span style={{
+        fontFamily: 'monospace',
+        fontSize: '10px',
+        fontWeight: 600,
+        letterSpacing: '0.18em',
+        textTransform: 'uppercase',
+        color: 'var(--accent-secondary)',
+      }}>
+        {children}
+      </span>
+    </div>
   );
 }
 
-/* ============================================================
-   CHEVRON SVG
-   ============================================================ */
+/* ── Editorial headline (3-line stacked with outline on line 3) */
 
-function ChevronSVG() {
+function EditorialHeadline({ line1, line2, line3, size = 'var(--text-3xl)' }) {
+  const lines = [
+    { text: line1, outline: false },
+    { text: line2, outline: false },
+    { text: line3, outline: true },
+  ];
   return (
-    <svg width="28" height="16" viewBox="0 0 28 16" fill="none">
-      <path
-        d="M2 2l12 12L26 2"
-        stroke="currentColor"
-        strokeWidth="2.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+    <div style={{ marginBottom: 'var(--space-8)' }}>
+      {lines.map(({ text, outline }, i) => (
+        <motion.div
+          key={i}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: size,
+            fontWeight: 900,
+            lineHeight: 0.92,
+            letterSpacing: '-0.03em',
+            ...(outline
+              ? {
+                  color: 'transparent',
+                  WebkitTextStroke: '1px rgba(232,185,49,0.5)',
+                }
+              : { color: 'var(--text-primary)' }),
+          }}
+        >
+          {text}
+        </motion.div>
+      ))}
+    </div>
   );
 }
 
-/* ============================================================
-   PAGE COMPONENT
-   ============================================================ */
+/* ── Page ──────────────────────────────────────────────────────── */
 
 export default function Page() {
   return (
     <div className="homepage-scroll">
 
-      {/* ── HERO ─────────────────────────────────────────────── */}
+      {/* ─────────────────────────────────────────────────────── */}
+      {/* SECTION 1 — HERO                                       */}
+      {/* ─────────────────────────────────────────────────────── */}
       <section
         className="snap-section"
         style={{
           height: 'calc(100vh - 4rem)',
           minHeight: 'unset',
           padding: 0,
-          textAlign: 'center',
-          position: 'relative',
-          overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
+          justifyContent: 'center',
+          position: 'relative',
         }}
       >
-        {/* Parallax glow circle */}
-        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
-          <ParallaxBackground speed={0.3}>
-            <div
-              style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '600px',
-                height: '600px',
-                borderRadius: '50%',
-                background:
-                  'radial-gradient(circle, rgba(232,185,49,0.12) 0%, rgba(232,185,49,0.04) 40%, transparent 70%)',
-                filter: 'blur(40px)',
-              }}
-            />
-          </ParallaxBackground>
-        </div>
-
-        <GlassCard variant="hero">
-          <AnimateIn delay={0.1}>
-            <div className="container" style={{ position: 'relative', zIndex: 1, padding: 'var(--space-24) var(--space-16)' }}>
-              <p
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'var(--text-sm)',
-                  fontWeight: 500,
-                  color: 'var(--accent-secondary)',
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  marginBottom: 'var(--space-6)',
-                }}
-              >
-                Full-stack developer & AI enthousiast
-              </p>
-
-              <h1
-                style={{
-                  fontFamily: 'var(--font-heading)',
-                  fontSize: 'clamp(2.2rem, 6vw, var(--text-4xl))',
-                  fontWeight: 700,
-                  lineHeight: 1.1,
-                  letterSpacing: '-0.03em',
-                  marginBottom: 'var(--space-6)',
-                  color: 'var(--text-primary)',
-                }}
-              >
-                Ik bouw dingen{' '}
-                <span
-                  style={{
-                    background:
-                      'linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 50%, var(--accent-tertiary) 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}
-                >
-                  die werken
-                </span>
-              </h1>
-
-              <p
-                style={{
-                  fontSize: 'var(--text-md)',
-                  color: 'var(--text-secondary)',
-                  maxWidth: '560px',
-                  marginInline: 'auto',
-                  marginBottom: 'var(--space-10)',
-                  lineHeight: 1.7,
-                }}
-              >
-                Van AI-chatbots tot productie-klare webapplicaties — ik combineer technische
-                precisie met een oog voor detail.
-              </p>
-
-              <div
-                style={{
-                  display: 'flex',
-                  gap: 'var(--space-4)',
-                  justifyContent: 'center',
-                  flexWrap: 'wrap',
-                }}
-              >
-                <a
-                  href="/work"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 'var(--space-2)',
-                    padding: 'var(--space-3) var(--space-8)',
-                    borderRadius: 'var(--radius-full)',
-                    backgroundColor: 'var(--accent-primary)',
-                    color: '#121110',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 600,
-                    fontSize: 'var(--text-base)',
-                    transition: 'background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast)',
-                    boxShadow: 'var(--shadow-sm)',
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.backgroundColor = 'var(--accent-primary-hover)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-glow)';
-                    e.currentTarget.style.transform = 'translateY(-1px)';
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.backgroundColor = 'var(--accent-primary)';
-                    e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-                    e.currentTarget.style.transform = 'translateY(0)';
-                  }}
-                >
-                  Bekijk projecten
-                </a>
-                <a
-                  href="/about"
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    padding: 'var(--space-3) var(--space-8)',
-                    borderRadius: 'var(--radius-full)',
-                    backgroundColor: 'transparent',
-                    color: 'var(--text-primary)',
-                    fontFamily: 'var(--font-heading)',
-                    fontWeight: 500,
-                    fontSize: 'var(--text-base)',
-                    border: '1px solid var(--border-default)',
-                    transition: 'border-color var(--transition-fast), background-color var(--transition-fast)',
-                  }}
-                  onMouseEnter={e => {
-                    e.currentTarget.style.backgroundColor = 'var(--bg-secondary)';
-                    e.currentTarget.style.borderColor = 'var(--accent-primary)';
-                  }}
-                  onMouseLeave={e => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.borderColor = 'var(--border-default)';
-                  }}
-                >
-                  Over mij
-                </a>
-              </div>
-            </div>
-          </AnimateIn>
-
-          {/* Scroll chevrons */}
-          <motion.button
-            onClick={() =>
-              document.getElementById('over-mij')?.scrollIntoView({ behavior: 'smooth' })
-            }
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-            style={{
-              position: 'absolute',
-              bottom: 'var(--space-8)',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '2px',
-              color: 'var(--accent-primary)',
-              opacity: 0.7,
-              zIndex: 2,
-              filter: 'drop-shadow(0 0 3px rgba(232,185,49,0.3))',
-            }}
-            whileHover={{
-              opacity: 1,
-              scale: 1.2,
-              filter: 'drop-shadow(0 0 8px rgba(232,185,49,0.9)) drop-shadow(0 0 16px rgba(232,185,49,0.4))',
-            }}
-            aria-label="Scroll naar volgende sectie"
+        <div className="container" style={{ paddingTop: 'var(--space-16)', paddingBottom: 'var(--space-16)' }}>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.15 }}
           >
-            <ChevronSVG />
-            <ChevronSVG />
-          </motion.button>
-        </GlassCard>
-      </section>
+            <Eyebrow>Real Estate × AI Automation</Eyebrow>
+          </motion.div>
 
-      {/* spacer */}
-      <div style={{ height: '45vh' }} />
+          <EditorialHeadline
+            line1="I BUILD AI TOOLS"
+            line2="THAT AUTOMATE"
+            line3="REAL ESTATE WORKFLOWS."
+            size="clamp(2rem, 5.5vw, var(--text-4xl))"
+          />
 
-      {/* ── ABOUT PREVIEW ────────────────────────────────────── */}
-      <section id="over-mij" className="snap-section">
-        <AnimateIn delay={0.1}>
-          <GlassCard variant="plain">
-            <p
-              style={{
-                fontFamily: 'var(--font-heading)',
-                color: 'var(--accent-secondary)',
-                fontSize: 'var(--text-xs)',
-                fontWeight: 600,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                marginBottom: 'var(--space-4)',
-              }}
-            >
-              Over mij
-            </p>
-            <h2
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-2xl)',
-                fontWeight: 600,
-                color: 'var(--text-primary)',
-                marginBottom: 'var(--space-6)',
-              }}
-            >
-              Developer. Leerling. Bouwer.
-            </h2>
-            <p
-              style={{
-                color: 'var(--text-secondary)',
-                fontSize: 'var(--text-md)',
-                lineHeight: 1.8,
-                marginBottom: 'var(--space-4)',
-                maxWidth: '520px',
-              }}
-            >
-              Ik ben Randy — een developer die zichzelf heeft leren programmeren door dingen
-              te bouwen. Mijn focus ligt op AI-gedreven applicaties en full-stack projecten
-              die echt iets oplossen.
-            </p>
-            <p
-              style={{
-                color: 'var(--text-secondary)',
-                fontSize: 'var(--text-md)',
-                lineHeight: 1.8,
-                marginBottom: 'var(--space-10)',
-                maxWidth: '520px',
-              }}
-            >
-              Elke tool en elke API die ik interessant vind vertaalt zich in een project.
-              Zo leer ik het beste.
-            </p>
-            <a
-              href="/about"
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-sm)',
-                fontWeight: 600,
-                color: 'var(--accent-secondary)',
-                textDecoration: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 'var(--space-2)',
-                transition: 'color var(--transition-fast)',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent-primary)'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'var(--accent-secondary)'; }}
-            >
-              Meer over mij →
-            </a>
-          </GlassCard>
-        </AnimateIn>
-      </section>
+          <motion.p
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.8, ease: 'easeOut' }}
+            style={{
+              color: 'var(--text-secondary)',
+              fontSize: 'var(--text-md)',
+              lineHeight: 1.7,
+              maxWidth: '520px',
+              marginBottom: 'var(--space-10)',
+            }}
+          >
+            From property document analysis to market intelligence — I build the AI pipelines
+            that save hours of manual work for real estate professionals.
+          </motion.p>
 
-      {/* spacer */}
-      <div style={{ height: '45vh' }} />
-
-      {/* ── PROJECTS ─────────────────────────────────────────── */}
-      <section id="projecten" className="snap-section">
-        <AnimateIn delay={0.1}>
-          <GlassCard variant="tinted">
-            <p
-              style={{
-                fontFamily: 'var(--font-heading)',
-                color: 'var(--accent-secondary)',
-                fontSize: 'var(--text-xs)',
-                fontWeight: 600,
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                marginBottom: 'var(--space-4)',
-              }}
-            >
-              Portfolio
-            </p>
-            <h2
-              style={{
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-2xl)',
-                fontWeight: 600,
-                marginBottom: 'var(--space-2)',
-                color: 'var(--text-primary)',
-              }}
-            >
-              Projecten
-            </h2>
-            <p
-              style={{
-                color: 'var(--text-muted)',
-                marginBottom: 'var(--space-10)',
-                fontSize: 'var(--text-sm)',
-              }}
-            >
-              Een selectie van wat ik gebouwd heb.
-            </p>
-
-            <StaggerChildren
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-                gap: 'var(--space-6)',
-                marginBottom: 'var(--space-10)',
-              }}
-            >
-              {projects.map(project => (
-                <motion.article
-                  key={project.title}
-                  whileHover={{
-                    y: -6,
-                    boxShadow: 'var(--shadow-glow)',
-                    borderColor: 'var(--accent-primary)',
-                  }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  style={{
-                    backgroundColor: 'var(--surface-card)',
-                    borderRadius: 'var(--radius-xl)',
-                    padding: 'var(--space-6)',
-                    border: '1px solid var(--border-subtle)',
-                    boxShadow: 'var(--shadow-sm)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 'var(--space-3)',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 'var(--space-3)' }}>
-                    <h3
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: 'var(--text-lg)',
-                        fontWeight: 600,
-                        color: 'var(--text-primary)',
-                      }}
-                    >
-                      {project.title}
-                    </h3>
-                    <span
-                      style={{
-                        flexShrink: 0,
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: 'var(--space-1)',
-                        padding: '0.2rem var(--space-2)',
-                        borderRadius: 'var(--radius-full)',
-                        fontSize: 'var(--text-xs)',
-                        fontFamily: 'var(--font-heading)',
-                        fontWeight: 600,
-                        backgroundColor: project.statusStyle.bg,
-                        color: project.statusStyle.text,
-                        border: `1px solid ${project.statusStyle.border}`,
-                      }}
-                    >
-                      <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: project.statusStyle.dot, display: 'inline-block' }} />
-                      {project.status}
-                    </span>
-                  </div>
-
-                  <p
-                    style={{
-                      color: 'var(--text-secondary)',
-                      fontSize: 'var(--text-sm)',
-                      lineHeight: 1.7,
-                      flex: 1,
-                      marginBottom: 0,
-                    }}
-                  >
-                    {project.description}
-                  </p>
-
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
-                    {project.tags.map(tag => (
-                      <span
-                        key={tag}
-                        style={{
-                          padding: '0.15rem var(--space-2)',
-                          borderRadius: 'var(--radius-sm)',
-                          fontSize: 'var(--text-xs)',
-                          fontFamily: 'var(--font-heading)',
-                          fontWeight: 500,
-                          backgroundColor: 'var(--bg-secondary)',
-                          color: 'var(--text-muted)',
-                          border: '1px solid var(--border-subtle)',
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </motion.article>
-              ))}
-            </StaggerChildren>
-
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 1.0, ease: 'easeOut' }}
+            style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}
+          >
             <a
               href="/work"
               style={{
+                display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)',
+                padding: 'var(--space-3) var(--space-8)',
+                backgroundColor: 'var(--accent-primary)',
+                color: '#121110',
                 fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-sm)',
-                fontWeight: 600,
-                color: 'var(--accent-secondary)',
-                textDecoration: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: 'var(--space-2)',
-                transition: 'color var(--transition-fast)',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent-primary)'; }}
-              onMouseLeave={e => { e.currentTarget.style.color = 'var(--accent-secondary)'; }}
-            >
-              Bekijk alle projecten →
-            </a>
-          </GlassCard>
-        </AnimateIn>
-      </section>
-
-      {/* spacer */}
-      <div style={{ height: '45vh' }} />
-
-      {/* ── LATEST BLOG POSTS ────────────────────────────────── */}
-      <section className="snap-section">
-        <AnimateIn delay={0.1}>
-          <GlassCard variant="plain">
-            <p
-              style={{
-                fontFamily: 'var(--font-heading)',
-                color: 'var(--accent-secondary)',
+                fontWeight: 700,
                 fontSize: 'var(--text-xs)',
-                fontWeight: 600,
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
-                marginBottom: 'var(--space-4)',
+                textDecoration: 'none',
+                transition: 'background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast)',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.backgroundColor = 'var(--accent-primary-hover)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-glow)';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.backgroundColor = 'var(--accent-primary)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              Schrijven
-            </p>
-            <h2
+              VIEW PROJECTS →
+            </a>
+            <a
+              href="/about"
               style={{
+                display: 'inline-flex', alignItems: 'center',
+                padding: 'var(--space-3) var(--space-8)',
+                backgroundColor: 'transparent',
+                color: 'var(--text-secondary)',
                 fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-2xl)',
                 fontWeight: 600,
-                color: 'var(--text-primary)',
-                marginBottom: 'var(--space-10)',
+                fontSize: 'var(--text-xs)',
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                border: '1px solid var(--border-default)',
+                transition: 'border-color var(--transition-fast), color var(--transition-fast)',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = 'rgba(232,185,49,0.4)';
+                e.currentTarget.style.color = 'var(--text-primary)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = 'var(--border-default)';
+                e.currentTarget.style.color = 'var(--text-secondary)';
               }}
             >
-              Laatste posts
-            </h2>
+              ABOUT ME
+            </a>
+          </motion.div>
+        </div>
 
-            <StaggerChildren style={{ display: 'flex', flexDirection: 'column' }}>
-              {latestPosts.map((post, i) => (
-                <motion.article
-                  key={post.title}
-                  whileHover={{ x: 4 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                  style={{
-                    paddingBottom: 'var(--space-8)',
-                    marginBottom: i < latestPosts.length - 1 ? 'var(--space-8)' : 0,
-                    borderBottom: i < latestPosts.length - 1 ? '1px solid var(--border-subtle)' : 'none',
-                  }}
-                >
-                  <a href={post.href} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        gap: 'var(--space-3)',
-                        alignItems: 'center',
-                        marginBottom: 'var(--space-2)',
-                      }}
-                    >
-                      <span style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
-                        {post.date}
-                      </span>
-                      <span style={{ color: 'var(--border-default)', userSelect: 'none' }}>·</span>
-                      <span style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
-                        {post.readTime}
-                      </span>
-                    </div>
-                    <h3
-                      style={{
-                        fontFamily: 'var(--font-heading)',
-                        fontSize: 'var(--text-lg)',
-                        fontWeight: 600,
-                        color: 'var(--text-primary)',
-                        marginBottom: 'var(--space-2)',
-                        transition: 'color var(--transition-fast)',
-                      }}
-                      onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent-primary)'; }}
-                      onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-primary)'; }}
-                    >
-                      {post.title}
-                    </h3>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', lineHeight: 1.7, marginBottom: 0 }}>
-                      {post.preview}
-                    </p>
-                  </a>
-                </motion.article>
+        {/* Scroll indicator */}
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+          style={{
+            position: 'absolute', bottom: 'var(--space-8)', left: '50%',
+            transform: 'translateX(-50%)',
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px',
+            color: 'rgba(232,185,49,0.4)',
+          }}
+        >
+          <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
+            <path d="M1 1l9 9 9-9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+          </svg>
+        </motion.div>
+      </section>
+
+      <div style={{ height: '45vh' }} />
+
+      {/* ─────────────────────────────────────────────────────── */}
+      {/* SECTION 2 — CAPABILITIES                               */}
+      {/* ─────────────────────────────────────────────────────── */}
+      <section id="capabilities" className="snap-section">
+        <div className="container">
+          <AnimateIn delay={0.05}>
+            <Eyebrow>MODULE_02 // CAPABILITIES</Eyebrow>
+            <div style={{ marginBottom: 'var(--space-8)' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-2xl)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>WHAT I</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-2xl)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>BUILD</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-2xl)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'transparent', WebkitTextStroke: '1px rgba(232,185,49,0.5)' }}>FOR REAL ESTATE.</div>
+            </div>
+          </AnimateIn>
+
+          <StaggerChildren style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 'var(--space-4)' }}>
+            {capabilities.map(cap => (
+              <div
+                key={cap.title}
+                style={{
+                  padding: 'var(--space-6)',
+                  border: '1px solid rgba(232,185,49,0.1)',
+                  borderLeft: `2px solid ${cap.accent === 'full' ? 'var(--accent-primary)' : cap.accent === 'mid' ? 'rgba(232,185,49,0.5)' : 'rgba(232,185,49,0.25)'}`,
+                  transition: 'background-color var(--transition-base), border-color var(--transition-base)',
+                  cursor: 'default',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'rgba(232,185,49,0.03)'; }}
+                onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
+              >
+                <div style={{ fontFamily: 'monospace', fontSize: '20px', color: 'var(--accent-primary)', marginBottom: 'var(--space-4)', opacity: 0.8 }}>{cap.icon}</div>
+                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 'var(--text-base)', color: 'var(--text-primary)', marginBottom: 'var(--space-2)', letterSpacing: '0.02em' }}>{cap.title}</div>
+                <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', lineHeight: 1.65, margin: 0 }}>{cap.desc}</p>
+              </div>
+            ))}
+          </StaggerChildren>
+        </div>
+      </section>
+
+      <div style={{ height: '45vh' }} />
+
+      {/* ─────────────────────────────────────────────────────── */}
+      {/* SECTION 3 — PROJECTS                                   */}
+      {/* ─────────────────────────────────────────────────────── */}
+      <section id="projects" className="snap-section">
+        <div className="container">
+          <AnimateIn delay={0.05}>
+            <Eyebrow>MODULE_03 // SYSTEMS</Eyebrow>
+            <div style={{ marginBottom: 'var(--space-8)' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-2xl)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>BUILT</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-2xl)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'transparent', WebkitTextStroke: '1px rgba(232,185,49,0.5)' }}>PROJECTS.</div>
+            </div>
+          </AnimateIn>
+
+          <StaggerChildren style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: 'var(--space-8)' }}>
+            {projects.map(project => (
+              <motion.div
+                key={project.title}
+                whileHover={{ backgroundColor: 'rgba(232,185,49,0.03)', borderLeftColor: 'var(--accent-primary)' }}
+                transition={{ duration: 0.15 }}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  gap: 'var(--space-4)',
+                  padding: 'var(--space-4) var(--space-4)',
+                  borderLeft: '2px solid transparent',
+                  borderBottom: '1px solid rgba(232,185,49,0.06)',
+                  transition: 'background-color var(--transition-fast), border-left-color var(--transition-fast)',
+                }}
+              >
+                <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 'var(--text-base)', color: 'var(--text-primary)', minWidth: 0 }}>
+                  {project.title}
+                </span>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', flex: 1, justifyContent: 'center' }}>
+                  {project.tags.map(tag => (
+                    <span key={tag} style={{
+                      padding: '0.15rem var(--space-2)', fontFamily: 'var(--font-heading)', fontWeight: 500,
+                      fontSize: 'var(--text-xs)', color: 'var(--text-muted)',
+                      backgroundColor: 'rgba(232,185,49,0.04)', border: '1px solid rgba(232,185,49,0.1)',
+                    }}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <span style={{
+                  flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)',
+                  padding: '0.2rem var(--space-3)',
+                  fontSize: 'var(--text-xs)', fontFamily: 'var(--font-heading)', fontWeight: 600,
+                  backgroundColor: project.statusStyle.bg,
+                  color: project.statusStyle.text,
+                  border: `1px solid ${project.statusStyle.border}`,
+                }}>
+                  <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: project.statusStyle.dot, display: 'inline-block' }} />
+                  {project.status}
+                </span>
+              </motion.div>
+            ))}
+          </StaggerChildren>
+
+          <a
+            href="/work"
+            style={{
+              fontFamily: 'var(--font-heading)', fontSize: 'var(--text-xs)', fontWeight: 700,
+              letterSpacing: '0.12em', textTransform: 'uppercase',
+              color: 'var(--accent-secondary)', textDecoration: 'none',
+              display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)',
+              transition: 'color var(--transition-fast)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent-primary)'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = 'var(--accent-secondary)'; }}
+          >
+            VIEW ALL PROJECTS →
+          </a>
+        </div>
+      </section>
+
+      <div style={{ height: '45vh' }} />
+
+      {/* ─────────────────────────────────────────────────────── */}
+      {/* SECTION 4 — ABOUT SNIPPET                              */}
+      {/* ─────────────────────────────────────────────────────── */}
+      <section id="about" className="snap-section">
+        <div className="container">
+          <AnimateIn delay={0.05}>
+            <Eyebrow>SYS.PROFILE // OPERATOR</Eyebrow>
+            <div style={{ marginBottom: 'var(--space-6)' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-2xl)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>SELF-TAUGHT.</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-2xl)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>SYSTEMS-FOCUSED.</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-2xl)', fontWeight: 900, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'transparent', WebkitTextStroke: '1px rgba(232,185,49,0.5)' }}>PROPTECH-DRIVEN.</div>
+            </div>
+
+            <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-md)', lineHeight: 1.75, maxWidth: '540px', marginBottom: 'var(--space-3)' }}>
+              I build AI systems that save real estate professionals hours of manual work.
+            </p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-md)', lineHeight: 1.75, maxWidth: '540px', marginBottom: 'var(--space-8)' }}>
+              Geen buzzwords — alleen pipelines die draaien.
+            </p>
+
+            {/* Stat blocks */}
+            <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', marginBottom: 'var(--space-8)' }}>
+              {[
+                { val: '4+', label: 'PROJECTS' },
+                { val: 'RAG', label: 'SPECIALIST' },
+                { val: 'NL', label: 'MARKET' },
+              ].map(({ val, label }) => (
+                <div key={label} style={{
+                  textAlign: 'center',
+                  border: '1px solid rgba(232,185,49,0.15)',
+                  padding: 'var(--space-4) var(--space-6)',
+                }}>
+                  <div style={{ fontFamily: 'monospace', fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--accent-primary)' }}>{val}</div>
+                  <div style={{ fontFamily: 'var(--font-heading)', fontSize: '9px', fontWeight: 600, letterSpacing: '0.14em', color: 'var(--text-muted)', marginTop: '2px' }}>{label}</div>
+                </div>
               ))}
-            </StaggerChildren>
+            </div>
 
             <a
-              href="/blog"
+              href="/about"
               style={{
-                marginTop: 'var(--space-10)',
-                display: 'inline-flex',
-                fontFamily: 'var(--font-heading)',
-                fontSize: 'var(--text-sm)',
-                fontWeight: 600,
-                color: 'var(--accent-secondary)',
-                textDecoration: 'none',
+                fontFamily: 'var(--font-heading)', fontSize: 'var(--text-xs)', fontWeight: 700,
+                letterSpacing: '0.12em', textTransform: 'uppercase',
+                color: 'var(--accent-secondary)', textDecoration: 'none',
+                display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)',
                 transition: 'color var(--transition-fast)',
               }}
               onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent-primary)'; }}
               onMouseLeave={e => { e.currentTarget.style.color = 'var(--accent-secondary)'; }}
             >
-              Alle posts →
+              → FULL PROFILE
             </a>
-          </GlassCard>
-        </AnimateIn>
+          </AnimateIn>
+        </div>
+      </section>
+
+      <div style={{ height: '45vh' }} />
+
+      {/* ─────────────────────────────────────────────────────── */}
+      {/* SECTION 5 — CTA                                        */}
+      {/* ─────────────────────────────────────────────────────── */}
+      <section className="snap-section">
+        <div className="container" style={{ textAlign: 'center' }}>
+          <AnimateIn delay={0.05}>
+            <Eyebrow>MODULE_05 // CONTACT</Eyebrow>
+            <div style={{ marginBottom: 'var(--space-6)' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(1.8rem, 4vw, var(--text-3xl))', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>READY TO</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'clamp(1.8rem, 4vw, var(--text-3xl))', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.03em', color: 'transparent', WebkitTextStroke: '1px rgba(232,185,49,0.6)', marginBottom: 'var(--space-2)' }}>AUTOMATE?</div>
+            </div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-md)', lineHeight: 1.7, maxWidth: '440px', margin: '0 auto var(--space-10)' }}>
+              Let&apos;s talk about what AI can do for your real estate workflow.
+            </p>
+            <a
+              href="mailto:hello@randy.dev"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)',
+                padding: 'var(--space-4) var(--space-12)',
+                backgroundColor: 'var(--accent-primary)',
+                color: '#121110',
+                fontFamily: 'var(--font-heading)',
+                fontWeight: 800,
+                fontSize: 'var(--text-xs)',
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                textDecoration: 'none',
+                transition: 'background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast)',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.backgroundColor = 'var(--accent-primary-hover)';
+                e.currentTarget.style.boxShadow = 'var(--shadow-glow)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.backgroundColor = 'var(--accent-primary)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              GET IN TOUCH →
+            </a>
+          </AnimateIn>
+        </div>
       </section>
 
     </div>

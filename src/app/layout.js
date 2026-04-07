@@ -18,12 +18,17 @@ export default function RootLayout({ children }) {
       <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <AuthProvider>
           <ThemeProvider>
+            {/* Layer 1: subtle data grid (slowest parallax) */}
             <DataGrid />
+
+            {/* Layer 2: particle network canvas (existing, fastest) */}
             <NetworkBackground
               nodeColor="#E8B931"
               pulseColor="#C49A1A"
               bgColor="transparent"
             />
+
+            {/* Vignette overlay — fades top/bottom edges into bg */}
             <div
               aria-hidden="true"
               style={{
@@ -34,6 +39,7 @@ export default function RootLayout({ children }) {
                 background: 'linear-gradient(to bottom, var(--bg-primary) 0%, transparent 12%, transparent 88%, var(--bg-primary) 100%)',
               }}
             />
+
             <Navbar />
             <main style={{ flex: 1, overflowX: 'hidden', position: 'relative', zIndex: 6 }}>
               <PageTransition>{children}</PageTransition>

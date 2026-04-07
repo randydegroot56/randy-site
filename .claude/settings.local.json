@@ -7,7 +7,8 @@
       "Bash(node -e \"const m = require\\('@react-three/postprocessing'\\); console.log\\(Object.keys\\(m\\).slice\\(0,10\\)\\)\")",
       "Bash(node -e \"const m = require\\('@react-three/postprocessing'\\); const keys = Object.keys\\(m\\); console.log\\(keys.filter\\(k => k.toLowerCase\\(\\).includes\\('bloom'\\) || k.toLowerCase\\(\\).includes\\('effect'\\)\\)\\)\")",
       "Bash(rm:*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "Bash(bash:*)"
     ]
   }
 }

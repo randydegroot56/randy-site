@@ -4,170 +4,83 @@ import { motion } from 'framer-motion';
 import AnimateIn from '../../components/AnimateIn';
 import StaggerChildren from '../../components/StaggerChildren';
 
-/* ── Data ────────────────────────────────────────────────────── */
-
 const posts = [
   {
     date: '28 maart 2026',
     readTime: '8 min',
-    title: 'Hoe ik mijn eerste RAG chatbot bouwde',
-    preview:
-      'Van PDF naar antwoord — een deep dive in embeddings, vector databases, en waarom context alles is.',
+    title: 'Building a Document AI for Dutch Lease Contracts',
+    preview: 'How I built a RAG pipeline that lets property managers ask questions across hundreds of pages of lease contracts — and actually get cited answers.',
     href: '#',
   },
   {
     date: '15 maart 2026',
-    readTime: '5 min',
-    title: 'Claude Code als development partner',
-    preview:
-      'Mijn ervaringen met AI-assisted coding: wat werkt, wat niet, en hoe je het beste uit Claude Code haalt.',
+    readTime: '6 min',
+    title: 'How AI is Changing Property Valuation in the Netherlands',
+    preview: 'Automated Valuation Models, data availability, and why the Dutch market is both challenging and exciting for AI-based pricing tools.',
     href: '#',
   },
   {
     date: '2 maart 2026',
-    readTime: '6 min',
-    title: 'Van nul naar Next.js: mijn website bouwen',
-    preview:
-      'Waarom ik koos voor Next.js, hoe ik een custom theming systeem opzette, en lessen geleerd onderweg.',
+    readTime: '5 min',
+    title: 'Claude Code as a PropTech Build Partner',
+    preview: 'Using AI-assisted coding to build real estate automation tools faster — what works, what breaks, and how to stay in control of the output.',
     href: '#',
   },
 ];
 
-/* ── Page ─────────────────────────────────────────────────────── */
-
 export default function BlogPage() {
   return (
-    <section
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: 'var(--space-20) var(--space-6)',
-      }}
-    >
+    <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 'var(--space-20) var(--space-6)' }}>
       <div style={{ width: '100%', maxWidth: '720px', margin: '0 auto' }}>
 
-        {/* Header */}
         <AnimateIn delay={0.05}>
-          <p
-            style={{
-              fontFamily: 'var(--font-heading)',
-              color: 'var(--accent-secondary)',
-              fontSize: 'var(--text-xs)',
-              fontWeight: 600,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              marginBottom: 'var(--space-2)',
-            }}
-          >
-            Schrijven
-          </p>
-          <h1
-            style={{
-              fontFamily: 'var(--font-heading)',
-              fontSize: 'var(--text-3xl)',
-              color: 'var(--text-primary)',
-              marginBottom: 'var(--space-4)',
-            }}
-          >
-            Blog
-          </h1>
-          <p
-            style={{
-              color: 'var(--text-secondary)',
-              fontSize: 'var(--text-md)',
-              lineHeight: 1.7,
-              marginBottom: 'var(--space-16)',
-            }}
-          >
-            Gedachten over development, AI, en wat ik onderweg leer.
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 'var(--space-4)' }}>
+            <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-primary)', boxShadow: '0 0 8px rgba(232,185,49,0.7)' }} />
+            <span style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--accent-secondary)' }}>
+              LOG // WRITING
+            </span>
+          </div>
+          <div style={{ marginBottom: 'var(--space-4)' }}>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-3xl)', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>FIELD</div>
+            <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-3xl)', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.03em', color: 'transparent', WebkitTextStroke: '1px rgba(232,185,49,0.5)' }}>NOTES.</div>
+          </div>
+          <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-md)', lineHeight: 1.7, marginBottom: 'var(--space-16)' }}>
+            AI, real estate data, and what I learn building at the intersection of both.
           </p>
         </AnimateIn>
 
-        {/* Post list */}
         <StaggerChildren style={{ display: 'flex', flexDirection: 'column' }}>
           {posts.map((post, i) => (
             <motion.article
               key={post.title}
-              whileHover={{ backgroundColor: 'var(--bg-secondary)' }}
+              whileHover={{ backgroundColor: 'rgba(232,185,49,0.02)', borderLeftColor: 'var(--accent-primary)' }}
               transition={{ duration: 0.15 }}
               style={{
                 padding: 'var(--space-8) var(--space-4)',
-                borderRadius: 'var(--radius-md)',
-                borderBottom: i < posts.length - 1 ? '1px solid var(--border-subtle)' : 'none',
+                borderLeft: '2px solid transparent',
+                borderBottom: i < posts.length - 1 ? '1px solid rgba(232,185,49,0.06)' : 'none',
+                transition: 'background-color var(--transition-fast), border-left-color var(--transition-fast)',
               }}
             >
               <a href={post.href} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
-                {/* Meta */}
-                <div
-                  style={{
-                    display: 'flex',
-                    gap: 'var(--space-3)',
-                    alignItems: 'center',
-                    marginBottom: 'var(--space-3)',
-                  }}
-                >
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: 'var(--text-xs)',
-                      color: 'var(--text-muted)',
-                    }}
-                  >
-                    {post.date}
-                  </span>
-                  <span style={{ color: 'var(--border-default)', userSelect: 'none' }}>·</span>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-heading)',
-                      fontSize: 'var(--text-xs)',
-                      color: 'var(--text-muted)',
-                    }}
-                  >
-                    {post.readTime} leestijd
-                  </span>
+                <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
+                  <span style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.06em' }}>{post.date}</span>
+                  <span style={{ color: 'rgba(232,185,49,0.2)' }}>·</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.06em' }}>{post.readTime} read</span>
                 </div>
-
-                {/* Title */}
                 <h2
                   style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: 'var(--text-xl)',
-                    fontWeight: 600,
-                    color: 'var(--text-primary)',
-                    marginBottom: 'var(--space-3)',
+                    fontFamily: 'var(--font-heading)', fontSize: 'var(--text-xl)', fontWeight: 700,
+                    color: 'var(--text-primary)', letterSpacing: '-0.01em',
+                    marginBottom: 'var(--space-3)', lineHeight: 1.2,
                     transition: 'color var(--transition-fast)',
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.color = 'var(--accent-primary)'; }}
-                  onMouseLeave={e => { e.currentTarget.style.color = 'var(--text-primary)'; }}
                 >
                   {post.title}
                 </h2>
-
-                {/* Preview */}
-                <p
-                  style={{
-                    color: 'var(--text-secondary)',
-                    fontSize: 'var(--text-base)',
-                    lineHeight: 1.7,
-                    marginBottom: 'var(--space-4)',
-                  }}
-                >
+                <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', lineHeight: 1.7, margin: 0 }}>
                   {post.preview}
                 </p>
-
-                {/* CTA */}
-                <span
-                  style={{
-                    fontFamily: 'var(--font-heading)',
-                    fontSize: 'var(--text-sm)',
-                    fontWeight: 500,
-                    color: 'var(--accent-secondary)',
-                  }}
-                >
-                  Lees meer →
-                </span>
               </a>
             </motion.article>
           ))}
