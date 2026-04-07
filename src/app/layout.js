@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageTransition from '../components/PageTransition';
 import NetworkBackground from '../components/NetworkBackground';
+import DataGrid from '../components/DataGrid';
 import AuthProvider from '../components/AuthProvider';
 
 export const metadata = {
@@ -17,6 +18,7 @@ export default function RootLayout({ children }) {
       <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <AuthProvider>
           <ThemeProvider>
+            <DataGrid />
             <NetworkBackground
               nodeColor="#E8B931"
               pulseColor="#C49A1A"
