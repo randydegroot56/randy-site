@@ -1,0 +1,249 @@
+{
+  "timestamp": "2026-04-08T21:41:17.563993+00:00",
+  "project_root": "C:\\Users\\degro\\OneDrive\\Bureaublad\\coderen\\Claude Code\\randy-site\\agents\\code_auditor",
+  "files": [
+    {
+      "path": "cli.py",
+      "file_type": "python",
+      "size_bytes": 10073,
+      "lines": 291,
+      "imports": [
+        "__future__",
+        "argparse",
+        "asyncio",
+        "json",
+        "sys",
+        "time",
+        "pathlib",
+        "agents.code_auditor.core.config",
+        "agents.code_auditor.core.phase1_analyzer",
+        "agents.code_auditor.core.phase1_discovery"
+      ],
+      "exports": [
+        "cmd_discover"
+      ],
+      "docstring": "agents/code_auditor/cli.py\n===========================\nMain CLI entry point for the Code Auditor Agent.\n\nUsage::\n\n    # Discover\n    python -m agents.code_auditor.cli discover --project . --verbose\n    python -m agents.code_auditor.cli discover --project /repo --output report.json --config ai-command-center\n\n    # Analyze\n    python -m agents.code_auditor.cli analyze report.json\n    python -m agents.code_auditor.cli analyze report.json --csv files.csv",
+      "last_modified": "2026-04-08T21:31:52.625356+00:00",
+      "complexity_score": 6.0,
+      "imports_count": 10,
+      "exports_count": 1
+    },
+    {
+      "path": "__init__.py",
+      "file_type": "python",
+      "size_bytes": 0,
+      "lines": 0,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-08T19:33:55.976029+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "core/config.py",
+      "file_type": "python",
+      "size_bytes": 11925,
+      "lines": 345,
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "typing",
+        "fnmatch",
+        "pathlib",
+        "warnings"
+      ],
+      "exports": [
+        "Phase1Config",
+        "AiCommandCenterConfig",
+        "NextJsConfig",
+        "PythonOnlyConfig"
+      ],
+      "docstring": "agents/code_auditor/core/config.py\n===================================\nConfiguration system for the Code Auditor Agent.\n\nUsage::\n\n    from agents.code_auditor.core.config import get_config\n\n    config = get_config(\"ai-command-center\")\n    scanner = Phase1Discovery(config=config)\n\nExtend ``Phase1Config`` to create project-specific profiles, then register\nthem in ``get_config``.",
+      "last_modified": "2026-04-08T19:43:01.405532+00:00",
+      "complexity_score": 18.0,
+      "imports_count": 6,
+      "exports_count": 4
+    },
+    {
+      "path": "core/phase1_analyzer.py",
+      "file_type": "python",
+      "size_bytes": 16776,
+      "lines": 486,
+      "imports": [
+        "__future__",
+        "argparse",
+        "csv",
+        "json",
+        "sys",
+        "dataclasses",
+        "pathlib",
+        "typing"
+      ],
+      "exports": [
+        "AnalysisInsight",
+        "ReportAnalyzer"
+      ],
+      "docstring": "agents/code_auditor/core/phase1_analyzer.py\n============================================\nAnalyzes the JSON report produced by Phase 1 Discovery and surfaces\nactionable insights: oversized files, circular imports, isolated/orphaned\nfiles, and overly complex modules.\n\nUsage::\n\n    from agents.code_auditor.core.phase1_analyzer import ReportAnalyzer\n\n    analyzer = ReportAnalyzer(\"phase1_report.json\")\n    insights = analyzer.analyze()\n    analyzer.print_summary()\n    analyzer.export_csv(\"phase1_report.csv\")\n\nCLI::\n\n    python -m agents.code_auditor.core.phase1_analyzer phase1_report.json\n    python -m agents.code_auditor.core.phase1_analyzer phase1_report.json --csv out.csv\n\nExpected JSON report structure (produced by Phase1Discovery)::\n\n    {\n      \"metadata\": {\n        \"total_files\": 84,\n        \"total_lines\": 12840,\n        \"scan_duration_seconds\": 2.1,\n        \"root_path\": \"/projects/myapp\"\n      },\n      \"files\": [\n        {\n          \"path\": \"src/app/page.js\",\n          \"file_type\": \"javascript\",\n          \"lines\": 210,\n          \"size_bytes\": 6800,\n          \"imports_count\": 5,\n          \"exports_count\": 3,\n          \"complexity_score\": 12.0,\n          \"imports\": [\"react\", \"./components/Foo\"],\n          \"exports\": [\"default\", \"helper\"]\n        },\n        ...\n      ],\n      \"circular_imports\": [\n        [\"agents/scraper.py\", \"backends/redis.py\", \"agents/scraper.py\"]\n      ]\n    }",
+      "last_modified": "2026-04-08T21:15:22.695513+00:00",
+      "complexity_score": 19.0,
+      "imports_count": 8,
+      "exports_count": 2
+    },
+    {
+      "path": "core/phase1_discovery.py",
+      "file_type": "python",
+      "size_bytes": 29886,
+      "lines": 804,
+      "imports": [
+        "__future__",
+        "argparse",
+        "ast",
+        "asyncio",
+        "json",
+        "re",
+        "sys",
+        "dataclasses",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "exports": [
+        "FileMetadata",
+        "ProjectRegistry",
+        "Phase1Discovery"
+      ],
+      "docstring": "agents/code_auditor/core/phase1_discovery.py\n=============================================\nPhase 1 Discovery Engine -- scans a project directory, extracts imports/\nexports from every supported source file, builds a dependency graph, and\ndetects circular imports.\n\nUsage (CLI)::\n\n    python agents/code_auditor/core/phase1_discovery.py --project . --verbose\n    python agents/code_auditor/core/phase1_discovery.py --project /path/to/repo --output report.json\n\nUsage (library)::\n\n    import asyncio\n    from agents.code_auditor.core.phase1_discovery import Phase1Discovery\n\n    registry = asyncio.run(Phase1Discovery(\"/path/to/repo\", verbose=True).scan_project())\n    print(registry.statistics)\n\nSafety guarantees:\n- Read-only: no file is ever written or deleted\n- Timeout: the full scan aborts after 60 seconds and returns partial results\n- Size limit: files larger than 50 MB are skipped\n- Error isolation: per-file parse failures are logged and skipped; the scan\n  always produces a usable (possibly partial) registry",
+      "last_modified": "2026-04-08T21:20:10.096615+00:00",
+      "complexity_score": 28.0,
+      "imports_count": 11,
+      "exports_count": 3
+    },
+    {
+      "path": "core/__init__.py",
+      "file_type": "python",
+      "size_bytes": 375,
+      "lines": 19,
+      "imports": [
+        ".config"
+      ],
+      "exports": [
+        "Phase1Config",
+        "AiCommandCenterConfig",
+        "NextJsConfig",
+        "PythonOnlyConfig",
+        "get_config",
+        "register_config"
+      ],
+      "docstring": "agents/code_auditor/core \u2014 shared infrastructure for all audit phases.",
+      "last_modified": "2026-04-08T19:41:29.622982+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 1,
+      "exports_count": 6
+    },
+    {
+      "path": "tests/test_phase1.py",
+      "file_type": "python",
+      "size_bytes": 14814,
+      "lines": 394,
+      "imports": [
+        "__future__",
+        "asyncio",
+        "json",
+        "textwrap",
+        "pathlib",
+        "pytest",
+        "agents.code_auditor.core.phase1_discovery",
+        "agents.code_auditor.core"
+      ],
+      "exports": [
+        "write"
+      ],
+      "docstring": "agents/code_auditor/tests/test_phase1.py\n=========================================\nTests for Phase 1 Discovery Engine.\n\nRun with::\n\n    pytest agents/code_auditor/tests/test_phase1.py -v",
+      "last_modified": "2026-04-08T21:27:36.718102+00:00",
+      "complexity_score": 15.0,
+      "imports_count": 8,
+      "exports_count": 1
+    },
+    {
+      "path": "tests/__init__.py",
+      "file_type": "python",
+      "size_bytes": 0,
+      "lines": 0,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-08T19:34:19.594472+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "utils/file_helpers.py",
+      "file_type": "python",
+      "size_bytes": 7234,
+      "lines": 236,
+      "imports": [
+        "__future__",
+        "re",
+        "pathlib",
+        "typing",
+        "agents.code_auditor.core.config"
+      ],
+      "exports": [
+        "should_scan_file"
+      ],
+      "docstring": "agents/code_auditor/utils/file_helpers.py\n==========================================\nHelper functions used across all phases of the Code Auditor.\n\nUsage::\n\n    from agents.code_auditor.utils.file_helpers import (\n        should_scan_file, get_file_type, read_file_safe,\n        get_relative_path, format_file_size, get_complexity_score,\n        extract_first_docstring,\n    )\n\n    if should_scan_file(path, config):\n        content = read_file_safe(path)\n        rel_path = get_relative_path(path, root)",
+      "last_modified": "2026-04-08T21:10:17.972220+00:00",
+      "complexity_score": 7.0,
+      "imports_count": 5,
+      "exports_count": 1
+    },
+    {
+      "path": "utils/__init__.py",
+      "file_type": "python",
+      "size_bytes": 0,
+      "lines": 0,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-08T19:34:02.538906+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    }
+  ],
+  "statistics": {
+    "total_files": 10,
+    "total_lines": 2575,
+    "total_size_bytes": 91083,
+    "avg_lines_per_file": 257,
+    "largest_file": "core/phase1_discovery.py (804 lines)",
+    "by_language": {
+      "python": 10
+    },
+    "scan_errors": 0
+  },
+  "circular_imports": [],
+  "external_dependencies": [
+    "__future__",
+    "agents",
+    "argparse",
+    "ast",
+    "asyncio",
+    "csv",
+    "dataclasses",
+    "datetime",
+    "fnmatch",
+    "json",
+    "pathlib",
+    "pytest",
+    "re",
+    "sys",
+    "textwrap",
+    "time",
+    "typing",
+    "warnings"
+  ]
+}
