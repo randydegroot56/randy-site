@@ -49,82 +49,6 @@ from agents.code_auditor.core.phase1_discovery import Phase1Discovery
 # ---------------------------------------------------------------------------
 
 
-def cmd_discover(args: argparse.Namespace) -> int:
-    """Run Phase 1 discovery on a project directory."""
-    project = Path(args.project).resolve()
-    output  = Path(args.output)
-
-    if not project.exists():
-        print(f"Error: project path does not exist: {project}", file=sys.stderr)
-        return 1
-    if not project.is_dir():
-        print(f"Error: project path is not a directory: {project}", file=sys.stderr)
-        return 1
-
-    # Load config (warns and falls back to default on unknown names)
-    config = get_config(args.config)
-    if args.verbose:
-        print(f"Config profile : {config!r}")
-
-    width = 72
-    print("=" * width)
-    print(f"[*] Scanning project: {project}")
-    print(f"    Config          : {args.config}")
-    print(f"    Output          : {output}")
-    print("=" * width)
-
-    t0 = time.perf_counter()
-
-    print("-> Phase 1a: File Tree Scan")
-    print("-> Phase 1b: Dependency Graph")
-    print("-> Phase 1c: Circular Import Detection")
-    print("-> Compiling statistics...")
-
-    try:
-        registry = asyncio.run(
-            Phase1Discovery(str(project), verbose=args.verbose).scan_project()
-        )
-    except Exception as exc:
-        print(f"Error: scan failed: {exc}", file=sys.stderr)
-        return 1
-
-    elapsed = time.perf_counter() - t0
-
-    # ── Persist report ────────────────────────────────────────────────────
-    try:
-        output.write_text(
-            json.dumps(registry.to_dict(), indent=2, default=str),
-            encoding="utf-8",
-        )
-    except OSError as exc:
-        print(f"Error: could not write report to {output}: {exc}", file=sys.stderr)
-        return 1
-
-    # ── Summary ───────────────────────────────────────────────────────────
-    stats = registry.statistics
-    total = stats.get("total_files", 0)
-
-    print(f"[OK] Scan complete: {total:,} files scanned in {elapsed:.1f}s")
-    print(f"[>] Report saved to: {output.resolve()}")
-    print()
-
-    _print_stats_table(stats, registry, width)
-
-    if registry.circular_imports:
-        print()
-        print(f"[!] {len(registry.circular_imports)} circular import chain(s) found:")
-        for chain in registry.circular_imports:
-            print(f"    {' -> '.join(chain)}")
-
-    if registry.external_dependencies:
-        deps_preview = ", ".join(sorted(registry.external_dependencies)[:8])
-        remainder = len(registry.external_dependencies) - 8
-        suffix = f" ... and {remainder} more" if remainder > 0 else ""
-        print()
-        print(f"[i] External dependencies ({len(registry.external_dependencies)}): {deps_preview}{suffix}")
-
-    print("=" * width)
-    return 0
 
 
 def _print_stats_table(stats: dict, registry, width: int) -> None:
@@ -481,6 +405,324 @@ def cmd_verify(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_execute(args: argparse.Namespace) -> int:
+    """Execute Phase 5 safe code removal."""
+    # ── Import Phase 5 modules ────────────────────────────────────────────
+    try:
+        from agents.code_auditor.core.phase5_executor import (
+            DryRunExecutor,
+            BatchRemover,
+            ImportCleaner,
+            TestVerifier,
+            GitCommitter,
+        )
+        from agents.code_auditor.core.phase5_analyzer import Phase5BatchAnalyzer
+    except ImportError as exc:
+        print("Error: Phase 5 modules not found.", file=sys.stderr)
+        print(f"\nImport error: {exc}", file=sys.stderr)
+        return 1
+
+    report_path  = Path(args.report)
+    phase1_path  = Path(args.phase1)
+    phase2_path  = Path(args.phase2)
+    output_path  = Path(args.output)
+    project_root = Path(args.project).resolve()
+
+    # ── Validate inputs ───────────────────────────────────────────────────
+    if not report_path.exists():
+        print(f"Error: Phase 3 report not found: {report_path}", file=sys.stderr)
+        print("Run Phase 3 verification first:", file=sys.stderr)
+        print(f"  python agents/code_auditor/cli.py verify --report phase2_findings.json",
+              file=sys.stderr)
+        return 1
+
+    if not phase2_path.exists():
+        print(f"Error: Phase 2 report not found: {phase2_path}", file=sys.stderr)
+        print("Phase 5 needs Phase 2 to resolve item names and file paths.", file=sys.stderr)
+        print("Run Phase 2 first:", file=sys.stderr)
+        print(f"  python agents/code_auditor/cli.py detect --report audit_report.json",
+              file=sys.stderr)
+        return 1
+
+    if not project_root.is_dir():
+        print(f"Error: project root is not a directory: {project_root}", file=sys.stderr)
+        return 1
+
+    # ── Load reports ──────────────────────────────────────────────────────
+    try:
+        phase3_raw   = json.loads(report_path.read_text(encoding="utf-8"))
+        phase2_report = json.loads(phase2_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        print(f"Error: invalid JSON in report: {exc}", file=sys.stderr)
+        return 1
+
+    phase1_report: dict = {}
+    if phase1_path.exists():
+        try:
+            phase1_report = json.loads(phase1_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            print(f"Warning: could not parse {phase1_path} -- impact analysis will be limited.")
+
+    p2_count = len(phase2_report.get("findings", []))
+    print(f"  Phase 3 : {report_path}")
+    print(f"  Phase 2 : {phase2_path} ({p2_count} findings loaded)")
+
+    # ── Normalise Phase 3 → all_checks ───────────────────────────────────
+    p2_map      = {f.get("id", ""): f for f in phase2_report.get("findings", []) if f.get("id")}
+    all_checks  = _normalise_phase3(phase3_raw, p2_map)
+    phase3_verified = {**phase3_raw, "all_checks": all_checks}
+
+    # ── Resolve items to process ──────────────────────────────────────────
+    if args.items:
+        items_to_remove = list(args.items)
+    else:
+        # Auto-select top 3 LOW-risk findings by confidence
+        candidates = sorted(
+            [c for c in all_checks if c.get("risk_level") == "LOW"],
+            key=lambda c: c.get("confidence", 0.0),
+            reverse=True,
+        )[:3]
+        items_to_remove = [c["id"] for c in candidates]
+
+    if not items_to_remove:
+        print("No LOW-risk items found. All done, or review MEDIUM/HIGH items manually.")
+        return 0
+
+    width = 68
+    print("=" * width)
+    print("[Phase 5] Removal Pipeline")
+    print(f"  Project  : {project_root}")
+    print(f"  Report   : {report_path}")
+    print(f"  Items    : {', '.join(items_to_remove)}")
+    print(f"  Dry run  : {args.dry_run}")
+    print("=" * width)
+
+    t0 = time.perf_counter()
+
+    # ── STAP 1: Dry Run ───────────────────────────────────────────────────
+    print("-> STAP 1: Dry run impact analysis...")
+    try:
+        # verbose=False here: the CLI prints its own formatted summary below
+        dry_executor = DryRunExecutor(
+            phase3_verified, phase1_report, phase2_report,
+            verbose=False,
+        )
+        dry_result = dry_executor.run_dry_run(items_to_remove)
+    except Exception as exc:
+        print(f"Error during dry run: {exc}", file=sys.stderr)
+        if args.verbose:
+            import traceback; traceback.print_exc()
+        return 1
+
+    # Always print the dry-run summary table
+    w60 = "=" * 60
+    print(w60)
+    print("DRY RUN SUMMARY")
+    print(w60)
+    print(f"Items analysed    : {', '.join(dry_result.items)}")
+    print(f"Files to delete   : {len(dry_result.files_to_delete)}")
+    print(f"Imports to remove : {len(dry_result.imports_to_remove)}")
+    print(f"Lines affected    : {dry_result.lines_affected}")
+    print(f"Tests affected    : {len(dry_result.tests_affected)}")
+    print(f"Is safe           : {dry_result.is_safe}")
+    print(f"Impact            : {dry_result.estimated_impact}")
+    if dry_result.warnings:
+        print("Warnings:")
+        for w in dry_result.warnings:
+            print(f"  - {w}")
+    print(w60)
+    print(f"   Found {dry_result.lines_affected} line(s) would be affected")
+
+    if not dry_result.is_safe:
+        print("\nDry run flagged safety issues -- aborting.", file=sys.stderr)
+        return 1
+
+    # Stop here in preview mode
+    if args.dry_run:
+        print()
+        print("Dry run complete (no changes made).")
+        print(f"\nRe-run without --dry-run to execute:")
+        items_str = " ".join(items_to_remove)
+        print(f"  python agents/code_auditor/cli.py execute "
+              f"--report {args.report} --items {items_str}")
+        return 0
+
+    # ── STAP 2: Batch removal ─────────────────────────────────────────────
+    print("-> STAP 2: Staged batch removal...")
+    from datetime import date as _date
+    batch_id = args.batch_id or f"{_date.today().isoformat()}-001"
+    try:
+        remover     = BatchRemover(str(project_root), phase2_report=phase2_report,
+                                   verbose=args.verbose)
+        batch_result = remover.remove_batch(items_to_remove, phase3_verified,
+                                            batch_id=batch_id)
+    except Exception as exc:
+        print(f"Error during batch removal: {exc}", file=sys.stderr)
+        if args.verbose:
+            import traceback; traceback.print_exc()
+        return 1
+
+    print(w60)
+    print("BATCH REMOVAL SUMMARY")
+    print(w60)
+    print(f"Batch ID          : {batch_result['batch_id']}")
+    print(f"Branch            : {batch_result['branch_created']}")
+    print(f"Status            : {batch_result['status']}")
+    items_done = batch_result.get("items_removed", [])
+    print(f"Items removed     : {', '.join(items_done) or 'none'}")
+    print(f"Files deleted     : {len(batch_result.get('files_deleted', []))}")
+    print(f"Lines removed     : {batch_result.get('total_lines_removed', 0)}")
+    next_step = "Review errors" if batch_result.get("errors") else "Run import cleanup"
+    print(f"Next step         : {next_step}")
+    if batch_result.get("errors"):
+        print("Errors:")
+        for e in batch_result["errors"]:
+            print(f"  - {e}")
+    print(w60)
+    print(f"   Found {batch_result.get('total_lines_removed', 0)} line(s) removed")
+
+    if batch_result["status"] == "failed":
+        print("Error: batch removal failed entirely.", file=sys.stderr)
+        return 1
+
+    # ── STAP 3: Import cleanup ────────────────────────────────────────────
+    print("-> STAP 3: Import cleanup...")
+    finding_map  = {c["id"]: c for c in all_checks}
+    deleted_names = [
+        finding_map[fid]["name"]
+        for fid in items_done
+        if fid in finding_map and finding_map[fid].get("name")
+    ]
+    try:
+        cleaner      = ImportCleaner(str(project_root), verbose=args.verbose)
+        import_result = cleaner.cleanup_imports(deleted_names)
+    except Exception as exc:
+        print(f"Warning: import cleanup failed: {exc}", file=sys.stderr)
+        import_result = {"imports_removed": 0, "lines_fixed": 0,
+                         "status": "error", "modified_files": []}
+
+    print(f"   Found {import_result.get('imports_removed', 0)} import(s) cleaned")
+
+    # ── STAP 4: Test verification ─────────────────────────────────────────
+    print("-> STAP 4: Running tests...")
+    try:
+        verifier    = TestVerifier(str(project_root), verbose=args.verbose)
+        test_result = verifier.run_tests()
+        linter_result = verifier.run_linter() if args.linter else {
+            "errors": 0, "warnings": 0, "status": "SKIPPED"
+        }
+    except Exception as exc:
+        print(f"Error during test verification: {exc}", file=sys.stderr)
+        return 1
+
+    tests_ok    = test_result.get("safe_to_commit", False)
+    test_counts = test_result.get("tests", {})
+
+    print(w60)
+    print("TEST VERIFICATION SUMMARY")
+    print(w60)
+    print(f"Total tests       : {test_counts.get('total', 0)}")
+    print(f"Passed            : {test_counts.get('passed', 0)}")
+    print(f"Failed            : {test_counts.get('failed', 0)}")
+    print(f"Test status       : {test_counts.get('status', '?')}")
+    print(f"Overall           : {test_result.get('overall_status', '?')}")
+    print(f"Safe to commit    : {tests_ok}")
+    if test_result.get("revert_recommendation"):
+        print(f"\n*** {test_result['revert_recommendation']} ***")
+    failures = test_counts.get("failures", [])
+    if failures:
+        print(f"\nFailed tests ({len(failures)}):")
+        for f in failures:
+            print(f"  FAILED {f}")
+    print(w60)
+
+    if not tests_ok:
+        print("\nTests FAILED -- commit blocked.", file=sys.stderr)
+        print(test_result.get("revert_recommendation", ""), file=sys.stderr)
+        return 1
+
+    # ── STAP 5: Git commit ────────────────────────────────────────────────
+    print("-> STAP 5: Creating atomic git commit...")
+    try:
+        committer    = GitCommitter(str(project_root), verbose=args.verbose)
+        commit_result = committer.commit_removal(
+            batch_id=batch_id,
+            items_removed=items_done,
+            tests_passed=tests_ok,
+            batch_result=batch_result,
+            import_result=import_result,
+            phase3_findings=all_checks,
+        )
+    except RuntimeError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"   Found {commit_result.get('deletions', 0)} line(s) committed")
+
+    elapsed = time.perf_counter() - t0
+    print()
+    print(f"[OK] Pipeline complete in {elapsed:.1f}s")
+    print()
+
+    # ── STAP 6: Batch report ──────────────────────────────────────────────
+    combined = {
+        "batch_id":       batch_id,
+        "dry_run":        dry_result.to_dict(),
+        "batch":          batch_result,
+        "import_cleanup": import_result,
+        "test_verify":    {**test_result, "linter": linter_result},
+        "commit":         commit_result,
+        "phase3_verified": phase3_verified,
+    }
+    analyzer = Phase5BatchAnalyzer(combined, verbose=True)
+    analyzer.print_summary()
+
+    try:
+        analyzer.export_to_json(str(output_path))
+        print(f"[>] Report saved to: {output_path.resolve()}")
+    except OSError as exc:
+        print(f"Warning: could not write report: {exc}", file=sys.stderr)
+
+    print()
+    print("Next steps:")
+    print(f"  1. Review commit : git log -1 -p")
+    print(f"  2. Rollback      : {commit_result.get('rollback_command', 'git revert <hash>')}")
+    nxt = analyzer.generate_batch_report().get("next_batch_suggestion", {})
+    if nxt.get("items"):
+        nxt_ids = " ".join(nxt["items"])
+        print(f"  3. Next batch    : python agents/code_auditor/cli.py execute "
+              f"--report {args.report} --items {nxt_ids}")
+    else:
+        print("  3. No further safe items -- audit complete")
+
+    return 0
+
+
+def _normalise_phase3(phase3_raw: dict, p2_map: dict) -> list:
+    """Convert Phase 3 ``assessments`` to the ``all_checks`` shape.
+
+    Phase 3 exports use ``finding_id``, ``file_path``, ``final_risk``,
+    ``final_confidence``; Phase 5 expects ``id``, ``file``, ``name``,
+    ``risk_level``, ``confidence``.  Phase 2 map fills the gaps.
+    """
+    result = []
+    for a in phase3_raw.get("assessments", []):
+        fid = a.get("finding_id", "")
+        p2  = p2_map.get(fid, {})
+        result.append({
+            "id":         fid,
+            "file":       p2.get("file",  a.get("file_path", "")),
+            # Phase 2 stores symbol name under "item" (e.g. "useTheme")
+            "name":       p2.get("item")  or p2.get("name") or fid,
+            "type":       a.get("type",   p2.get("type", "unknown")),
+            "risk_level": a.get("final_risk",       "LOW"),
+            "confidence": a.get("final_confidence", 0.0),
+            "lines":      a.get("lines",  p2.get("lines", 0)),
+            "evidence":   p2.get("evidence", {}),
+        })
+    return result
+
+
 def _step(label: str, verbose: bool) -> None:
     """Print a detection-step progress line."""
     if verbose:
@@ -521,6 +763,11 @@ examples:
   # Phase 3: verify safety of findings
   python -m agents.code_auditor.cli verify --report phase2_findings.json
   python -m agents.code_auditor.cli verify --report phase2_findings.json --phase1 audit_report.json --verbose
+
+  # Phase 5: execute safe removals
+  python -m agents.code_auditor.cli execute --report phase3_verified.json --dry-run
+  python -m agents.code_auditor.cli execute --report phase3_verified.json --items U001 U002 U003
+  python -m agents.code_auditor.cli execute --report phase3_verified.json --items U001 U002 --verbose
 """,
     )
 
@@ -649,6 +896,87 @@ examples:
         help="Verbose output.",
     )
     verify_parser.set_defaults(func=cmd_verify)
+
+    # ── execute (Phase 5) ─────────────────────────────────────────────────
+    execute_parser = subparsers.add_parser(
+        "execute",
+        help="Execute safe code removal via the Phase 5 pipeline.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "examples:\n"
+            "  # Preview without making changes\n"
+            "  python -m agents.code_auditor.cli execute "
+            "--report phase3_verified.json --dry-run\n\n"
+            "  # Remove specific items\n"
+            "  python -m agents.code_auditor.cli execute "
+            "--report phase3_verified.json --items U001 U002 U003\n\n"
+            "  # Auto-select top 3 LOW-risk items and remove them\n"
+            "  python -m agents.code_auditor.cli execute "
+            "--report phase3_verified.json\n"
+        ),
+    )
+    execute_parser.add_argument(
+        "--report",
+        type=str,
+        required=True,
+        help="Path to Phase 3 verified findings JSON (e.g. phase3_verified.json).",
+    )
+    execute_parser.add_argument(
+        "--items",
+        type=str,
+        nargs="+",
+        default=None,
+        help=(
+            "Finding IDs to remove (e.g. U001 U002 U003). "
+            "When omitted the top 3 LOW-risk items are auto-selected."
+        ),
+    )
+    execute_parser.add_argument(
+        "--phase1",
+        type=str,
+        default="audit_report.json",
+        help="Path to Phase 1 report (default: audit_report.json).",
+    )
+    execute_parser.add_argument(
+        "--phase2",
+        type=str,
+        default="phase2_findings.json",
+        help="Path to Phase 2 findings (default: phase2_findings.json).",
+    )
+    execute_parser.add_argument(
+        "--project",
+        type=str,
+        default=".",
+        help="Root of the git repository to modify (default: current directory).",
+    )
+    execute_parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Preview what would be removed without making any changes.",
+    )
+    execute_parser.add_argument(
+        "--batch-id",
+        type=str,
+        default=None,
+        help="Optional batch identifier used in branch name and commit message.",
+    )
+    execute_parser.add_argument(
+        "--output",
+        type=str,
+        default="phase5_report.json",
+        help="Destination JSON file for the batch report (default: phase5_report.json).",
+    )
+    execute_parser.add_argument(
+        "--linter",
+        action="store_true",
+        help="Also run flake8 after tests (requires flake8 to be installed).",
+    )
+    execute_parser.add_argument(
+        "--verbose", "-v",
+        action="store_true",
+        help="Print detailed per-step output.",
+    )
+    execute_parser.set_defaults(func=cmd_execute)
 
     return parser
 
