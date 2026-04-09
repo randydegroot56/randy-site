@@ -9,9 +9,17 @@ Usage::
     python -m agents.code_auditor.cli discover --project . --verbose
     python -m agents.code_auditor.cli discover --project /repo --output report.json --config ai-command-center
 
-    # Analyze
+    # Analyze (Phase 1 insights)
     python -m agents.code_auditor.cli analyze report.json
     python -m agents.code_auditor.cli analyze report.json --csv files.csv
+
+    # Detect (Phase 2 unused code)
+    python -m agents.code_auditor.cli detect --report audit_report.json
+    python -m agents.code_auditor.cli detect --report audit_report.json --output phase2.json --verbose
+
+    # Verify (Phase 3 safety verification)
+    python -m agents.code_auditor.cli verify --report phase2_findings.json
+    python -m agents.code_auditor.cli verify --report phase2_findings.json --phase1 audit_report.json --verbose
 """
 
 from __future__ import annotations
@@ -186,6 +194,306 @@ def cmd_analyze(args: argparse.Namespace) -> int:
 
 
 # ---------------------------------------------------------------------------
+# detect subcommand (Phase 2)
+# ---------------------------------------------------------------------------
+
+
+def cmd_detect(args: argparse.Namespace) -> int:
+    """Run all Phase 2 unused-code detectors against a Phase 1 JSON report."""
+    # ── Import Phase 2 modules ────────────────────────────────────────────
+    try:
+        from agents.code_auditor.core.phase2_detection import (
+            CircularDependencyAnalyzer,
+            OrphanFileFinder,
+            UnusedExportFinder,
+            UnusedImportFinder,
+        )
+        from agents.code_auditor.core.phase2_analyzer import (
+            Phase2ReportGenerator,
+            TestCoverageVerifier,
+        )
+    except ImportError as exc:
+        print("Error: Phase 2 modules not found.", file=sys.stderr)
+        print(file=sys.stderr)
+        print("Phase 2 has not been built yet. To set it up:", file=sys.stderr)
+        print("  1. Create: agents/code_auditor/core/phase2_detection.py", file=sys.stderr)
+        print("  2. Create: agents/code_auditor/core/phase2_analyzer.py", file=sys.stderr)
+        print(f"\nImport error: {exc}", file=sys.stderr)
+        return 1
+
+    report_path = Path(args.report)
+    output_path = Path(args.output)
+
+    # ── Validate input ────────────────────────────────────────────────────
+    if not report_path.exists():
+        print(f"Error: Phase 1 report not found: {report_path}", file=sys.stderr)
+        print(file=sys.stderr)
+        print("Run Phase 1 discovery first:", file=sys.stderr)
+        print(f"  python cli.py discover --project . --output {report_path}", file=sys.stderr)
+        return 1
+
+    # ── Load Phase 1 report ───────────────────────────────────────────────
+    print(f"Loading Phase 1 report: {report_path}")
+    try:
+        phase1_report = json.loads(report_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        print(f"Error: invalid JSON in {report_path}: {exc}", file=sys.stderr)
+        return 1
+
+    file_count = len(phase1_report.get("files", []))
+    print(f"  {file_count} files loaded from report.")
+    print()
+
+    width = 68
+    print("=" * width)
+    print("Running Phase 2 Detection Analysis...")
+    print("=" * width)
+
+    t0 = time.perf_counter()
+    all_findings: list = []
+
+    try:
+        # ── Phase 2A: Unused exports ──────────────────────────────────────
+        _step("Phase 2A: Unused export detection", args.verbose)
+        f1 = UnusedExportFinder(phase1_report, verbose=args.verbose).find_unused_exports()
+        all_findings.extend(f1)
+        _step_result(len(f1), "unused export(s)", args.verbose)
+
+        # ── Phase 2B: Orphan files ────────────────────────────────────────
+        _step("Phase 2B: Orphan file detection", args.verbose)
+        f2 = OrphanFileFinder(phase1_report, verbose=args.verbose).find_orphan_files()
+        all_findings.extend(f2)
+        _step_result(len(f2), "orphan file(s)", args.verbose)
+
+        # ── Phase 2C: Unused imports ──────────────────────────────────────
+        _step("Phase 2C: Unused import detection", args.verbose)
+        f3 = UnusedImportFinder(phase1_report, verbose=args.verbose).find_unused_imports()
+        all_findings.extend(f3)
+        _step_result(len(f3), "unused import(s)", args.verbose)
+
+        # ── Phase 2D: Circular dependencies ──────────────────────────────
+        _step("Phase 2D: Circular dependency analysis", args.verbose)
+        f4 = CircularDependencyAnalyzer(phase1_report, verbose=args.verbose).analyze_circular_deps()
+        all_findings.extend(f4)
+        _step_result(len(f4), "circular dependency chain(s)", args.verbose)
+
+        # ── Phase 2E: Test coverage adjustment ───────────────────────────
+        _step("Phase 2E: Test coverage adjustment", args.verbose)
+        all_findings = TestCoverageVerifier(
+            phase1_report, all_findings, verbose=args.verbose
+        ).adjust_findings_for_tests()
+        covered = sum(
+            1 for f in all_findings
+            if f.get("evidence", {}).get("test_coverage")
+        )
+        _step_result(covered, "finding(s) adjusted for test coverage", args.verbose)
+
+        # ── Phase 2F: Report generation ───────────────────────────────────
+        _step("Phase 2F: Generating final report", args.verbose)
+        generator = Phase2ReportGenerator(all_findings, phase1_report)
+        generator.generate_report()
+        _step_result(len(all_findings), "total finding(s)", args.verbose)
+
+    except Exception as exc:
+        print(f"\nError during Phase 2 detection: {exc}", file=sys.stderr)
+        if args.verbose:
+            import traceback
+            traceback.print_exc()
+        return 1
+
+    elapsed = time.perf_counter() - t0
+    print()
+    print(f"[OK] Detection complete in {elapsed:.1f}s")
+    print()
+
+    # ── Console summary ───────────────────────────────────────────────────
+    generator.print_summary()
+
+    # ── Export JSON ───────────────────────────────────────────────────────
+    try:
+        generator.export_to_json(str(output_path))
+    except OSError as exc:
+        print(f"Error: could not write output to {output_path}: {exc}", file=sys.stderr)
+        return 1
+
+    print()
+    print("Next steps:")
+    print("  1. Review findings in the JSON report.")
+    print("  2. Run Phase 3 verification when ready.")
+    print("  3. Run Phase 5 to execute safe removals with git rollback.")
+    return 0
+
+
+def cmd_verify(args: argparse.Namespace) -> int:
+    """Execute Phase 3 safety verification."""
+    # ── Import Phase 3 modules ────────────────────────────────────────────
+    try:
+        from agents.code_auditor.core.phase3_verification import (
+            TestDependencyChecker,
+            APIEndpointChecker,
+            ConfigurationChecker,
+            DatabaseMigrationChecker,
+            DynamicImportDetector,
+        )
+        from agents.code_auditor.core.phase3_analyzer import Phase3SafetyAnalyzer
+    except ImportError as exc:
+        print("❌ Phase 3 modules not found")
+        print()
+        print("Phase 3 is not yet implemented.")
+        print("To build Phase 3, follow these steps:")
+        print()
+        print("1. Read: PHASE_3_COMPLETE_GUIDE.md")
+        print("2. Create: agents/code_auditor/core/phase3_verification.py")
+        print("3. Create: agents/code_auditor/core/phase3_analyzer.py")
+        print("4. Copy prompts from PHASE_3_COMPLETE_GUIDE.md and paste in Claude Code")
+        print("5. Try again: python cli.py verify --report phase2_findings.json")
+        print()
+        print(f"Error details: {exc}")
+        return 1
+
+    phase2_path = Path(args.report)
+    phase1_path = Path(args.phase1)
+    output_path = Path(args.output)
+
+    # ── Validate input files ──────────────────────────────────────────────
+    if not phase2_path.exists():
+        print(f"❌ Phase 2 report not found: {phase2_path}", file=sys.stderr)
+        print(file=sys.stderr)
+        print("Run Phase 2 first:", file=sys.stderr)
+        print(f"  python agents/code_auditor/cli.py detect --report audit_report.json", file=sys.stderr)
+        return 1
+
+    if not phase1_path.exists():
+        print(f"❌ Phase 1 report not found: {phase1_path}", file=sys.stderr)
+        print(file=sys.stderr)
+        print("Run Phase 1 first:", file=sys.stderr)
+        print(f"  python agents/code_auditor/cli.py discover --project . --verbose", file=sys.stderr)
+        return 1
+
+    # ── Load reports ──────────────────────────────────────────────────────
+    print(f"📖 Loading Phase 1 report: {phase1_path}")
+    print(f"📖 Loading Phase 2 report: {phase2_path}")
+
+    try:
+        phase1_report = json.loads(phase1_path.read_text(encoding="utf-8"))
+        phase2_report = json.loads(phase2_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        print(f"❌ Invalid JSON in report file: {exc}", file=sys.stderr)
+        return 1
+
+    print("🛡️  Running Phase 3 Safety Verification...")
+    print()
+
+    t0 = time.perf_counter()
+
+    try:
+        phase2_findings = phase2_report.get("findings", [])
+
+        # Each checker is chained: it receives the adjusted findings from the
+        # previous step so that risk/confidence adjustments accumulate and each
+        # finding's ``evidence`` dict grows one key per checker.
+
+        # ── Phase 3A: Test dependency check ───────────────────────────────
+        _step("Phase 3A: Checking test dependencies", args.verbose)
+        checker1  = TestDependencyChecker(phase1_report, phase2_findings, verbose=args.verbose)
+        adjusted1 = checker1.get_adjusted_findings()
+        _step_result(
+            sum(1 for f in adjusted1 if f.get("evidence", {}).get("test_dependency_check", {}).get("has_tests")),
+            "finding(s) with test coverage",
+            args.verbose,
+        )
+
+        # ── Phase 3B: API endpoint safety ─────────────────────────────────
+        _step("Phase 3B: Checking API endpoint safety", args.verbose)
+        checker2  = APIEndpointChecker(phase1_report, adjusted1, verbose=args.verbose)
+        adjusted2 = checker2.get_adjusted_findings()
+        _step_result(
+            sum(1 for f in adjusted2 if f.get("evidence", {}).get("api_endpoint_check", {}).get("is_api_endpoint")),
+            "API endpoint(s) found",
+            args.verbose,
+        )
+
+        # ── Phase 3C: Configuration usage ─────────────────────────────────
+        _step("Phase 3C: Checking configuration usage", args.verbose)
+        checker3  = ConfigurationChecker(phase1_report, adjusted2, verbose=args.verbose)
+        adjusted3 = checker3.get_adjusted_findings()
+        _step_result(
+            sum(1 for f in adjusted3 if f.get("evidence", {}).get("configuration_check", {}).get("is_configuration")),
+            "configuration item(s) found",
+            args.verbose,
+        )
+
+        # ── Phase 3D: Database migration safety ───────────────────────────
+        _step("Phase 3D: Checking database safety", args.verbose)
+        checker4  = DatabaseMigrationChecker(phase1_report, adjusted3, verbose=args.verbose)
+        adjusted4 = checker4.check_database_safety()
+        _step_result(
+            sum(1 for f in adjusted4 if f.get("evidence", {}).get("database_check", {}).get("is_database_critical")),
+            "database-related item(s) found (CRITICAL)",
+            args.verbose,
+        )
+
+        # ── Phase 3E: Dynamic import detection ────────────────────────────
+        _step("Phase 3E: Detecting dynamic imports", args.verbose)
+        checker5  = DynamicImportDetector(phase1_report, adjusted4, verbose=args.verbose)
+        adjusted5 = checker5.detect_dynamic_imports()
+        _step_result(
+            sum(1 for f in adjusted5 if f.get("evidence", {}).get("dynamic_check", {}).get("is_dynamically_loaded")),
+            "potentially dynamic import(s) found",
+            args.verbose,
+        )
+
+        # ── Phase 3F: Final safety assessment ─────────────────────────────
+        # Pass the fully-chained adjusted findings (not the raw checker results)
+        _step("Phase 3F: Calculating final safety assessment", args.verbose)
+        analyzer = Phase3SafetyAnalyzer(phase2_findings, adjusted5, verbose=args.verbose)
+        analyzer.analyze_safety()
+        _step_result(len(adjusted5), "finding(s) assessed", args.verbose)
+
+    except Exception as exc:
+        print(f"\n❌ Error during Phase 3 verification: {exc}", file=sys.stderr)
+        if args.verbose:
+            import traceback
+            traceback.print_exc()
+        return 1
+
+    elapsed = time.perf_counter() - t0
+    print()
+    print(f"[OK] Verification complete in {elapsed:.1f}s")
+    print()
+
+    analyzer.print_summary()
+
+    # ── Export JSON ───────────────────────────────────────────────────────
+    try:
+        analyzer.export_to_json(str(output_path))
+    except OSError as exc:
+        print(f"Error: could not write output to {output_path}: {exc}", file=sys.stderr)
+        return 1
+
+    print(f"\n📄 Verified findings exported to: {output_path}")
+    print()
+    print("Next steps:")
+    print("  1. Review the safety assessment in the JSON report")
+    print("  2. Understand why items are CRITICAL/HIGH/MEDIUM/LOW risk")
+    print("  3. Plan removals based on scenarios")
+    print("  4. Run Phase 5 when ready to execute safe removals")
+    return 0
+
+
+def _step(label: str, verbose: bool) -> None:
+    """Print a detection-step progress line."""
+    if verbose:
+        print(f"-> {label}...")
+
+
+def _step_result(count: int, label: str, verbose: bool) -> None:
+    """Print the result count for a detection step."""
+    if verbose:
+        print(f"   Found {count} {label}")
+
+
+# ---------------------------------------------------------------------------
 # Argument parser
 # ---------------------------------------------------------------------------
 
@@ -197,17 +505,22 @@ def _build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 examples:
-  # Scan the current directory
+  # Phase 1: scan the current directory
   python -m agents.code_auditor.cli discover --project . --verbose
 
-  # Scan with a project-specific config
+  # Phase 1: scan with a project-specific config
   python -m agents.code_auditor.cli discover --project /repo --config ai-command-center --output report.json
 
-  # Analyze a saved report
-  python -m agents.code_auditor.cli analyze report.json
-
-  # Analyze and export per-file metrics to CSV
+  # Phase 1: analyze a saved report (insights + CSV)
   python -m agents.code_auditor.cli analyze report.json --csv files.csv
+
+  # Phase 2: detect unused code
+  python -m agents.code_auditor.cli detect --report audit_report.json
+  python -m agents.code_auditor.cli detect --report audit_report.json --output phase2.json --verbose
+
+  # Phase 3: verify safety of findings
+  python -m agents.code_auditor.cli verify --report phase2_findings.json
+  python -m agents.code_auditor.cli verify --report phase2_findings.json --phase1 audit_report.json --verbose
 """,
     )
 
@@ -272,6 +585,70 @@ examples:
         help="Optional: export per-file metrics to this CSV file.",
     )
     analyze_parser.set_defaults(func=cmd_analyze)
+
+    # ── detect (Phase 2) ──────────────────────────────────────────────────
+    detect_parser = subparsers.add_parser(
+        "detect",
+        help="Detect unused exports, orphan files, and circular deps (Phase 2).",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "example: python -m agents.code_auditor.cli detect "
+            "--report audit_report.json --verbose"
+        ),
+    )
+    detect_parser.add_argument(
+        "--report",
+        metavar="PATH",
+        required=True,
+        help="Path to the Phase 1 JSON report produced by 'discover'.",
+    )
+    detect_parser.add_argument(
+        "--output",
+        metavar="PATH",
+        default="phase2_findings.json",
+        help="Destination JSON file for Phase 2 findings (default: phase2_findings.json).",
+    )
+    detect_parser.add_argument(
+        "--verbose", "-v",
+        action="store_true",
+        help="Print per-step progress during detection.",
+    )
+    detect_parser.set_defaults(func=cmd_detect)
+
+    # ── verify (Phase 3) ──────────────────────────────────────────────────
+    verify_parser = subparsers.add_parser(
+        "verify",
+        help="Verify safety of findings (Phase 3).",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "example: python -m agents.code_auditor.cli verify "
+            "--report phase2_findings.json --verbose"
+        ),
+    )
+    verify_parser.add_argument(
+        "--report",
+        type=str,
+        required=True,
+        help="Path to Phase 2 findings JSON (e.g., phase2_findings.json).",
+    )
+    verify_parser.add_argument(
+        "--phase1",
+        type=str,
+        default="audit_report.json",
+        help="Path to Phase 1 report JSON (default: audit_report.json).",
+    )
+    verify_parser.add_argument(
+        "--output",
+        type=str,
+        default="phase3_verified.json",
+        help="Output file for Phase 3 verification (default: phase3_verified.json).",
+    )
+    verify_parser.add_argument(
+        "--verbose", "-v",
+        action="store_true",
+        help="Verbose output.",
+    )
+    verify_parser.set_defaults(func=cmd_verify)
 
     return parser
 
