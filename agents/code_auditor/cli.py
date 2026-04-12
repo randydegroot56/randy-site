@@ -45,10 +45,116 @@ from agents.code_auditor.core.phase1_discovery import Phase1Discovery
 
 
 # ---------------------------------------------------------------------------
-# discover subcommand
+# report subcommand (Phase 4)
 # ---------------------------------------------------------------------------
 
 
+def cmd_report(args: argparse.Namespace) -> int:
+    """Generate an audit report: JSON summary, terminal dashboard, HTML, CSV."""
+    try:
+        from agents.code_auditor.core.phase4_reporting import (
+            ReportGenerator, DashboardGenerator, HTMLExporter, CSVExporter,
+        )
+        from agents.code_auditor.core.phase4_analyzer import RecommendationGenerator
+    except ImportError as exc:
+        print(f"Error: Phase 4 modules not found: {exc}", file=sys.stderr)
+        return 1
+
+    phase3_path = Path(args.phase3)
+    phase2_path = Path(args.phase2)
+
+    if not phase3_path.exists():
+        print(f"Error: Phase 3 file not found: {phase3_path}", file=sys.stderr)
+        print("Run Phase 3 first:", file=sys.stderr)
+        print("  python agents/code_auditor/cli.py verify --report phase2_findings.json",
+              file=sys.stderr)
+        return 1
+
+    if not phase2_path.exists():
+        print(f"Error: Phase 2 file not found: {phase2_path}", file=sys.stderr)
+        print("Run Phase 2 first:", file=sys.stderr)
+        print("  python agents/code_auditor/cli.py detect --report audit_report.json",
+              file=sys.stderr)
+        return 1
+
+    # ── Load inputs ───────────────────────────────────────────────────────
+    try:
+        phase3_data = json.loads(phase3_path.read_text(encoding="utf-8"))
+        phase2_data = json.loads(phase2_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        print(f"Error: invalid JSON: {exc}", file=sys.stderr)
+        return 1
+
+    phase1_data: dict = {}
+    phase1_path = Path(args.phase1)
+    if phase1_path.exists():
+        try:
+            phase1_data = json.loads(phase1_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            print(f"Warning: could not parse {phase1_path} — metadata will be limited.",
+                  file=sys.stderr)
+
+    history: list = []
+    if args.history:
+        history_path = Path(args.history)
+        if history_path.exists():
+            try:
+                history = json.loads(history_path.read_text(encoding="utf-8"))
+                if not isinstance(history, list):
+                    history = []
+            except json.JSONDecodeError:
+                pass
+
+    # ── Build report data ─────────────────────────────────────────────────
+    # Merge raw findings into report_data for pattern analysis
+    raw_findings = phase2_data.get("findings", [])
+
+    gen         = ReportGenerator(phase1_data, phase2_data, phase3_data, history)
+    report_data = gen.generate_json_report()
+    report_data["_findings_raw"] = raw_findings
+
+    # ── JSON output ───────────────────────────────────────────────────────
+    output_path = Path(args.output)
+    output_path.write_text(
+        json.dumps(report_data, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
+    print(f"Report saved -> {output_path}")
+
+    # ── HTML export ───────────────────────────────────────────────────────
+    if args.html:
+        html_path = Path(args.html)
+        html_path.write_text(
+            HTMLExporter(report_data).generate_html(), encoding="utf-8"
+        )
+        print(f"HTML  saved -> {html_path}")
+
+    # ── CSV export ────────────────────────────────────────────────────────
+    if args.csv:
+        csv_path = Path(args.csv)
+        csv_path.write_text(
+            CSVExporter(report_data).generate_csv(), encoding="utf-8", newline=""
+        )
+        print(f"CSV   saved -> {csv_path}")
+
+    # ── Terminal dashboard ────────────────────────────────────────────────
+    if not args.no_dashboard:
+        dash = DashboardGenerator(report_data).generate_dashboard()
+        # Force UTF-8 on Windows consoles that default to cp1252
+        try:
+            print(dash)
+        except UnicodeEncodeError:
+            sys.stdout.buffer.write((dash + "\n").encode("utf-8", errors="replace"))
+
+    # ── Recommendations ───────────────────────────────────────────────────
+    if not args.no_recommendations:
+        recs = RecommendationGenerator(report_data).generate_recommendations()
+        recs_str = "\n" + json.dumps(recs, indent=2, ensure_ascii=True)
+        try:
+            print(recs_str)
+        except UnicodeEncodeError:
+            sys.stdout.buffer.write((recs_str + "\n").encode("utf-8", errors="replace"))
+
+    return 0
 
 
 def _print_stats_table(stats: dict, registry, width: int) -> None:
@@ -467,7 +573,7 @@ def cmd_execute(args: argparse.Namespace) -> int:
     print(f"  Phase 3 : {report_path}")
     print(f"  Phase 2 : {phase2_path} ({p2_count} findings loaded)")
 
-    # ── Normalise Phase 3 → all_checks ───────────────────────────────────
+    # ── Normalise Phase 3 -> all_checks ───────────────────────────────────
     p2_map      = {f.get("id", ""): f for f in phase2_report.get("findings", []) if f.get("id")}
     all_checks  = _normalise_phase3(phase3_raw, p2_map)
     phase3_verified = {**phase3_raw, "all_checks": all_checks}
@@ -778,41 +884,6 @@ examples:
     )
     subparsers.required = True
 
-    # ── discover ──────────────────────────────────────────────────────────
-    discover_parser = subparsers.add_parser(
-        "discover",
-        help="Scan a project and produce a Phase 1 JSON report.",
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="example: python -m agents.code_auditor.cli discover --project . --verbose",
-    )
-    discover_parser.add_argument(
-        "--project",
-        metavar="PATH",
-        default=".",
-        help="Root directory of the project to scan (default: current directory).",
-    )
-    discover_parser.add_argument(
-        "--output",
-        metavar="PATH",
-        default="audit_report.json",
-        help="Destination JSON report file (default: audit_report.json).",
-    )
-    discover_parser.add_argument(
-        "--verbose", "-v",
-        action="store_true",
-        help="Print per-file progress during the scan.",
-    )
-    discover_parser.add_argument(
-        "--config",
-        metavar="PROFILE",
-        default="default",
-        help=(
-            "Config profile to use. Built-in: default, ai-command-center, nextjs, python "
-            "(default: default)."
-        ),
-    )
-    discover_parser.set_defaults(func=cmd_discover)
-
     # ── analyze ───────────────────────────────────────────────────────────
     analyze_parser = subparsers.add_parser(
         "analyze",
@@ -977,6 +1048,77 @@ examples:
         help="Print detailed per-step output.",
     )
     execute_parser.set_defaults(func=cmd_execute)
+
+    # ── report (Phase 4) ──────────────────────────────────────────────────
+    report_parser = subparsers.add_parser(
+        "report",
+        help="Generate a Phase 4 audit report (JSON, HTML, CSV, dashboard).",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "examples:\n"
+            "  python -m agents.code_auditor.cli report "
+            "--phase3 phase3_verified.json --phase2 phase2_findings.json\n\n"
+            "  python -m agents.code_auditor.cli report "
+            "--phase3 phase3_verified.json --phase2 phase2_findings.json "
+            "--html report.html --csv report.csv\n"
+        ),
+    )
+    report_parser.add_argument(
+        "--phase3",
+        type=str,
+        required=True,
+        help="Path to Phase 3 verified findings JSON (e.g. phase3_verified.json).",
+    )
+    report_parser.add_argument(
+        "--phase2",
+        type=str,
+        required=True,
+        help="Path to Phase 2 findings JSON (e.g. phase2_findings.json).",
+    )
+    report_parser.add_argument(
+        "--phase1",
+        type=str,
+        default="audit_report.json",
+        help="Path to Phase 1 report JSON for metadata (default: audit_report.json).",
+    )
+    report_parser.add_argument(
+        "--history",
+        type=str,
+        default=None,
+        metavar="PATH",
+        help="Optional JSON file with execution history (list of batch dicts).",
+    )
+    report_parser.add_argument(
+        "--output",
+        type=str,
+        default="phase4_report.json",
+        help="Destination JSON report file (default: phase4_report.json).",
+    )
+    report_parser.add_argument(
+        "--html",
+        type=str,
+        default=None,
+        metavar="PATH",
+        help="Also export an HTML report to this path.",
+    )
+    report_parser.add_argument(
+        "--csv",
+        type=str,
+        default=None,
+        metavar="PATH",
+        help="Also export a CSV findings table to this path.",
+    )
+    report_parser.add_argument(
+        "--no-dashboard",
+        action="store_true",
+        help="Skip printing the terminal dashboard.",
+    )
+    report_parser.add_argument(
+        "--no-recommendations",
+        action="store_true",
+        help="Skip printing the recommendations JSON.",
+    )
+    report_parser.set_defaults(func=cmd_report)
 
     return parser
 

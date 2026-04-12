@@ -1,0 +1,959 @@
+{
+  "timestamp": "2026-04-08T21:51:56.720246+00:00",
+  "project_root": "C:\\Users\\degro\\OneDrive\\Bureaublad\\coderen\\Claude Code\\randy-site",
+  "files": [
+    {
+      "path": "layout.js",
+      "file_type": "javascript",
+      "size_bytes": 1420,
+      "lines": 44,
+      "imports": [
+        "../styles/globals.css",
+        "../components/ThemeProvider"
+      ],
+      "exports": [
+        "metadata",
+        "RootLayout"
+      ],
+      "docstring": null,
+      "last_modified": "2026-03-31T19:15:09.792499+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 2,
+      "exports_count": 2
+    },
+    {
+      "path": "package.json",
+      "file_type": "json",
+      "size_bytes": 373,
+      "lines": 18,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:10:34.484611+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "page.js",
+      "file_type": "javascript",
+      "size_bytes": 16302,
+      "lines": 509,
+      "imports": [
+        "../components/ThemeProvider",
+        "../components/ThemeToggle"
+      ],
+      "exports": [
+        "Home"
+      ],
+      "docstring": null,
+      "last_modified": "2026-03-31T20:04:12.811199+00:00",
+      "complexity_score": 5.0,
+      "imports_count": 2,
+      "exports_count": 1
+    },
+    {
+      "path": "ThemeProvider.jsx",
+      "file_type": "javascript",
+      "size_bytes": 3084,
+      "lines": 95,
+      "imports": [
+        "react"
+      ],
+      "exports": [
+        "useTheme",
+        "ThemeProvider"
+      ],
+      "docstring": null,
+      "last_modified": "2026-03-31T19:15:09.599742+00:00",
+      "complexity_score": 3.0,
+      "imports_count": 1,
+      "exports_count": 2
+    },
+    {
+      "path": "ThemeToggle.jsx",
+      "file_type": "javascript",
+      "size_bytes": 3042,
+      "lines": 103,
+      "imports": [
+        "./ThemeProvider"
+      ],
+      "exports": [
+        "ThemeToggle"
+      ],
+      "docstring": null,
+      "last_modified": "2026-03-31T19:15:09.695822+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": ".claude/settings.local.json",
+      "file_type": "json",
+      "size_bytes": 2160,
+      "lines": 29,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-08T21:26:49.157144+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": ".vscode/settings.json",
+      "file_type": "json",
+      "size_bytes": 68,
+      "lines": 3,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-03-31T19:16:35.991095+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "agents/code_auditor/audit_report.json",
+      "file_type": "json",
+      "size_bytes": 10126,
+      "lines": 249,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-08T21:41:17.572020+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "agents/code_auditor/cli.py",
+      "file_type": "python",
+      "size_bytes": 10073,
+      "lines": 291,
+      "imports": [
+        "__future__",
+        "argparse",
+        "asyncio",
+        "json",
+        "sys",
+        "time",
+        "pathlib",
+        "agents.code_auditor.core.config",
+        "agents.code_auditor.core.phase1_analyzer",
+        "agents.code_auditor.core.phase1_discovery"
+      ],
+      "exports": [
+        "cmd_discover"
+      ],
+      "docstring": "agents/code_auditor/cli.py\n===========================\nMain CLI entry point for the Code Auditor Agent.\n\nUsage::\n\n    # Discover\n    python -m agents.code_auditor.cli discover --project . --verbose\n    python -m agents.code_auditor.cli discover --project /repo --output report.json --config ai-command-center\n\n    # Analyze\n    python -m agents.code_auditor.cli analyze report.json\n    python -m agents.code_auditor.cli analyze report.json --csv files.csv",
+      "last_modified": "2026-04-08T21:31:52.625356+00:00",
+      "complexity_score": 6.0,
+      "imports_count": 10,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/code_auditor/__init__.py",
+      "file_type": "python",
+      "size_bytes": 0,
+      "lines": 0,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-08T19:33:55.976029+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "agents/code_auditor/core/config.py",
+      "file_type": "python",
+      "size_bytes": 11925,
+      "lines": 345,
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "typing",
+        "fnmatch",
+        "pathlib",
+        "warnings"
+      ],
+      "exports": [
+        "Phase1Config",
+        "AiCommandCenterConfig",
+        "NextJsConfig",
+        "PythonOnlyConfig"
+      ],
+      "docstring": "agents/code_auditor/core/config.py\n===================================\nConfiguration system for the Code Auditor Agent.\n\nUsage::\n\n    from agents.code_auditor.core.config import get_config\n\n    config = get_config(\"ai-command-center\")\n    scanner = Phase1Discovery(config=config)\n\nExtend ``Phase1Config`` to create project-specific profiles, then register\nthem in ``get_config``.",
+      "last_modified": "2026-04-08T19:43:01.405532+00:00",
+      "complexity_score": 18.0,
+      "imports_count": 6,
+      "exports_count": 4
+    },
+    {
+      "path": "agents/code_auditor/core/phase1_analyzer.py",
+      "file_type": "python",
+      "size_bytes": 16776,
+      "lines": 486,
+      "imports": [
+        "__future__",
+        "argparse",
+        "csv",
+        "json",
+        "sys",
+        "dataclasses",
+        "pathlib",
+        "typing"
+      ],
+      "exports": [
+        "AnalysisInsight",
+        "ReportAnalyzer"
+      ],
+      "docstring": "agents/code_auditor/core/phase1_analyzer.py\n============================================\nAnalyzes the JSON report produced by Phase 1 Discovery and surfaces\nactionable insights: oversized files, circular imports, isolated/orphaned\nfiles, and overly complex modules.\n\nUsage::\n\n    from agents.code_auditor.core.phase1_analyzer import ReportAnalyzer\n\n    analyzer = ReportAnalyzer(\"phase1_report.json\")\n    insights = analyzer.analyze()\n    analyzer.print_summary()\n    analyzer.export_csv(\"phase1_report.csv\")\n\nCLI::\n\n    python -m agents.code_auditor.core.phase1_analyzer phase1_report.json\n    python -m agents.code_auditor.core.phase1_analyzer phase1_report.json --csv out.csv\n\nExpected JSON report structure (produced by Phase1Discovery)::\n\n    {\n      \"metadata\": {\n        \"total_files\": 84,\n        \"total_lines\": 12840,\n        \"scan_duration_seconds\": 2.1,\n        \"root_path\": \"/projects/myapp\"\n      },\n      \"files\": [\n        {\n          \"path\": \"src/app/page.js\",\n          \"file_type\": \"javascript\",\n          \"lines\": 210,\n          \"size_bytes\": 6800,\n          \"imports_count\": 5,\n          \"exports_count\": 3,\n          \"complexity_score\": 12.0,\n          \"imports\": [\"react\", \"./components/Foo\"],\n          \"exports\": [\"default\", \"helper\"]\n        },\n        ...\n      ],\n      \"circular_imports\": [\n        [\"agents/scraper.py\", \"backends/redis.py\", \"agents/scraper.py\"]\n      ]\n    }",
+      "last_modified": "2026-04-08T21:15:22.695513+00:00",
+      "complexity_score": 19.0,
+      "imports_count": 8,
+      "exports_count": 2
+    },
+    {
+      "path": "agents/code_auditor/core/phase1_discovery.py",
+      "file_type": "python",
+      "size_bytes": 29886,
+      "lines": 804,
+      "imports": [
+        "__future__",
+        "argparse",
+        "ast",
+        "asyncio",
+        "json",
+        "re",
+        "sys",
+        "dataclasses",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "exports": [
+        "FileMetadata",
+        "ProjectRegistry",
+        "Phase1Discovery"
+      ],
+      "docstring": "agents/code_auditor/core/phase1_discovery.py\n=============================================\nPhase 1 Discovery Engine -- scans a project directory, extracts imports/\nexports from every supported source file, builds a dependency graph, and\ndetects circular imports.\n\nUsage (CLI)::\n\n    python agents/code_auditor/core/phase1_discovery.py --project . --verbose\n    python agents/code_auditor/core/phase1_discovery.py --project /path/to/repo --output report.json\n\nUsage (library)::\n\n    import asyncio\n    from agents.code_auditor.core.phase1_discovery import Phase1Discovery\n\n    registry = asyncio.run(Phase1Discovery(\"/path/to/repo\", verbose=True).scan_project())\n    print(registry.statistics)\n\nSafety guarantees:\n- Read-only: no file is ever written or deleted\n- Timeout: the full scan aborts after 60 seconds and returns partial results\n- Size limit: files larger than 50 MB are skipped\n- Error isolation: per-file parse failures are logged and skipped; the scan\n  always produces a usable (possibly partial) registry",
+      "last_modified": "2026-04-08T21:20:10.096615+00:00",
+      "complexity_score": 28.0,
+      "imports_count": 11,
+      "exports_count": 3
+    },
+    {
+      "path": "agents/code_auditor/core/__init__.py",
+      "file_type": "python",
+      "size_bytes": 375,
+      "lines": 19,
+      "imports": [
+        ".config"
+      ],
+      "exports": [
+        "Phase1Config",
+        "AiCommandCenterConfig",
+        "NextJsConfig",
+        "PythonOnlyConfig",
+        "get_config",
+        "register_config"
+      ],
+      "docstring": "agents/code_auditor/core \u2014 shared infrastructure for all audit phases.",
+      "last_modified": "2026-04-08T19:41:29.622982+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 1,
+      "exports_count": 6
+    },
+    {
+      "path": "agents/code_auditor/tests/test_phase1.py",
+      "file_type": "python",
+      "size_bytes": 14814,
+      "lines": 394,
+      "imports": [
+        "__future__",
+        "asyncio",
+        "json",
+        "textwrap",
+        "pathlib",
+        "pytest",
+        "agents.code_auditor.core.phase1_discovery",
+        "agents.code_auditor.core"
+      ],
+      "exports": [
+        "write"
+      ],
+      "docstring": "agents/code_auditor/tests/test_phase1.py\n=========================================\nTests for Phase 1 Discovery Engine.\n\nRun with::\n\n    pytest agents/code_auditor/tests/test_phase1.py -v",
+      "last_modified": "2026-04-08T21:27:36.718102+00:00",
+      "complexity_score": 15.0,
+      "imports_count": 8,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/code_auditor/tests/__init__.py",
+      "file_type": "python",
+      "size_bytes": 0,
+      "lines": 0,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-08T19:34:19.594472+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "agents/code_auditor/utils/file_helpers.py",
+      "file_type": "python",
+      "size_bytes": 7234,
+      "lines": 236,
+      "imports": [
+        "__future__",
+        "re",
+        "pathlib",
+        "typing",
+        "agents.code_auditor.core.config"
+      ],
+      "exports": [
+        "should_scan_file"
+      ],
+      "docstring": "agents/code_auditor/utils/file_helpers.py\n==========================================\nHelper functions used across all phases of the Code Auditor.\n\nUsage::\n\n    from agents.code_auditor.utils.file_helpers import (\n        should_scan_file, get_file_type, read_file_safe,\n        get_relative_path, format_file_size, get_complexity_score,\n        extract_first_docstring,\n    )\n\n    if should_scan_file(path, config):\n        content = read_file_safe(path)\n        rel_path = get_relative_path(path, root)",
+      "last_modified": "2026-04-08T21:10:17.972220+00:00",
+      "complexity_score": 7.0,
+      "imports_count": 5,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/code_auditor/utils/__init__.py",
+      "file_type": "python",
+      "size_bytes": 0,
+      "lines": 0,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-08T19:34:02.538906+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "src/app/layout.js",
+      "file_type": "javascript",
+      "size_bytes": 1870,
+      "lines": 53,
+      "imports": [
+        "../styles/globals.css",
+        "../components/ThemeProvider",
+        "../components/Navbar",
+        "../components/Footer",
+        "../components/PageTransition",
+        "../components/NetworkBackground",
+        "../components/DataGrid",
+        "../components/AuthProvider"
+      ],
+      "exports": [
+        "metadata",
+        "RootLayout"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:31:17.927474+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 8,
+      "exports_count": 2
+    },
+    {
+      "path": "src/app/page.js",
+      "file_type": "javascript",
+      "size_bytes": 23922,
+      "lines": 477,
+      "imports": [
+        "framer-motion",
+        "../components/AnimateIn",
+        "../components/StaggerChildren"
+      ],
+      "exports": [
+        "Page"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:30:45.821031+00:00",
+      "complexity_score": 3.0,
+      "imports_count": 3,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/AnimateIn.jsx",
+      "file_type": "javascript",
+      "size_bytes": 535,
+      "lines": 23,
+      "imports": [
+        "framer-motion"
+      ],
+      "exports": [
+        "AnimateIn"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-01T16:55:37.865944+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/AuthProvider.jsx",
+      "file_type": "javascript",
+      "size_bytes": 185,
+      "lines": 7,
+      "imports": [
+        "next-auth/react"
+      ],
+      "exports": [
+        "AuthProvider"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:10:34.550511+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/CityskylineBackground.tsx",
+      "file_type": "typescript",
+      "size_bytes": 8125,
+      "lines": 209,
+      "imports": [
+        "framer-motion"
+      ],
+      "exports": [
+        "CityskylineBackground"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-05T21:30:39.908211+00:00",
+      "complexity_score": 2.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/DataGrid.tsx",
+      "file_type": "typescript",
+      "size_bytes": 1578,
+      "lines": 64,
+      "imports": [
+        "framer-motion"
+      ],
+      "exports": [
+        "DataGrid"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-05T21:24:47.511722+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/Footer.jsx",
+      "file_type": "javascript",
+      "size_bytes": 1988,
+      "lines": 59,
+      "imports": [],
+      "exports": [
+        "Footer"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:30:45.838601+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 0,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/GlowButton.jsx",
+      "file_type": "javascript",
+      "size_bytes": 978,
+      "lines": 35,
+      "imports": [
+        "framer-motion",
+        "./MagneticButton"
+      ],
+      "exports": [
+        "GlowButton"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-01T21:08:43.824838+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 2,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/MagneticButton.jsx",
+      "file_type": "javascript",
+      "size_bytes": 1001,
+      "lines": 37,
+      "imports": [
+        "react",
+        "framer-motion"
+      ],
+      "exports": [
+        "MagneticButton"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-01T21:08:39.920906+00:00",
+      "complexity_score": 3.0,
+      "imports_count": 2,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/Navbar.jsx",
+      "file_type": "javascript",
+      "size_bytes": 9531,
+      "lines": 254,
+      "imports": [
+        "react",
+        "framer-motion",
+        "next/link",
+        "next/navigation",
+        "./ThemeToggle"
+      ],
+      "exports": [
+        "Navbar"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:53:53.134808+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 5,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/NetworkBackground.tsx",
+      "file_type": "typescript",
+      "size_bytes": 11872,
+      "lines": 353,
+      "imports": [
+        "react"
+      ],
+      "exports": [
+        "NetworkBackground"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-03T00:30:53.821547+00:00",
+      "complexity_score": 6.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/PageTransition.jsx",
+      "file_type": "javascript",
+      "size_bytes": 613,
+      "lines": 23,
+      "imports": [
+        "framer-motion",
+        "next/navigation"
+      ],
+      "exports": [
+        "PageTransition"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-01T21:08:33.146672+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 2,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/ParallaxBackground.jsx",
+      "file_type": "javascript",
+      "size_bytes": 357,
+      "lines": 14,
+      "imports": [
+        "framer-motion"
+      ],
+      "exports": [
+        "ParallaxBackground"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-01T21:08:35.504855+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/StaggerChildren.jsx",
+      "file_type": "javascript",
+      "size_bytes": 746,
+      "lines": 38,
+      "imports": [
+        "framer-motion",
+        "react"
+      ],
+      "exports": [
+        "StaggerChildren"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-01T16:55:40.460416+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 2,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/TechBackground.jsx",
+      "file_type": "javascript",
+      "size_bytes": 2811,
+      "lines": 64,
+      "imports": [
+        "./ThemeProvider"
+      ],
+      "exports": [
+        "TechBackground"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-01T21:51:34.003179+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/ThemeProvider.jsx",
+      "file_type": "javascript",
+      "size_bytes": 1191,
+      "lines": 41,
+      "imports": [
+        "react"
+      ],
+      "exports": [
+        "ThemeProvider",
+        "useTheme"
+      ],
+      "docstring": null,
+      "last_modified": "2026-03-31T20:19:34.177122+00:00",
+      "complexity_score": 3.0,
+      "imports_count": 1,
+      "exports_count": 2
+    },
+    {
+      "path": "src/components/ThemeToggle.jsx",
+      "file_type": "javascript",
+      "size_bytes": 2353,
+      "lines": 74,
+      "imports": [
+        "./ThemeProvider"
+      ],
+      "exports": [
+        "ThemeToggle"
+      ],
+      "docstring": null,
+      "last_modified": "2026-03-31T20:19:44.429565+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/lib/authOptions.js",
+      "file_type": "javascript",
+      "size_bytes": 2157,
+      "lines": 66,
+      "imports": [
+        "next-auth/providers/google"
+      ],
+      "exports": [
+        "authOptions"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:10:34.616624+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/lib/calendarClient.js",
+      "file_type": "javascript",
+      "size_bytes": 320,
+      "lines": 10,
+      "imports": [
+        "googleapis"
+      ],
+      "exports": [
+        "getCalendarClient"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:10:34.617836+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/app/about/page.js",
+      "file_type": "javascript",
+      "size_bytes": 6831,
+      "lines": 116,
+      "imports": [
+        "../../components/AnimateIn"
+      ],
+      "exports": [
+        "AboutPage"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:30:45.800062+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/app/blog/page.js",
+      "file_type": "javascript",
+      "size_bytes": 4871,
+      "lines": 91,
+      "imports": [
+        "framer-motion",
+        "../../components/AnimateIn",
+        "../../components/StaggerChildren"
+      ],
+      "exports": [
+        "BlogPage"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:30:45.813033+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 3,
+      "exports_count": 1
+    },
+    {
+      "path": "src/app/calendar/page.js",
+      "file_type": "javascript",
+      "size_bytes": 11762,
+      "lines": 337,
+      "imports": [
+        "react",
+        "next-auth/react",
+        "framer-motion",
+        "../../components/AnimateIn",
+        "../../components/Calendar/CalendarHeader",
+        "../../components/Calendar/WeekView",
+        "../../components/Calendar/EventDetailPanel",
+        "../../components/Calendar/EventForm"
+      ],
+      "exports": [
+        "CalendarPage"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-08T16:33:29.859768+00:00",
+      "complexity_score": 13.0,
+      "imports_count": 8,
+      "exports_count": 1
+    },
+    {
+      "path": "src/app/work/page.js",
+      "file_type": "javascript",
+      "size_bytes": 7611,
+      "lines": 125,
+      "imports": [
+        "framer-motion",
+        "../../components/AnimateIn",
+        "../../components/StaggerChildren"
+      ],
+      "exports": [
+        "WorkPage"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:30:45.834406+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 3,
+      "exports_count": 1
+    },
+    {
+      "path": "src/app/api/auth/[...nextauth]/route.js",
+      "file_type": "javascript",
+      "size_bytes": 182,
+      "lines": 5,
+      "imports": [
+        "next-auth",
+        "../../../../lib/authOptions"
+      ],
+      "exports": [
+        "handler"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:10:34.492620+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 2,
+      "exports_count": 1
+    },
+    {
+      "path": "src/app/api/calendar/events/route.js",
+      "file_type": "javascript",
+      "size_bytes": 2322,
+      "lines": 65,
+      "imports": [
+        "next-auth/next",
+        "../../../../lib/authOptions",
+        "../../../../lib/calendarClient"
+      ],
+      "exports": [
+        "GET",
+        "POST"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:10:34.525981+00:00",
+      "complexity_score": 2.0,
+      "imports_count": 3,
+      "exports_count": 2
+    },
+    {
+      "path": "src/app/api/calendar/events/[id]/route.js",
+      "file_type": "javascript",
+      "size_bytes": 2059,
+      "lines": 58,
+      "imports": [
+        "next-auth/next",
+        "../../../../../lib/authOptions",
+        "../../../../../lib/calendarClient"
+      ],
+      "exports": [
+        "PATCH",
+        "DELETE"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:10:34.516405+00:00",
+      "complexity_score": 2.0,
+      "imports_count": 3,
+      "exports_count": 2
+    },
+    {
+      "path": "src/components/Calendar/CalendarGrid.jsx",
+      "file_type": "javascript",
+      "size_bytes": 4153,
+      "lines": 121,
+      "imports": [
+        "./EventBlock"
+      ],
+      "exports": [
+        "CalendarGrid"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:10:34.559574+00:00",
+      "complexity_score": 5.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/Calendar/CalendarHeader.jsx",
+      "file_type": "javascript",
+      "size_bytes": 5926,
+      "lines": 161,
+      "imports": [
+        "react",
+        "framer-motion"
+      ],
+      "exports": [
+        "CalendarHeader"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-08T05:53:00.318153+00:00",
+      "complexity_score": 3.0,
+      "imports_count": 2,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/Calendar/EventBlock.jsx",
+      "file_type": "javascript",
+      "size_bytes": 1315,
+      "lines": 36,
+      "imports": [],
+      "exports": [
+        "EventBlock"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-07T21:10:34.577209+00:00",
+      "complexity_score": 1.0,
+      "imports_count": 0,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/Calendar/EventDetailPanel.jsx",
+      "file_type": "javascript",
+      "size_bytes": 7930,
+      "lines": 205,
+      "imports": [
+        "framer-motion"
+      ],
+      "exports": [
+        "EventDetailPanel"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-08T05:53:33.880251+00:00",
+      "complexity_score": 3.0,
+      "imports_count": 1,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/Calendar/EventForm.jsx",
+      "file_type": "javascript",
+      "size_bytes": 13364,
+      "lines": 340,
+      "imports": [
+        "react",
+        "framer-motion"
+      ],
+      "exports": [
+        "EventForm"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-08T16:33:22.744943+00:00",
+      "complexity_score": 7.0,
+      "imports_count": 2,
+      "exports_count": 1
+    },
+    {
+      "path": "src/components/Calendar/WeekView.jsx",
+      "file_type": "javascript",
+      "size_bytes": 28717,
+      "lines": 565,
+      "imports": [
+        "react"
+      ],
+      "exports": [
+        "WeekView"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-08T16:33:17.414563+00:00",
+      "complexity_score": 10.0,
+      "imports_count": 1,
+      "exports_count": 1
+    }
+  ],
+  "statistics": {
+    "total_files": 50,
+    "total_lines": 7751,
+    "total_size_bytes": 296834,
+    "avg_lines_per_file": 155,
+    "largest_file": "agents/code_auditor/core/phase1_discovery.py (804 lines)",
+    "by_language": {
+      "javascript": 33,
+      "json": 4,
+      "python": 10,
+      "typescript": 3
+    },
+    "scan_errors": 0
+  },
+  "circular_imports": [],
+  "external_dependencies": [
+    "__future__",
+    "argparse",
+    "ast",
+    "asyncio",
+    "csv",
+    "dataclasses",
+    "datetime",
+    "fnmatch",
+    "framer-motion",
+    "googleapis",
+    "json",
+    "next",
+    "next-auth",
+    "pathlib",
+    "pytest",
+    "re",
+    "react",
+    "sys",
+    "textwrap",
+    "time",
+    "typing",
+    "warnings"
+  ]
+}

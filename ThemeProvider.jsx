@@ -42,9 +42,6 @@ const ThemeContext = createContext({
 
 // 2. Custom hook — maakt het makkelijk om het theme te gebruiken
 //    In elk component: const { theme, toggleTheme } = useTheme();
-export function useTheme() {
-  return useContext(ThemeContext);
-}
 
 // 3. De Provider component — wraps je hele app
 export default function ThemeProvider({ children }) {

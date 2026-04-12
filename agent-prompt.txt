@@ -1,0 +1,298 @@
+================================================================================
+FIX PHASE 5 - HANDLE CLASSES, EXPORTS, AND DECORATORS
+================================================================================
+
+You are fixing Phase 5 to properly delete functions, classes, exports, and dataclasses.
+
+PROBLEM: delete_from_file() only finds 'def function_name', but misses:
+  - 'export const useTheme = ...' (JavaScript exports)
+  - 'class ClassName:' (Python classes)
+  - '@dataclass class ConfigClass:' (Python dataclasses)
+  - 'const variable = ...' (JavaScript constants)
+
+TASK: Update agents/code_auditor/core/phase5_executor.py
+
+Find the BatchRemover.delete_from_file() method and REPLACE it with:
+
+```python
+def delete_from_file(self, filepath: str, item_name: str, item_type: str):
+    """Delete a specific function/class/export from a file.
+    
+    Handles:
+    - Python: def, class, @dataclass
+    - JavaScript: export const, const, function
+    - TypeScript: same as JavaScript + type definitions
+    """
+    import re
+    
+    path = Path(filepath)
+    
+    if not path.exists():
+        raise FileNotFoundError(f"File not found: {filepath}")
+    
+    content = path.read_text(encoding='utf-8')
+    original_lines = content.split('\n')
+    
+    # Determine file type
+    is_javascript = filepath.endswith(('.js', '.jsx', '.ts', '.tsx'))
+    is_python = filepath.endswith('.py')
+    
+    new_lines = []
+    i = 0
+    deleted = False
+    
+    while i < len(original_lines):
+        line = original_lines[i]
+        
+        # PYTHON: Function or class definition
+        if is_python:
+            # Match: def function_name( or class ClassName: or @dataclass
+            func_pattern = rf'^(def|class)\s+{re.escape(item_name)}\s*[\(:]'
+            decorator_pattern = r'^@'
+            
+            if re.match(func_pattern, line):
+                # Found the definition! Skip it and following indented lines
+                deleted = True
+                indent_level = len(line) - len(line.lstrip())
+                
+                # Skip decorators BEFORE this definition
+                j = len(new_lines) - 1
+                while j >= 0 and re.match(decorator_pattern, new_lines[j].lstrip()):
+                    new_lines.pop()
+                    j -= 1
+                
+                # Skip the definition line
+                i += 1
+                
+                # Skip all indented lines that follow (the body)
+                while i < len(original_lines):
+                    next_line = original_lines[i]
+                    
+                    # If blank line, skip it
+                    if not next_line.strip():
+                        i += 1
+                        continue
+                    
+                    # If line has same or less indentation, stop
+                    next_indent = len(next_line) - len(next_line.lstrip())
+                    if next_line.strip() and next_indent <= indent_level:
+                        break
+                    
+                    # Skip this indented line
+                    i += 1
+                
+                continue
+        
+        # JAVASCRIPT/TYPESCRIPT: export const, const, function
+        elif is_javascript:
+            # Match: export const useTheme = or const useTheme = or function useTheme(
+            export_pattern = rf'^export\s+(const|function|async function|type|interface)\s+{re.escape(item_name)}\s*[=(\{:]'
+            const_pattern = rf'^const\s+{re.escape(item_name)}\s*[=:]'
+            func_pattern = rf'^(function|async\s+function)\s+{re.escape(item_name)}\s*\('
+            arrow_pattern = rf'^(export\s+)?const\s+{re.escape(item_name)}\s*=\s*\('
+            
+            patterns = [export_pattern, const_pattern, func_pattern, arrow_pattern]
+            
+            if any(re.match(p, line) for p in patterns):
+                # Found the definition! Skip it
+                deleted = True
+                
+                # For arrow functions and object literals, we need multi-line handling
+                # Example: const useTheme = () => { ... }
+                # Example: export const config = { ... }
+                
+                i += 1
+                brace_count = 0
+                paren_count = 0
+                
+                # Count braces/parens in the first line
+                brace_count += line.count('{') - line.count('}')
+                paren_count += line.count('(') - line.count(')')
+                
+                # Skip lines until all braces/parens are closed
+                while i < len(original_lines) and (brace_count > 0 or paren_count > 0):
+                    next_line = original_lines[i]
+                    brace_count += next_line.count('{') - next_line.count('}')
+                    paren_count += next_line.count('(') - next_line.count(')')
+                    i += 1
+                
+                continue
+        
+        # No match, keep the line
+        new_lines.append(line)
+        i += 1
+    
+    if not deleted:
+        raise ValueError(f"Could not locate '{item_name}' in {filepath}")
+    
+    # Write back
+    path.write_text('\n'.join(new_lines), encoding='utf-8')
+    
+    if self.verbose:
+        print(f"[BatchRemover] Deleted '{item_name}' from {filepath}")
+```
+
+ALSO ADD helper method to better detect item type:
+
+```python
+def _detect_item_type(self, filepath: str, item_name: str) -> str:
+    """Detect what kind of item this is (function, class, export, etc.)"""
+    try:
+        path = Path(filepath)
+        if not path.exists():
+            return 'unknown'
+        
+        content = path.read_text(encoding='utf-8')
+        
+        # Python patterns
+        if filepath.endswith('.py'):
+            if re.search(rf'^\s*def\s+{re.escape(item_name)}\s*\(', content, re.MULTILINE):
+                return 'function'
+            if re.search(rf'^\s*class\s+{re.escape(item_name)}\s*[\(:]', content, re.MULTILINE):
+                return 'class'
+            if re.search(rf'^\s*@dataclass', content, re.MULTILINE):
+                return 'dataclass'
+        
+        # JavaScript/TypeScript patterns
+        elif filepath.endswith(('.js', '.jsx', '.ts', '.tsx')):
+            if re.search(rf'export\s+const\s+{re.escape(item_name)}\s*=', content):
+                return 'export'
+            if re.search(rf'const\s+{re.escape(item_name)}\s*=\s*\(', content):
+                return 'arrow_function'
+            if re.search(rf'function\s+{re.escape(item_name)}\s*\(', content):
+                return 'function'
+        
+        return 'unknown'
+    except Exception as e:
+        if self.verbose:
+            print(f"Warning: Could not detect type for {item_name}: {e}")
+        return 'unknown'
+```
+
+UPDATE remove_batch() to use better detection:
+
+```python
+def remove_batch(self, items_to_remove: List[str]) -> dict:
+    """Actually remove items. Create git branch, delete files, fix imports."""
+    errors = []
+    items_removed = []
+    files_deleted = []
+    total_lines_removed = 0
+    
+    batch_id = datetime.now().strftime('%Y-%m-%d-%H%M%S')
+    branch_name = f"audit/remove-{items_to_remove[0]}-{datetime.now().strftime('%Y-%m-%d')}"
+    
+    # Create feature branch
+    result = subprocess.run(
+        ['git', 'checkout', '-b', branch_name],
+        cwd=self.project_root,
+        capture_output=True,
+        text=True
+    )
+    
+    if result.returncode != 0:
+        if "already exists" in result.stderr:
+            # Try to checkout existing branch
+            result = subprocess.run(
+                ['git', 'checkout', branch_name],
+                cwd=self.project_root,
+                capture_output=True,
+                text=True
+            )
+    
+    if self.verbose:
+        print(f"[BatchRemover] $ git checkout -b {branch_name}")
+        print(f"[BatchRemover] Created branch: {branch_name}")
+    
+    for item_identifier in items_to_remove:
+        # Resolve item details from Phase 2
+        item_details = self._resolve_item_details(item_identifier)
+        
+        if not item_details:
+            errors.append(f"{item_identifier}: could not resolve details")
+            continue
+        
+        item_name = item_details.get('item')
+        file_path = item_details.get('file')
+        item_type = item_details.get('type')
+        
+        if self.verbose:
+            print(f"[BatchRemover] Removing '{item_name}' from {file_path}")
+        
+        try:
+            # Detect actual item type
+            detected_type = self._detect_item_type(str(self.project_root / file_path), item_name)
+            
+            if detected_type == 'unknown':
+                if self.verbose:
+                    print(f"[BatchRemover]   Warning: Could not detect type, using phase data")
+            
+            # Delete from file
+            self.delete_from_file(str(self.project_root / file_path), item_name, item_type)
+            
+            items_removed.append(item_name)
+            total_lines_removed += item_details.get('lines', 0)
+            
+            if self.verbose:
+                print(f"[BatchRemover] Removed {detected_type} '{item_name}' from {file_path}")
+        
+        except FileNotFoundError as e:
+            errors.append(f"{item_identifier} ({item_name}): File not found")
+        except ValueError as e:
+            errors.append(f"{item_identifier} ({item_name}): {str(e)}")
+        except Exception as e:
+            errors.append(f"{item_identifier} ({item_name}): Unexpected error: {str(e)}")
+    
+    return {
+        'batch_id': batch_id,
+        'branch_created': branch_name,
+        'items_removed': items_removed,
+        'files_deleted': files_deleted,
+        'total_lines_removed': total_lines_removed,
+        'status': 'success' if not errors else 'partial' if items_removed else 'failed',
+        'errors': errors
+    }
+```
+
+KEY IMPROVEMENTS:
+
+1. **Python support:**
+   - Detects 'def function_name('
+   - Detects 'class ClassName:'
+   - Detects '@dataclass' decorators
+   - Removes entire indented block
+
+2. **JavaScript/TypeScript support:**
+   - Detects 'export const name ='
+   - Detects 'const name ='
+   - Detects 'function name('
+   - Handles arrow functions and object literals
+   - Counts braces/parens to find end of block
+
+3. **Better error handling:**
+   - Distinguishes between file not found vs item not found
+   - Shows what type was detected
+   - Provides helpful error messages
+
+4. **Works with:**
+   - Python functions and classes
+   - JavaScript/TypeScript exports
+   - React hooks (export const useTheme = ...)
+   - Dataclasses and decorators
+   - Multi-line definitions
+
+TEST IT:
+
+```bash
+# Test with U001 (useTheme - React hook)
+python agents/code_auditor/cli.py execute --report phase3_verified.json \
+  --items U001 --dry-run --verbose
+
+# If dry-run shows 0 errors, execute it:
+python agents/code_auditor/cli.py execute --report phase3_verified.json \
+  --items U001 --verbose
+```
+
+Should now successfully remove React hooks, classes, and exports!
+
+================================================================================

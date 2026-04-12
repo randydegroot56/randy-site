@@ -1,0 +1,2681 @@
+{
+  "timestamp": "2026-04-08T22:21:18.995352+00:00",
+  "summary": {
+    "total_findings": 138,
+    "by_type": {
+      "unused_export": 40,
+      "orphan_file": 24,
+      "unused_import": 74
+    },
+    "avg_confidence_by_type": {
+      "unused_export": 0.894,
+      "orphan_file": 0.99,
+      "unused_import": 0.703
+    },
+    "by_risk": {
+      "LOW": 97,
+      "MEDIUM": 38,
+      "HIGH": 3,
+      "CRITICAL": 0
+    },
+    "by_confidence": {
+      "HIGH": 61,
+      "MEDIUM": 76,
+      "LOW": 1
+    },
+    "high_confidence": 61,
+    "recommended_for_removal": 97,
+    "estimated_removable_lines": 3430,
+    "estimated_safety_pct": 78
+  },
+  "findings": [
+    {
+      "id": "U001",
+      "type": "unused_export",
+      "file": "ThemeProvider.jsx",
+      "item": "useTheme",
+      "reason": "0 imports, 8 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-03-31T19:15:09.599742+00:00",
+        "days_old": 8,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U002",
+      "type": "unused_export",
+      "file": "agents/code_auditor/cli.py",
+      "item": "cmd_discover",
+      "reason": "0 imports, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T21:31:52.625356+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U003",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/__init__.py",
+      "item": "Phase1Config",
+      "reason": "0 imports, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T19:41:29.622982+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U004",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/__init__.py",
+      "item": "AiCommandCenterConfig",
+      "reason": "0 imports, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T19:41:29.622982+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U005",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/__init__.py",
+      "item": "NextJsConfig",
+      "reason": "0 imports, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T19:41:29.622982+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U006",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/__init__.py",
+      "item": "PythonOnlyConfig",
+      "reason": "0 imports, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T19:41:29.622982+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U007",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/__init__.py",
+      "item": "get_config",
+      "reason": "0 imports, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T19:41:29.622982+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U008",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/__init__.py",
+      "item": "register_config",
+      "reason": "0 imports, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T19:41:29.622982+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U009",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/config.py",
+      "item": "Phase1Config",
+      "reason": "0 imports, no tests",
+      "confidence": 0.95,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T19:43:01.405532+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U010",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/config.py",
+      "item": "AiCommandCenterConfig",
+      "reason": "0 imports, no tests",
+      "confidence": 0.95,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T19:43:01.405532+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U011",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/config.py",
+      "item": "NextJsConfig",
+      "reason": "0 imports, no tests",
+      "confidence": 0.95,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T19:43:01.405532+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U012",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/config.py",
+      "item": "PythonOnlyConfig",
+      "reason": "0 imports, no tests",
+      "confidence": 0.95,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T19:43:01.405532+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U013",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/phase1_analyzer.py",
+      "item": "AnalysisInsight",
+      "reason": "0 imports, no tests",
+      "confidence": 0.95,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T21:15:22.695513+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U014",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/phase1_analyzer.py",
+      "item": "ReportAnalyzer",
+      "reason": "0 imports, no tests",
+      "confidence": 0.95,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T21:15:22.695513+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U015",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/phase1_discovery.py",
+      "item": "FileMetadata",
+      "reason": "0 imports, no tests",
+      "confidence": 0.7,
+      "risk": "HIGH",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": true,
+        "last_modified": "2026-04-08T21:20:10.096615+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U016",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/phase1_discovery.py",
+      "item": "ProjectRegistry",
+      "reason": "0 imports, no tests",
+      "confidence": 0.7,
+      "risk": "HIGH",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": true,
+        "last_modified": "2026-04-08T21:20:10.096615+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U017",
+      "type": "unused_export",
+      "file": "agents/code_auditor/core/phase1_discovery.py",
+      "item": "Phase1Discovery",
+      "reason": "0 imports, no tests",
+      "confidence": 0.7,
+      "risk": "HIGH",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": true,
+        "last_modified": "2026-04-08T21:20:10.096615+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U018",
+      "type": "unused_export",
+      "file": "agents/code_auditor/utils/file_helpers.py",
+      "item": "should_scan_file",
+      "reason": "0 imports, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T21:10:17.972220+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U019",
+      "type": "unused_export",
+      "file": "layout.js",
+      "item": "metadata",
+      "reason": "0 imports, 8 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-03-31T19:15:09.792499+00:00",
+        "days_old": 8,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U020",
+      "type": "unused_export",
+      "file": "layout.js",
+      "item": "RootLayout",
+      "reason": "0 imports, 8 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-03-31T19:15:09.792499+00:00",
+        "days_old": 8,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U021",
+      "type": "unused_export",
+      "file": "page.js",
+      "item": "Home",
+      "reason": "0 imports, 8 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-03-31T20:04:12.811199+00:00",
+        "days_old": 8,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U022",
+      "type": "unused_export",
+      "file": "src/app/about/page.js",
+      "item": "AboutPage",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:30:45.800062+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U023",
+      "type": "unused_export",
+      "file": "src/app/api/auth/[...nextauth]/route.js",
+      "item": "handler",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:10:34.492620+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U024",
+      "type": "unused_export",
+      "file": "src/app/api/calendar/events/[id]/route.js",
+      "item": "PATCH",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:10:34.516405+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U025",
+      "type": "unused_export",
+      "file": "src/app/api/calendar/events/[id]/route.js",
+      "item": "DELETE",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:10:34.516405+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U026",
+      "type": "unused_export",
+      "file": "src/app/api/calendar/events/route.js",
+      "item": "GET",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:10:34.525981+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U027",
+      "type": "unused_export",
+      "file": "src/app/api/calendar/events/route.js",
+      "item": "POST",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:10:34.525981+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U028",
+      "type": "unused_export",
+      "file": "src/app/blog/page.js",
+      "item": "BlogPage",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:30:45.813033+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U029",
+      "type": "unused_export",
+      "file": "src/app/calendar/page.js",
+      "item": "CalendarPage",
+      "reason": "0 imports, no tests",
+      "confidence": 0.95,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-08T16:33:29.859768+00:00",
+        "days_old": 0,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U030",
+      "type": "unused_export",
+      "file": "src/app/layout.js",
+      "item": "metadata",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:31:17.927474+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U031",
+      "type": "unused_export",
+      "file": "src/app/layout.js",
+      "item": "RootLayout",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:31:17.927474+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U032",
+      "type": "unused_export",
+      "file": "src/app/page.js",
+      "item": "Page",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:30:45.821031+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U033",
+      "type": "unused_export",
+      "file": "src/app/work/page.js",
+      "item": "WorkPage",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:30:45.834406+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U034",
+      "type": "unused_export",
+      "file": "src/components/Calendar/CalendarGrid.jsx",
+      "item": "CalendarGrid",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:10:34.559574+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U035",
+      "type": "unused_export",
+      "file": "src/components/CityskylineBackground.tsx",
+      "item": "CityskylineBackground",
+      "reason": "0 imports, 3 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-05T21:30:39.908211+00:00",
+        "days_old": 3,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U036",
+      "type": "unused_export",
+      "file": "src/components/GlowButton.jsx",
+      "item": "GlowButton",
+      "reason": "0 imports, 7 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-01T21:08:43.824838+00:00",
+        "days_old": 7,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U037",
+      "type": "unused_export",
+      "file": "src/components/ParallaxBackground.jsx",
+      "item": "ParallaxBackground",
+      "reason": "0 imports, 7 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-01T21:08:35.504855+00:00",
+        "days_old": 7,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U038",
+      "type": "unused_export",
+      "file": "src/components/TechBackground.jsx",
+      "item": "TechBackground",
+      "reason": "0 imports, 7 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-01T21:51:34.003179+00:00",
+        "days_old": 7,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U039",
+      "type": "unused_export",
+      "file": "src/components/ThemeProvider.jsx",
+      "item": "useTheme",
+      "reason": "0 imports, 8 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-03-31T20:19:34.177122+00:00",
+        "days_old": 8,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "U040",
+      "type": "unused_export",
+      "file": "src/lib/calendarClient.js",
+      "item": "getCalendarClient",
+      "reason": "0 imports, 1 days old, no tests",
+      "confidence": 0.9,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "test_coverage": false,
+        "last_modified": "2026-04-07T21:10:34.617836+00:00",
+        "days_old": 1,
+        "is_dunder": false,
+        "is_private": false
+      }
+    },
+    {
+      "id": "O001",
+      "type": "orphan_file",
+      "file": "ThemeProvider.jsx",
+      "reason": "no incoming imports, very small file",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 3084,
+        "lines": 95,
+        "exports": [
+          "useTheme",
+          "ThemeProvider"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O002",
+      "type": "orphan_file",
+      "file": "ThemeToggle.jsx",
+      "reason": "no incoming imports, small utility, single export (ThemeToggle)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 3042,
+        "lines": 103,
+        "exports": [
+          "ThemeToggle"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O003",
+      "type": "orphan_file",
+      "file": "agents/code_auditor/audit_report.json",
+      "reason": "no incoming imports, small utility, nothing exported",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 10126,
+        "lines": 249,
+        "exports": [],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O004",
+      "type": "orphan_file",
+      "file": "agents/code_auditor/cli.py",
+      "reason": "no incoming imports, small utility, single export (cmd_discover)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 10073,
+        "lines": 291,
+        "exports": [
+          "cmd_discover"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O005",
+      "type": "orphan_file",
+      "file": "agents/code_auditor/utils/file_helpers.py",
+      "reason": "no incoming imports, small utility, single export (should_scan_file)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 7234,
+        "lines": 236,
+        "exports": [
+          "should_scan_file"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O006",
+      "type": "orphan_file",
+      "file": "layout.js",
+      "reason": "no incoming imports, very small file",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 1420,
+        "lines": 44,
+        "exports": [
+          "metadata",
+          "RootLayout"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O007",
+      "type": "orphan_file",
+      "file": "package.json",
+      "reason": "no incoming imports, very small file, nothing exported",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 373,
+        "lines": 18,
+        "exports": [],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O008",
+      "type": "orphan_file",
+      "file": "page.js",
+      "reason": "no incoming imports, single export (Home)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 16302,
+        "lines": 509,
+        "exports": [
+          "Home"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O009",
+      "type": "orphan_file",
+      "file": "src/app/about/page.js",
+      "reason": "no incoming imports, small utility, single export (AboutPage)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 6831,
+        "lines": 116,
+        "exports": [
+          "AboutPage"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O010",
+      "type": "orphan_file",
+      "file": "src/app/api/auth/[...nextauth]/route.js",
+      "reason": "no incoming imports, very small file, single export (handler)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 182,
+        "lines": 5,
+        "exports": [
+          "handler"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O011",
+      "type": "orphan_file",
+      "file": "src/app/api/calendar/events/[id]/route.js",
+      "reason": "no incoming imports, very small file",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 2059,
+        "lines": 58,
+        "exports": [
+          "PATCH",
+          "DELETE"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O012",
+      "type": "orphan_file",
+      "file": "src/app/api/calendar/events/route.js",
+      "reason": "no incoming imports, very small file",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 2322,
+        "lines": 65,
+        "exports": [
+          "GET",
+          "POST"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O013",
+      "type": "orphan_file",
+      "file": "src/app/blog/page.js",
+      "reason": "no incoming imports, very small file, single export (BlogPage)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 4871,
+        "lines": 91,
+        "exports": [
+          "BlogPage"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O014",
+      "type": "orphan_file",
+      "file": "src/app/calendar/page.js",
+      "reason": "no incoming imports, small utility, single export (CalendarPage)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 11762,
+        "lines": 337,
+        "exports": [
+          "CalendarPage"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O015",
+      "type": "orphan_file",
+      "file": "src/app/layout.js",
+      "reason": "no incoming imports, very small file",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 1870,
+        "lines": 53,
+        "exports": [
+          "metadata",
+          "RootLayout"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O016",
+      "type": "orphan_file",
+      "file": "src/app/page.js",
+      "reason": "no incoming imports, small utility, single export (Page)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 23922,
+        "lines": 477,
+        "exports": [
+          "Page"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O017",
+      "type": "orphan_file",
+      "file": "src/app/work/page.js",
+      "reason": "no incoming imports, small utility, single export (WorkPage)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 7611,
+        "lines": 125,
+        "exports": [
+          "WorkPage"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O018",
+      "type": "orphan_file",
+      "file": "src/components/Calendar/CalendarGrid.jsx",
+      "reason": "no incoming imports, small utility, single export (CalendarGrid)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 4153,
+        "lines": 121,
+        "exports": [
+          "CalendarGrid"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O019",
+      "type": "orphan_file",
+      "file": "src/components/CityskylineBackground.tsx",
+      "reason": "no incoming imports, small utility, single export (CityskylineBackground)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 8125,
+        "lines": 209,
+        "exports": [
+          "CityskylineBackground"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O020",
+      "type": "orphan_file",
+      "file": "src/components/GlowButton.jsx",
+      "reason": "no incoming imports, very small file, single export (GlowButton)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 978,
+        "lines": 35,
+        "exports": [
+          "GlowButton"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O021",
+      "type": "orphan_file",
+      "file": "src/components/ParallaxBackground.jsx",
+      "reason": "no incoming imports, very small file, single export (ParallaxBackground)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 357,
+        "lines": 14,
+        "exports": [
+          "ParallaxBackground"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O022",
+      "type": "orphan_file",
+      "file": "src/components/TechBackground.jsx",
+      "reason": "no incoming imports, very small file, single export (TechBackground)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 2811,
+        "lines": 64,
+        "exports": [
+          "TechBackground"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O023",
+      "type": "orphan_file",
+      "file": "src/components/ThemeProvider.jsx",
+      "reason": "no incoming imports, very small file",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 1191,
+        "lines": 41,
+        "exports": [
+          "ThemeProvider",
+          "useTheme"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "O024",
+      "type": "orphan_file",
+      "file": "src/components/ThemeToggle.jsx",
+      "reason": "no incoming imports, very small file, single export (ThemeToggle)",
+      "confidence": 0.99,
+      "risk": "LOW",
+      "evidence": {
+        "incoming_imports": 0,
+        "file_size": 2353,
+        "lines": 74,
+        "exports": [
+          "ThemeToggle"
+        ],
+        "has_main": false,
+        "is_test_file": false,
+        "is_config_file": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I001",
+      "type": "unused_import",
+      "file": "ThemeProvider.jsx",
+      "item": "react",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I002",
+      "type": "unused_import",
+      "file": "ThemeToggle.jsx",
+      "item": "./ThemeProvider",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I003",
+      "type": "unused_import",
+      "file": "agents/code_auditor/cli.py",
+      "item": "argparse",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I004",
+      "type": "unused_import",
+      "file": "agents/code_auditor/core/phase1_analyzer.py",
+      "item": "argparse",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.75,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I005",
+      "type": "unused_import",
+      "file": "agents/code_auditor/core/phase1_discovery.py",
+      "item": "argparse",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.5,
+      "risk": "MEDIUM",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": true
+      }
+    },
+    {
+      "id": "I006",
+      "type": "unused_import",
+      "file": "layout.js",
+      "item": "../styles/globals.css",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I007",
+      "type": "unused_import",
+      "file": "layout.js",
+      "item": "../components/ThemeProvider",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I008",
+      "type": "unused_import",
+      "file": "page.js",
+      "item": "../components/ThemeProvider",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I009",
+      "type": "unused_import",
+      "file": "page.js",
+      "item": "../components/ThemeToggle",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I010",
+      "type": "unused_import",
+      "file": "src/app/about/page.js",
+      "item": "../../components/AnimateIn",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I011",
+      "type": "unused_import",
+      "file": "src/app/api/auth/[...nextauth]/route.js",
+      "item": "next-auth",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I012",
+      "type": "unused_import",
+      "file": "src/app/api/auth/[...nextauth]/route.js",
+      "item": "../../../../lib/authOptions",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I013",
+      "type": "unused_import",
+      "file": "src/app/api/calendar/events/[id]/route.js",
+      "item": "next-auth/next",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I014",
+      "type": "unused_import",
+      "file": "src/app/api/calendar/events/[id]/route.js",
+      "item": "../../../../../lib/authOptions",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I015",
+      "type": "unused_import",
+      "file": "src/app/api/calendar/events/[id]/route.js",
+      "item": "../../../../../lib/calendarClient",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I016",
+      "type": "unused_import",
+      "file": "src/app/api/calendar/events/route.js",
+      "item": "next-auth/next",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I017",
+      "type": "unused_import",
+      "file": "src/app/api/calendar/events/route.js",
+      "item": "../../../../lib/authOptions",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I018",
+      "type": "unused_import",
+      "file": "src/app/api/calendar/events/route.js",
+      "item": "../../../../lib/calendarClient",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I019",
+      "type": "unused_import",
+      "file": "src/app/blog/page.js",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I020",
+      "type": "unused_import",
+      "file": "src/app/blog/page.js",
+      "item": "../../components/AnimateIn",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I021",
+      "type": "unused_import",
+      "file": "src/app/blog/page.js",
+      "item": "../../components/StaggerChildren",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I022",
+      "type": "unused_import",
+      "file": "src/app/calendar/page.js",
+      "item": "react",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.75,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I023",
+      "type": "unused_import",
+      "file": "src/app/calendar/page.js",
+      "item": "next-auth/react",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.75,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I024",
+      "type": "unused_import",
+      "file": "src/app/calendar/page.js",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.75,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I025",
+      "type": "unused_import",
+      "file": "src/app/calendar/page.js",
+      "item": "../../components/AnimateIn",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.75,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I026",
+      "type": "unused_import",
+      "file": "src/app/calendar/page.js",
+      "item": "../../components/Calendar/CalendarHeader",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.75,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I027",
+      "type": "unused_import",
+      "file": "src/app/calendar/page.js",
+      "item": "../../components/Calendar/WeekView",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.75,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I028",
+      "type": "unused_import",
+      "file": "src/app/calendar/page.js",
+      "item": "../../components/Calendar/EventDetailPanel",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.75,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I029",
+      "type": "unused_import",
+      "file": "src/app/calendar/page.js",
+      "item": "../../components/Calendar/EventForm",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.75,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I030",
+      "type": "unused_import",
+      "file": "src/app/layout.js",
+      "item": "../styles/globals.css",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I031",
+      "type": "unused_import",
+      "file": "src/app/layout.js",
+      "item": "../components/ThemeProvider",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I032",
+      "type": "unused_import",
+      "file": "src/app/layout.js",
+      "item": "../components/Navbar",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I033",
+      "type": "unused_import",
+      "file": "src/app/layout.js",
+      "item": "../components/Footer",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I034",
+      "type": "unused_import",
+      "file": "src/app/layout.js",
+      "item": "../components/PageTransition",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I035",
+      "type": "unused_import",
+      "file": "src/app/layout.js",
+      "item": "../components/NetworkBackground",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I036",
+      "type": "unused_import",
+      "file": "src/app/layout.js",
+      "item": "../components/DataGrid",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I037",
+      "type": "unused_import",
+      "file": "src/app/layout.js",
+      "item": "../components/AuthProvider",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I038",
+      "type": "unused_import",
+      "file": "src/app/page.js",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I039",
+      "type": "unused_import",
+      "file": "src/app/page.js",
+      "item": "../components/AnimateIn",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I040",
+      "type": "unused_import",
+      "file": "src/app/page.js",
+      "item": "../components/StaggerChildren",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I041",
+      "type": "unused_import",
+      "file": "src/app/work/page.js",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I042",
+      "type": "unused_import",
+      "file": "src/app/work/page.js",
+      "item": "../../components/AnimateIn",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I043",
+      "type": "unused_import",
+      "file": "src/app/work/page.js",
+      "item": "../../components/StaggerChildren",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I044",
+      "type": "unused_import",
+      "file": "src/components/AnimateIn.jsx",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I045",
+      "type": "unused_import",
+      "file": "src/components/AuthProvider.jsx",
+      "item": "next-auth/react",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I046",
+      "type": "unused_import",
+      "file": "src/components/Calendar/CalendarGrid.jsx",
+      "item": "./EventBlock",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I047",
+      "type": "unused_import",
+      "file": "src/components/Calendar/CalendarHeader.jsx",
+      "item": "react",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I048",
+      "type": "unused_import",
+      "file": "src/components/Calendar/CalendarHeader.jsx",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I049",
+      "type": "unused_import",
+      "file": "src/components/Calendar/EventDetailPanel.jsx",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I050",
+      "type": "unused_import",
+      "file": "src/components/Calendar/EventForm.jsx",
+      "item": "react",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I051",
+      "type": "unused_import",
+      "file": "src/components/Calendar/EventForm.jsx",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I052",
+      "type": "unused_import",
+      "file": "src/components/Calendar/WeekView.jsx",
+      "item": "react",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I053",
+      "type": "unused_import",
+      "file": "src/components/CityskylineBackground.tsx",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I054",
+      "type": "unused_import",
+      "file": "src/components/DataGrid.tsx",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I055",
+      "type": "unused_import",
+      "file": "src/components/GlowButton.jsx",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I056",
+      "type": "unused_import",
+      "file": "src/components/GlowButton.jsx",
+      "item": "./MagneticButton",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I057",
+      "type": "unused_import",
+      "file": "src/components/MagneticButton.jsx",
+      "item": "react",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I058",
+      "type": "unused_import",
+      "file": "src/components/MagneticButton.jsx",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I059",
+      "type": "unused_import",
+      "file": "src/components/Navbar.jsx",
+      "item": "react",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I060",
+      "type": "unused_import",
+      "file": "src/components/Navbar.jsx",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I061",
+      "type": "unused_import",
+      "file": "src/components/Navbar.jsx",
+      "item": "next/link",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I062",
+      "type": "unused_import",
+      "file": "src/components/Navbar.jsx",
+      "item": "next/navigation",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I063",
+      "type": "unused_import",
+      "file": "src/components/Navbar.jsx",
+      "item": "./ThemeToggle",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I064",
+      "type": "unused_import",
+      "file": "src/components/NetworkBackground.tsx",
+      "item": "react",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I065",
+      "type": "unused_import",
+      "file": "src/components/PageTransition.jsx",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I066",
+      "type": "unused_import",
+      "file": "src/components/PageTransition.jsx",
+      "item": "next/navigation",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I067",
+      "type": "unused_import",
+      "file": "src/components/ParallaxBackground.jsx",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I068",
+      "type": "unused_import",
+      "file": "src/components/StaggerChildren.jsx",
+      "item": "framer-motion",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I069",
+      "type": "unused_import",
+      "file": "src/components/StaggerChildren.jsx",
+      "item": "react",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I070",
+      "type": "unused_import",
+      "file": "src/components/TechBackground.jsx",
+      "item": "./ThemeProvider",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I071",
+      "type": "unused_import",
+      "file": "src/components/ThemeProvider.jsx",
+      "item": "react",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I072",
+      "type": "unused_import",
+      "file": "src/components/ThemeToggle.jsx",
+      "item": "./ThemeProvider",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I073",
+      "type": "unused_import",
+      "file": "src/lib/authOptions.js",
+      "item": "next-auth/providers/google",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    },
+    {
+      "id": "I074",
+      "type": "unused_import",
+      "file": "src/lib/calendarClient.js",
+      "item": "googleapis",
+      "reason": "Third-party import (verify usage manually)",
+      "confidence": 0.7,
+      "risk": "LOW",
+      "evidence": {
+        "usage_count": 0,
+        "import_type": "third_party",
+        "is_exception_handling": false,
+        "test_coverage": false
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario": 1,
+      "label": "Remove HIGH confidence only (safest)",
+      "item_count": 61,
+      "items": [
+        "U001",
+        "U002",
+        "U003",
+        "U004",
+        "U005",
+        "U006",
+        "U007",
+        "U008",
+        "U009",
+        "U010",
+        "U011",
+        "U012",
+        "U013",
+        "U014",
+        "U018",
+        "U019",
+        "U020",
+        "U021",
+        "U022",
+        "U023",
+        "U024",
+        "U025",
+        "U026",
+        "U027",
+        "U028",
+        "U029",
+        "U030",
+        "U031",
+        "U032",
+        "U033",
+        "U034",
+        "U035",
+        "U036",
+        "U037",
+        "U038",
+        "U039",
+        "U040",
+        "O001",
+        "O002",
+        "O003",
+        "O004",
+        "O005",
+        "O006",
+        "O007",
+        "O008",
+        "O009",
+        "O010",
+        "O011",
+        "O012",
+        "O013",
+        "O014",
+        "O015",
+        "O016",
+        "O017",
+        "O018",
+        "O019",
+        "O020",
+        "O021",
+        "O022",
+        "O023",
+        "O024"
+      ],
+      "estimated_safety_pct": 94
+    },
+    {
+      "scenario": 2,
+      "label": "Remove HIGH + MEDIUM confidence (aggressive)",
+      "item_count": 137,
+      "items": [
+        "U001",
+        "U002",
+        "U003",
+        "U004",
+        "U005",
+        "U006",
+        "U007",
+        "U008",
+        "U009",
+        "U010",
+        "U011",
+        "U012",
+        "U013",
+        "U014",
+        "U015",
+        "U016",
+        "U017",
+        "U018",
+        "U019",
+        "U020",
+        "U021",
+        "U022",
+        "U023",
+        "U024",
+        "U025",
+        "U026",
+        "U027",
+        "U028",
+        "U029",
+        "U030",
+        "U031",
+        "U032",
+        "U033",
+        "U034",
+        "U035",
+        "U036",
+        "U037",
+        "U038",
+        "U039",
+        "U040",
+        "O001",
+        "O002",
+        "O003",
+        "O004",
+        "O005",
+        "O006",
+        "O007",
+        "O008",
+        "O009",
+        "O010",
+        "O011",
+        "O012",
+        "O013",
+        "O014",
+        "O015",
+        "O016",
+        "O017",
+        "O018",
+        "O019",
+        "O020",
+        "O021",
+        "O022",
+        "O023",
+        "O024",
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012",
+        "I013",
+        "I014",
+        "I015",
+        "I016",
+        "I017",
+        "I018",
+        "I019",
+        "I020",
+        "I021",
+        "I022",
+        "I023",
+        "I024",
+        "I025",
+        "I026",
+        "I027",
+        "I028",
+        "I029",
+        "I030",
+        "I031",
+        "I032",
+        "I033",
+        "I034",
+        "I035",
+        "I036",
+        "I037",
+        "I038",
+        "I039",
+        "I040",
+        "I041",
+        "I042",
+        "I043",
+        "I044",
+        "I045",
+        "I046",
+        "I047",
+        "I048",
+        "I049",
+        "I050",
+        "I051",
+        "I052",
+        "I053",
+        "I054",
+        "I055",
+        "I056",
+        "I057",
+        "I058",
+        "I059",
+        "I060",
+        "I061",
+        "I062",
+        "I063",
+        "I064",
+        "I065",
+        "I066",
+        "I067",
+        "I068",
+        "I069",
+        "I070",
+        "I071",
+        "I072",
+        "I073",
+        "I074"
+      ],
+      "estimated_safety_pct": 81
+    },
+    {
+      "scenario": 3,
+      "label": "Remove all except CRITICAL (very aggressive)",
+      "item_count": 138,
+      "items": [
+        "U001",
+        "U002",
+        "U003",
+        "U004",
+        "U005",
+        "U006",
+        "U007",
+        "U008",
+        "U009",
+        "U010",
+        "U011",
+        "U012",
+        "U013",
+        "U014",
+        "U015",
+        "U016",
+        "U017",
+        "U018",
+        "U019",
+        "U020",
+        "U021",
+        "U022",
+        "U023",
+        "U024",
+        "U025",
+        "U026",
+        "U027",
+        "U028",
+        "U029",
+        "U030",
+        "U031",
+        "U032",
+        "U033",
+        "U034",
+        "U035",
+        "U036",
+        "U037",
+        "U038",
+        "U039",
+        "U040",
+        "O001",
+        "O002",
+        "O003",
+        "O004",
+        "O005",
+        "O006",
+        "O007",
+        "O008",
+        "O009",
+        "O010",
+        "O011",
+        "O012",
+        "O013",
+        "O014",
+        "O015",
+        "O016",
+        "O017",
+        "O018",
+        "O019",
+        "O020",
+        "O021",
+        "O022",
+        "O023",
+        "O024",
+        "I001",
+        "I002",
+        "I003",
+        "I004",
+        "I005",
+        "I006",
+        "I007",
+        "I008",
+        "I009",
+        "I010",
+        "I011",
+        "I012",
+        "I013",
+        "I014",
+        "I015",
+        "I016",
+        "I017",
+        "I018",
+        "I019",
+        "I020",
+        "I021",
+        "I022",
+        "I023",
+        "I024",
+        "I025",
+        "I026",
+        "I027",
+        "I028",
+        "I029",
+        "I030",
+        "I031",
+        "I032",
+        "I033",
+        "I034",
+        "I035",
+        "I036",
+        "I037",
+        "I038",
+        "I039",
+        "I040",
+        "I041",
+        "I042",
+        "I043",
+        "I044",
+        "I045",
+        "I046",
+        "I047",
+        "I048",
+        "I049",
+        "I050",
+        "I051",
+        "I052",
+        "I053",
+        "I054",
+        "I055",
+        "I056",
+        "I057",
+        "I058",
+        "I059",
+        "I060",
+        "I061",
+        "I062",
+        "I063",
+        "I064",
+        "I065",
+        "I066",
+        "I067",
+        "I068",
+        "I069",
+        "I070",
+        "I071",
+        "I072",
+        "I073",
+        "I074"
+      ],
+      "estimated_safety_pct": 75
+    }
+  ],
+  "recommendations": {
+    "priority_order": [
+      "circular_dependency",
+      "unused_export",
+      "orphan_file",
+      "unused_import"
+    ],
+    "actions": [
+      "Review and remove 97 LOW-risk item(s) (start with orphan files, then unused exports).",
+      "Manually verify 38 MEDIUM-risk item(s) before deletion.",
+      "Investigate 3 HIGH-risk item(s) -- do NOT delete without review."
+    ],
+    "do_not_delete": []
+  }
+}

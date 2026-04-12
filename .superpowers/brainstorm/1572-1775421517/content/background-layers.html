@@ -1,0 +1,137 @@
+<h2>Gelaagde parallax achtergrond + AI/tech tekststijl</h2>
+<p class="subtitle">3 parallax-lagen op snelheid gestapeld, plus hoe de sectie-tekst er tech-achtig uitziet</p>
+
+<!-- LAYER DIAGRAM -->
+<div style="font-family:system-ui;margin-bottom:32px">
+  <h3 style="margin-bottom:12px">Parallax-stapel (langzaam → snel)</h3>
+  <div style="display:flex;flex-direction:column;gap:4px;max-width:640px">
+    <div style="background:rgba(18,17,16,0.95);border:1px solid rgba(232,185,49,0.08);padding:12px 16px;border-left:3px solid rgba(232,185,49,0.2);border-radius:2px">
+      <div style="color:#5E5850;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px">Laag 1 — Langzaamst (speed: 0.05)</div>
+      <div style="color:#8A8279;font-size:11px">Subtiele <strong style="color:#C49A1A">data-grid</strong>: lichte rasterlijnen + hex-coördinaten in de hoeken. Nauwelijks zichtbaar, geeft diepte en tech-context.</div>
+    </div>
+    <div style="background:rgba(18,17,16,0.95);border:1px solid rgba(232,185,49,0.12);padding:12px 16px;border-left:3px solid rgba(232,185,49,0.45);border-radius:2px">
+      <div style="color:#5E5850;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px">Laag 2 — Middel (speed: 0.15)</div>
+      <div style="color:#8A8279;font-size:11px"><strong style="color:#C49A1A">Rotterdam skyline SVG</strong>: gold line-art, full-width, onderaan verankerd. Schuift licht omhoog bij scroll. Draw-in animatie bij load.</div>
+    </div>
+    <div style="background:rgba(18,17,16,0.95);border:1px solid rgba(232,185,49,0.18);padding:12px 16px;border-left:3px solid #E8B931;border-radius:2px">
+      <div style="color:#5E5850;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px">Laag 3 — Snelst (speed: 0.3) — bestaand NetworkBackground</div>
+      <div style="color:#8A8279;font-size:11px"><strong style="color:#C49A1A">Particle network canvas</strong>: bestaande component, goud-nodes. Beweegt het snelst. Geeft het "levende data" gevoel bovenop de skyline.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION MOCKUPS WITH TECH TEXT -->
+<h3 style="margin-bottom:16px">Tekststijl in secties — AI/tech-toon</h3>
+
+<div class="split">
+
+  <!-- BEFORE -->
+  <div class="mockup">
+    <div class="mockup-header">Huidige stijl</div>
+    <div class="mockup-body" style="background:#121110;padding:24px;font-family:system-ui;min-height:280px">
+      <div style="color:#C49A1A;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px">Over mij</div>
+      <div style="color:#EDE8DC;font-size:20px;font-weight:600;margin-bottom:12px">Developer. Leerling. Bouwer.</div>
+      <div style="color:#8A8279;font-size:12px;line-height:1.7">Ik ben Randy — een developer die zichzelf heeft leren programmeren door dingen te bouwen.</div>
+      <div style="margin-top:20px;color:#C49A1A;font-size:11px;font-weight:600">Meer over mij →</div>
+    </div>
+  </div>
+
+  <!-- AFTER -->
+  <div class="mockup">
+    <div class="mockup-header">Nieuwe stijl — AI/tech toon</div>
+    <div class="mockup-body" style="background:#121110;padding:24px;font-family:system-ui;min-height:280px;position:relative;overflow:hidden">
+      <!-- Grid background hint -->
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(232,185,49,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(232,185,49,0.03) 1px,transparent 1px);background-size:32px 32px;pointer-events:none"></div>
+      <!-- Hex coord -->
+      <div style="position:absolute;top:8px;right:12px;color:rgba(232,185,49,0.2);font-size:8px;font-family:monospace">52.3702°N / 4.8952°E</div>
+      <div style="position:relative">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+          <div style="width:6px;height:6px;border-radius:50%;background:#E8B931;box-shadow:0 0 6px rgba(232,185,49,0.6)"></div>
+          <div style="color:#C49A1A;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;font-family:monospace">SYS.PROFILE // OPERATOR</div>
+        </div>
+        <div style="color:#EDE8DC;font-size:22px;font-weight:900;line-height:1;letter-spacing:-0.03em;margin-bottom:4px">SELF-TAUGHT.</div>
+        <div style="color:#EDE8DC;font-size:22px;font-weight:900;line-height:1;letter-spacing:-0.03em;margin-bottom:4px">SYSTEMS-FOCUSED.</div>
+        <div style="color:transparent;font-size:22px;font-weight:900;line-height:1;letter-spacing:-0.03em;-webkit-text-stroke:1px rgba(232,185,49,0.5);margin-bottom:16px">PROPTECH-DRIVEN.</div>
+        <div style="color:#8A8279;font-size:11px;line-height:1.7;margin-bottom:16px;max-width:300px">Ik bouw AI-systemen die vastgoedprofessionals uren handwerk besparen. Geen buzzwords — alleen pipelines die draaien.</div>
+        <div style="display:flex;gap:16px">
+          <div style="text-align:center;border:1px solid rgba(232,185,49,0.15);padding:8px 14px">
+            <div style="color:#E8B931;font-size:18px;font-weight:800;font-family:monospace">4+</div>
+            <div style="color:#5E5850;font-size:8px;letter-spacing:0.1em;text-transform:uppercase">Projects</div>
+          </div>
+          <div style="text-align:center;border:1px solid rgba(232,185,49,0.15);padding:8px 14px">
+            <div style="color:#E8B931;font-size:18px;font-weight:800;font-family:monospace">RAG</div>
+            <div style="color:#5E5850;font-size:8px;letter-spacing:0.1em;text-transform:uppercase">Specialist</div>
+          </div>
+          <div style="text-align:center;border:1px solid rgba(232,185,49,0.15);padding:8px 14px">
+            <div style="color:#E8B931;font-size:18px;font-weight:800;font-family:monospace">NL</div>
+            <div style="color:#5E5850;font-size:8px;letter-spacing:0.1em;text-transform:uppercase">Market</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FULL SCROLL PREVIEW -->
+<div class="mockup" style="margin-top:24px">
+  <div class="mockup-header">Scroll-doorsnede — hoe de lagen zich gedragen</div>
+  <div class="mockup-body" style="background:#121110;padding:0;position:relative;min-height:320px;overflow:hidden;font-family:system-ui">
+    <!-- Layer 1: Grid (fixed, barely visible) -->
+    <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(232,185,49,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(232,185,49,0.025) 1px,transparent 1px);background-size:40px 40px"></div>
+    <!-- Layer 2: Skyline (middle) -->
+    <div style="position:absolute;bottom:0;left:0;right:0;opacity:0.35">
+      <svg width="100%" height="140" viewBox="0 0 800 140" preserveAspectRatio="xMidYMax meet">
+        <!-- Stylized skyline -->
+        <polyline points="0,140 0,110 40,110 40,95 55,95 55,80 70,80 75,60 85,60 95,50 100,50 105,40 115,40 120,30 128,30 133,20 140,20 140,10 150,10 153,5 158,5 160,0 168,0 170,5 175,5 178,10 185,10 190,20 200,20 205,30 215,30 220,40 235,40 240,50 255,50 265,40 280,40 290,30 300,30 310,20 320,20 320,10 330,10 340,20 350,20 360,30 375,30 385,40 400,40 410,50 425,50 435,40 450,40 460,30 470,30 475,20 485,20 490,30 500,30 510,40 525,40 535,50 550,50 560,60 575,60 580,70 595,70 605,80 620,80 630,90 650,90 660,100 680,100 690,110 720,110 740,110 760,105 800,105 800,140" fill="none" stroke="rgba(232,185,49,0.7)" stroke-width="1.5" stroke-linejoin="round"/>
+        <!-- Tower -->
+        <line x1="163" y1="0" x2="163" y2="-15" stroke="rgba(232,185,49,0.9)" stroke-width="2"/>
+        <circle cx="163" cy="-16" r="3" fill="#E8B931"/>
+      </svg>
+    </div>
+    <!-- Layer 3: Particles hint -->
+    <div style="position:absolute;inset:0">
+      <svg width="100%" height="100%" style="position:absolute;inset:0">
+        <circle cx="15%" cy="25%" r="2" fill="rgba(232,185,49,0.4)"/>
+        <circle cx="35%" cy="15%" r="1.5" fill="rgba(232,185,49,0.3)"/>
+        <circle cx="60%" cy="30%" r="2" fill="rgba(232,185,49,0.35)"/>
+        <circle cx="80%" cy="20%" r="1.5" fill="rgba(232,185,49,0.25)"/>
+        <line x1="15%" y1="25%" x2="35%" y2="15%" stroke="rgba(232,185,49,0.12)" stroke-width="1"/>
+        <line x1="35%" y1="15%" x2="60%" y2="30%" stroke="rgba(232,185,49,0.1)" stroke-width="1"/>
+        <line x1="60%" y1="30%" x2="80%" y2="20%" stroke="rgba(232,185,49,0.12)" stroke-width="1"/>
+      </svg>
+    </div>
+    <!-- Content overlay -->
+    <div style="position:relative;z-index:2;padding:32px 40px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <div style="width:6px;height:6px;border-radius:50%;background:#E8B931;box-shadow:0 0 8px rgba(232,185,49,0.8)"></div>
+        <span style="color:#C49A1A;font-size:9px;letter-spacing:0.18em;font-family:monospace;text-transform:uppercase">MODULE_02 // CAPABILITIES</span>
+      </div>
+      <div style="color:#EDE8DC;font-size:26px;font-weight:900;letter-spacing:-0.03em;line-height:1">WHAT I<br>BUILD<span style="color:#E8B931">.</span></div>
+      <div style="margin-top:12px;color:#5E5850;font-size:9px;font-family:monospace">[ 3 active modules loaded ]</div>
+    </div>
+    <!-- Speed indicator labels -->
+    <div style="position:absolute;right:16px;top:16px;display:flex;flex-direction:column;gap:6px;align-items:flex-end">
+      <div style="font-size:9px;color:rgba(232,185,49,0.25);font-family:monospace">▲ particles 0.3x</div>
+      <div style="font-size:9px;color:rgba(232,185,49,0.35);font-family:monospace">▲ skyline 0.15x</div>
+      <div style="font-size:9px;color:rgba(232,185,49,0.2);font-family:monospace">▲ grid 0.05x</div>
+    </div>
+  </div>
+</div>
+
+<div class="options" style="margin-top:24px">
+  <div class="option" data-choice="approve" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>Dit is precies wat ik wil</h3>
+      <p>Gelaagde parallax + AI/tech tekststijl — verder naar de implementatiespec</p>
+    </div>
+  </div>
+  <div class="option" data-choice="tweak" onclick="toggleSelect(this)">
+    <div class="letter">~</div>
+    <div class="content">
+      <h3>Kleine aanpassing</h3>
+      <p>Vertel me in de terminal wat anders moet</p>
+    </div>
+  </div>
+</div>

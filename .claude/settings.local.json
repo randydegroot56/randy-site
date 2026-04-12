@@ -8,7 +8,15 @@
       "Bash(node -e \"const m = require\\('@react-three/postprocessing'\\); const keys = Object.keys\\(m\\); console.log\\(keys.filter\\(k => k.toLowerCase\\(\\).includes\\('bloom'\\) || k.toLowerCase\\(\\).includes\\('effect'\\)\\)\\)\")",
       "Bash(rm:*)",
       "Bash(npm uninstall:*)",
-      "Bash(bash:*)"
+      "Bash(bash:*)",
+      "Bash(python -c \"lines=open\\('agents/code_auditor/cli.py'\\).readlines\\(\\); print\\('total lines:', len\\(lines\\)\\); hits=[\\(i+1,l.rstrip\\(\\)\\) for i,l in enumerate\\(lines\\) if 'def cmd_' in l or 'def _build' in l or 'def main' in l or 'def _normalise' in l]; [print\\(n,l\\) for n,l in hits]\")",
+      "Bash(python -c ':*)",
+      "Bash(python agents/code_auditor/cli.py execute --report phase3_verified.json --dry-run)",
+      "Bash(python agents/code_auditor/cli.py execute --report phase3_verified.json --items U001 U002 U003 --dry-run --verbose)",
+      "Bash(python agents/code_auditor/cli.py report --phase3 phase3_verified.json --phase2 phase2_findings.json)",
+      "Bash(python agents/code_auditor/cli.py report --phase3 phase3_verified.json --phase2 phase2_findings.json --no-dashboard --no-recommendations)",
+      "Bash(python -c \"from agents.code_auditor.core.phase5_executor import BatchRemover; print\\('Import OK'\\)\")",
+      "Bash(python agents/code_auditor/cli.py execute --report phase3_verified.json --items U001 --dry-run --verbose)"
     ]
   }
 }
