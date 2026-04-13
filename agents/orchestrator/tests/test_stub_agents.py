@@ -1,8 +1,8 @@
 import pytest
-from orchestrator.agents.audit_agent import AuditAgent
-from orchestrator.agents.fixer_agent import FixerAgent
-from orchestrator.bus import EventBus
-from orchestrator.state import StateStore
+from agents.orchestrator.agents.audit_agent import AuditAgent
+from agents.orchestrator.agents.fixer_agent import FixerAgent
+from agents.orchestrator.bus import EventBus
+from agents.orchestrator.state import StateStore
 
 
 def make_deps(tmp_path):

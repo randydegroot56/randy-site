@@ -14,8 +14,8 @@ import sys
 from pathlib import Path
 from typing import List, Optional, TextIO
 
-from orchestrator.bus import EventBus
-from orchestrator.events import AgentEvent
+from agents.orchestrator.bus import EventBus
+from agents.orchestrator.events import AgentEvent
 
 
 class OrchestratorLogger:

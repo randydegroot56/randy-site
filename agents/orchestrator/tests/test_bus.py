@@ -1,5 +1,5 @@
-from orchestrator.bus import EventBus
-from orchestrator.events import AgentEvent, AuditCompleted
+from agents.orchestrator.bus import EventBus
+from agents.orchestrator.events import AgentEvent, AuditCompleted
 
 
 def test_subscribe_and_publish():

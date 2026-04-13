@@ -1,8 +1,8 @@
 import pytest
-from orchestrator.base_agent import BaseAgent
-from orchestrator.bus import EventBus
-from orchestrator.events import AgentEvent
-from orchestrator.state import StateStore
+from agents.orchestrator.base_agent import BaseAgent
+from agents.orchestrator.bus import EventBus
+from agents.orchestrator.events import AgentEvent
+from agents.orchestrator.state import StateStore
 
 
 class ConcreteAgent(BaseAgent):

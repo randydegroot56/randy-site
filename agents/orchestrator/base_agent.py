@@ -14,9 +14,9 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
-from orchestrator.bus import EventBus
-from orchestrator.events import AgentEvent
-from orchestrator.state import StateStore
+from agents.orchestrator.bus import EventBus
+from agents.orchestrator.events import AgentEvent
+from agents.orchestrator.state import StateStore
 
 
 class BaseAgent(ABC):

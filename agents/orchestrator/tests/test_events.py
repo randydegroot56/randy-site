@@ -1,4 +1,4 @@
-from orchestrator.events import AgentEvent, AuditCompleted, AuditFailed, FixCompleted, FixFailed
+from agents.orchestrator.events import AgentEvent, AuditCompleted, AuditFailed, FixCompleted, FixFailed
 
 
 def test_agent_event_defaults():

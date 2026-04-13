@@ -1,8 +1,8 @@
 import io
 import json
-from orchestrator.bus import EventBus
-from orchestrator.events import AgentEvent, AuditCompleted
-from orchestrator.logger import OrchestratorLogger
+from agents.orchestrator.bus import EventBus
+from agents.orchestrator.events import AgentEvent, AuditCompleted
+from agents.orchestrator.logger import OrchestratorLogger
 
 
 def test_logger_prints_event_type_on_event():

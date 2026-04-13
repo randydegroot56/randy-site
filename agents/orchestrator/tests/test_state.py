@@ -1,5 +1,5 @@
 import json
-from orchestrator.state import StateStore
+from agents.orchestrator.state import StateStore
 
 
 def test_get_returns_default_when_key_missing(tmp_path):

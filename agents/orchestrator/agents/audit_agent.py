@@ -11,8 +11,8 @@ from __future__ import annotations
 
 from typing import Any, Dict
 
-from orchestrator.base_agent import BaseAgent
-from orchestrator.events import AuditCompleted, AuditFailed
+from agents.orchestrator.base_agent import BaseAgent
+from agents.orchestrator.events import AuditCompleted, AuditFailed
 
 
 class AuditAgent(BaseAgent):

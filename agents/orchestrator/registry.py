@@ -12,9 +12,9 @@ from __future__ import annotations
 
 from typing import Dict, Type
 
-from orchestrator.base_agent import BaseAgent
-from orchestrator.bus import EventBus
-from orchestrator.state import StateStore
+from agents.orchestrator.base_agent import BaseAgent
+from agents.orchestrator.bus import EventBus
+from agents.orchestrator.state import StateStore
 
 
 class AgentRegistry:

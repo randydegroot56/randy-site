@@ -1,12 +1,12 @@
 import io
 import pytest
-from orchestrator.base_agent import BaseAgent
-from orchestrator.bus import EventBus
-from orchestrator.events import AuditCompleted
-from orchestrator.logger import OrchestratorLogger
-from orchestrator.orchestrator import Orchestrator
-from orchestrator.registry import AgentRegistry
-from orchestrator.state import StateStore
+from agents.orchestrator.base_agent import BaseAgent
+from agents.orchestrator.bus import EventBus
+from agents.orchestrator.events import AuditCompleted
+from agents.orchestrator.logger import OrchestratorLogger
+from agents.orchestrator.orchestrator import Orchestrator
+from agents.orchestrator.registry import AgentRegistry
+from agents.orchestrator.state import StateStore
 
 
 class EchoAuditAgent(BaseAgent):
@@ -26,7 +26,7 @@ class EchoFixAgent(BaseAgent):
     description = "Echo fixer for testing"
 
     def run(self, target=".", audit_result=None, **kwargs):
-        from orchestrator.events import FixCompleted
+        from agents.orchestrator.events import FixCompleted
         result = {"target": target, "audit_result_received": audit_result is not None}
         self.emit(FixCompleted(agent_name=self.name, payload=result))
         return result

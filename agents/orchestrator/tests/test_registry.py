@@ -1,8 +1,8 @@
 import pytest
-from orchestrator.registry import AgentRegistry
-from orchestrator.base_agent import BaseAgent
-from orchestrator.bus import EventBus
-from orchestrator.state import StateStore
+from agents.orchestrator.registry import AgentRegistry
+from agents.orchestrator.base_agent import BaseAgent
+from agents.orchestrator.bus import EventBus
+from agents.orchestrator.state import StateStore
 
 
 class AlphaAgent(BaseAgent):

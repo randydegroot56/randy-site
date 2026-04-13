@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Callable, Dict, List
 
-from orchestrator.events import AgentEvent
+from agents.orchestrator.events import AgentEvent
 
 Handler = Callable[[AgentEvent], None]
 

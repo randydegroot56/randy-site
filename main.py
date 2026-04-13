@@ -26,13 +26,13 @@ if hasattr(sys.stdout, "reconfigure"):
 if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
-from orchestrator.agents.audit_agent import AuditAgent
-from orchestrator.agents.fixer_agent import FixerAgent
-from orchestrator.bus import EventBus
-from orchestrator.logger import OrchestratorLogger
-from orchestrator.orchestrator import Orchestrator
-from orchestrator.registry import AgentRegistry
-from orchestrator.state import StateStore
+from agents.orchestrator.agents.audit_agent import AuditAgent
+from agents.orchestrator.agents.fixer_agent import FixerAgent
+from agents.orchestrator.bus import EventBus
+from agents.orchestrator.logger import OrchestratorLogger
+from agents.orchestrator.orchestrator import Orchestrator
+from agents.orchestrator.registry import AgentRegistry
+from agents.orchestrator.state import StateStore
 
 
 def build_registry() -> AgentRegistry:

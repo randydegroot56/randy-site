@@ -13,10 +13,10 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Tuple
 
-from orchestrator.bus import EventBus
-from orchestrator.logger import OrchestratorLogger
-from orchestrator.registry import AgentRegistry
-from orchestrator.state import StateStore
+from agents.orchestrator.bus import EventBus
+from agents.orchestrator.logger import OrchestratorLogger
+from agents.orchestrator.registry import AgentRegistry
+from agents.orchestrator.state import StateStore
 
 # Maps CLI verb -> (agent_name, kwarg_key_for_first_positional_arg)
 INTENT_MAP: Dict[str, Tuple[str, Optional[str]]] = {

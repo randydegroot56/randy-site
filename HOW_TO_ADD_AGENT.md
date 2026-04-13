@@ -7,13 +7,13 @@ When you're done, `python main.py <your-command> <args>` will work.
 
 ## Step 1 — Create your agent file
 
-Create `orchestrator/agents/my_agent.py`:
+Create `agents/orchestrator/agents/my_agent.py`:
 
 ```python
 from __future__ import annotations
 from typing import Any, Dict, Optional
-from orchestrator.base_agent import BaseAgent
-from orchestrator.events import AgentEvent
+from agents.orchestrator.base_agent import BaseAgent
+from agents.orchestrator.events import AgentEvent
 from dataclasses import dataclass
 
 
@@ -61,7 +61,7 @@ Rules:
 Open `main.py`, add one import and one `registry.register()` call in `build_registry()`:
 
 ```python
-from orchestrator.agents.my_agent import MyAgent   # add import
+from agents.orchestrator.agents.my_agent import MyAgent   # add import
 
 def build_registry() -> AgentRegistry:
     registry = AgentRegistry()
@@ -75,7 +75,7 @@ def build_registry() -> AgentRegistry:
 
 ## Step 3 — Add a CLI command in orchestrator.py
 
-Open `orchestrator/orchestrator.py`. Add your command to `INTENT_MAP`:
+Open `agents/orchestrator/orchestrator.py`. Add your command to `INTENT_MAP`:
 
 ```python
 INTENT_MAP: Dict[str, Tuple[str, Optional[str]]] = {
@@ -91,12 +91,12 @@ Now `python main.py my-task ./src` works.
 
 ## Step 4 — Write tests
 
-Create `orchestrator/tests/test_my_agent.py`:
+Create `agents/orchestrator/tests/test_my_agent.py`:
 
 ```python
-from orchestrator.agents.my_agent import MyAgent
-from orchestrator.bus import EventBus
-from orchestrator.state import StateStore
+from agents.orchestrator.agents.my_agent import MyAgent
+from agents.orchestrator.bus import EventBus
+from agents.orchestrator.state import StateStore
 
 
 def make_deps(tmp_path):
@@ -126,7 +126,7 @@ def test_my_agent_emits_completed_event(tmp_path):
     assert received[0].agent_name == "my_agent"
 ```
 
-Run: `python -m pytest orchestrator/tests/test_my_agent.py -v`
+Run: `python -m pytest agents/orchestrator/tests/test_my_agent.py -v`
 
 ---
 
@@ -144,18 +144,21 @@ The logger automatically captures all your events. The state store saves `last_M
 ## Architecture Quick Reference
 
 ```
-orchestrator/
-├── base_agent.py     ← Inherit from BaseAgent
-├── events.py         ← Define AgentEvent subclasses here
-├── bus.py            ← EventBus (subscribe/publish)
-├── state.py          ← StateStore (JSON persistence)
-├── registry.py       ← AgentRegistry (register/get/list)
-├── logger.py         ← OrchestratorLogger (subscribes to *)
-├── orchestrator.py   ← INTENT_MAP + dispatch logic
-└── agents/
-    ├── audit_agent.py
-    ├── fixer_agent.py
-    └── my_agent.py   ← Your new agent goes here
+agents/
+├── code_auditor/         ← 5-phase static analysis agent
+├── code_fixer/           ← applies audit findings to codebase
+└── orchestrator/
+    ├── base_agent.py     ← Inherit from BaseAgent
+    ├── events.py         ← Define AgentEvent subclasses here
+    ├── bus.py            ← EventBus (subscribe/publish)
+    ├── state.py          ← StateStore (JSON persistence)
+    ├── registry.py       ← AgentRegistry (register/get/list)
+    ├── logger.py         ← OrchestratorLogger (subscribes to *)
+    ├── orchestrator.py   ← INTENT_MAP + dispatch logic
+    └── agents/
+        ├── audit_agent.py
+        ├── fixer_agent.py
+        └── my_agent.py   ← Your new agent goes here
 ```
 
 **Data flow for a single command:**

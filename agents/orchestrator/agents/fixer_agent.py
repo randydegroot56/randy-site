@@ -11,8 +11,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
-from orchestrator.base_agent import BaseAgent
-from orchestrator.events import FixCompleted, FixFailed
+from agents.orchestrator.base_agent import BaseAgent
+from agents.orchestrator.events import FixCompleted, FixFailed
 
 
 class FixerAgent(BaseAgent):
