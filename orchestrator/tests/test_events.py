@@ -39,4 +39,11 @@ def test_event_timestamp_is_iso_format():
     import re
     event = AgentEvent(agent_name="x")
     # ISO 8601: 2026-04-13T12:00:00.000000
-    assert re.match(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", event.timestamp)
+    assert re.match(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*\+00:00$", event.timestamp)
+
+
+def test_payload_not_shared_between_instances():
+    e1 = AgentEvent(agent_name="a")
+    e2 = AgentEvent(agent_name="b")
+    e1.payload["x"] = 1
+    assert "x" not in e2.payload
