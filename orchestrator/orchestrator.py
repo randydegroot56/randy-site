@@ -1,0 +1,68 @@
+"""
+orchestrator/orchestrator.py
+=============================
+Orchestrator — parses user commands and dispatches to the correct agent.
+
+INTENT_MAP ties CLI verbs to agent names. To add a new command:
+    INTENT_MAP["scrape"] = ("web_scraper", "url")
+
+The fix command automatically pulls the last audit result from state
+so the user can run "audit ./src" then "fix" without repeating the path.
+"""
+from __future__ import annotations
+
+from typing import Any, Dict, List, Optional, Tuple
+
+from orchestrator.bus import EventBus
+from orchestrator.logger import OrchestratorLogger
+from orchestrator.registry import AgentRegistry
+from orchestrator.state import StateStore
+
+# Maps CLI verb -> (agent_name, kwarg_key_for_first_positional_arg)
+INTENT_MAP: Dict[str, Tuple[str, Optional[str]]] = {
+    "audit": ("code_auditor", "target"),
+    "fix":   ("code_fixer",   "target"),
+}
+
+
+class Orchestrator:
+    """Routes CLI commands to registered agents."""
+
+    def __init__(
+        self,
+        registry: AgentRegistry,
+        bus: EventBus,
+        state: StateStore,
+        logger: OrchestratorLogger,
+    ) -> None:
+        self._registry = registry
+        self._bus = bus
+        self._state = state
+        self._logger = logger
+
+    def run(self, command: str, args: List[str]) -> Dict[str, Any]:
+        """Resolve intent and run the matching agent."""
+        if command not in INTENT_MAP:
+            available = ", ".join(sorted(INTENT_MAP))
+            raise ValueError(
+                f"Unknown command '{command}'. Available: {available}"
+            )
+
+        agent_name, kwarg_key = INTENT_MAP[command]
+        kwargs: Dict[str, Any] = {}
+
+        # Map first positional arg to the agent's expected kwarg
+        if kwarg_key and args:
+            kwargs[kwarg_key] = args[0]
+
+        # For "fix": if no target given and a previous audit exists, inject it
+        if command == "fix":
+            audit_result = self._state.get("last_AuditCompleted")
+            if audit_result:
+                kwargs.setdefault("audit_result", audit_result)
+
+        agent = self._registry.get(agent_name, self._bus, self._state)
+        return agent.run(**kwargs)
+
+    def print_summary(self) -> None:
+        print(self._logger.summary())
