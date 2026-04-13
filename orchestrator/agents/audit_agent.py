@@ -31,5 +31,9 @@ class AuditAgent(BaseAgent):
             self.emit(AuditCompleted(agent_name=self.name, payload=result))
             return result
         except Exception as exc:
-            self.emit(AuditFailed(agent_name=self.name, error=str(exc)))
+            self.emit(AuditFailed(
+                agent_name=self.name,
+                error=str(exc),
+                payload={"error": str(exc)},
+            ))
             raise

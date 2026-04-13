@@ -37,5 +37,9 @@ class FixerAgent(BaseAgent):
             self.emit(FixCompleted(agent_name=self.name, payload=result))
             return result
         except Exception as exc:
-            self.emit(FixFailed(agent_name=self.name, error=str(exc)))
+            self.emit(FixFailed(
+                agent_name=self.name,
+                error=str(exc),
+                payload={"error": str(exc)},
+            ))
             raise
