@@ -107,3 +107,19 @@ def test_logger_non_verbose_does_not_print_payload():
     bus.publish(AgentEvent(agent_name="x", event_type="Ev", payload={"secret": "hidden"}))
 
     assert "secret" not in out.getvalue()
+
+
+def test_logger_survives_corrupted_log_file(tmp_path):
+    """Logger should not crash when log_file exists but contains invalid JSON."""
+    bus = EventBus()
+    log_file = tmp_path / "log.json"
+    log_file.write_text("NOT VALID JSON", encoding="utf-8")
+    out = io.StringIO()
+    logger = OrchestratorLogger(bus, log_file=log_file, stream=out)
+
+    # Publishing after corruption must not raise
+    bus.publish(AgentEvent(agent_name="x", event_type="E"))
+
+    # After recovery, the file should be valid JSON with one entry
+    entries = json.loads(log_file.read_text())
+    assert len(entries) == 1
