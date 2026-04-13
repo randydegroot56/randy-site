@@ -291,9 +291,23 @@ class FixerEngine:
         ]:
             result = check_fn()
             if not result.passed:
-                raise SystemExit(
-                    f"Pre-flight layer {result.layer} failed: {result.message}"
+                print(
+                    f"Pre-flight layer {result.layer} failed: {result.message}",
+                    file=sys.stderr,
                 )
+                raise SystemExit(3)
+
+        # Global layers 3+4: check all candidate IDs exist and are within risk threshold
+        all_candidate_ids = [c["id"] for c in self._candidates]
+        if all_candidate_ids:
+            layer3 = validator.validate_items_exist(all_candidate_ids)
+            if not layer3.passed:
+                print(f"Pre-flight layer 3 failed: {layer3.message}", file=sys.stderr)
+                raise SystemExit(3)
+            layer4 = validator.validate_risk_filter(all_candidate_ids, max_risk=self.risk)
+            if not layer4.passed:
+                print(f"Pre-flight layer 4 failed: {layer4.message}", file=sys.stderr)
+                raise SystemExit(3)
 
         batches = self.build_batches()
         run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -336,6 +350,14 @@ class FixerEngine:
                     batch_id=f"fix-{run_id}-batch{batch_num}",
                 )
             except Exception as exc:  # noqa: BLE001
+                # Attempt best-effort cleanup — we don't know if a branch was created
+                if not self.no_cleanup:
+                    try:
+                        current = git.current_branch()
+                        if current != "main":
+                            git.cleanup_branch(current)
+                    except RuntimeError:
+                        pass  # best effort only
                 br = BatchResult(
                     batch_num=batch_num, item_ids=batch, status="failed",
                     lines_removed=0, commit_hash="", branch_name="",
