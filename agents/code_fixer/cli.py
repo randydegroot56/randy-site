@@ -535,3 +535,453 @@ class FixerEngine:
                 continue
             result.append(c)
         return result
+
+
+# ---------------------------------------------------------------------------
+# Subcommand implementations
+# ---------------------------------------------------------------------------
+
+
+def cmd_fix(args: argparse.Namespace) -> int:
+    """Execute batched code removal.
+
+    Loads phase3_verified.json, builds batches, runs the full remove ->
+    test -> commit loop, and writes HTML + JSON reports.
+    """
+    report_path = Path(args.report)
+    if not report_path.exists():
+        print(
+            f"\u274c Error: {report_path} not found\n"
+            "   Run: python agents/code_auditor/cli.py verify --report phase2_findings.json",
+            file=sys.stderr,
+        )
+        return 4
+
+    project_root = Path(args.project).resolve()
+    engine = FixerEngine(
+        report_path=report_path,
+        project_root=project_root,
+        phase2_path=Path(args.phase2) if args.phase2 else None,
+        risk=args.risk,
+        batch_size=args.batch_size,
+        items=args.items or None,
+        skip_failed=args.skip_failed,
+        no_cleanup=args.no_cleanup,
+        verbose=args.verbose,
+    )
+
+    try:
+        print(f"\U0001f50d Loading {report_path}...")
+        candidates = engine.load_report()
+        print(f"   {len(candidates)} {args.risk}-risk candidates found")
+    except FileNotFoundError as exc:
+        print(f"\u274c Error: {exc}", file=sys.stderr)
+        return 4
+    except json.JSONDecodeError as exc:
+        print(f"\u274c Error: invalid JSON in report: {exc}", file=sys.stderr)
+        return 4
+
+    if not candidates:
+        print(f"\u2705 No {args.risk}-risk candidates to fix. All done!")
+        return 0
+
+    batches = engine.build_batches()
+    print(f"\U0001f4cb Building batches: {len(batches)} batches x {args.batch_size} items")
+
+    if args.dry_run:
+        print("\n[DRY RUN -- no changes will be made]\n")
+        summary = engine.dry_run()
+        for b in summary.get("batches", []):
+            safe = "\u2705" if b.get("is_safe") else "\u274c"
+            ids = ", ".join(b.get("item_ids", []))
+            lines = b.get("estimated_lines", 0)
+            print(f"  {safe} Batch {b['batch_num']:>3}: {ids}  ~{lines} lines")
+        total = summary.get("estimated_lines", 0)
+        print(f"\n   Total estimated: {len(candidates)} items / ~{total} lines")
+        return 0
+
+    try:
+        result = engine.run()
+    except SystemExit as exc:
+        print(f"\u274c Pre-flight failed: {exc}", file=sys.stderr)
+        return 3
+    except ImportError as exc:
+        print(f"\u274c Import error: {exc}", file=sys.stderr)
+        return 3
+
+    # ── Print summary ──────────────────────────────────────────────────
+    icon = "\u2705" if result.status == "success" else (
+        "\u26a0\ufe0f" if result.status == "partial" else "\u274c"
+    )
+    print(f"\n\U0001f4ca Run complete  {icon}")
+    print(f"   Fixed  : {len(result.items_fixed)} items / {result.lines_removed} lines removed")
+    print(f"   Failed : {len(result.items_failed)} items")
+    print(f"   Commits: {len(result.commits)}")
+    if result.report_html:
+        print(f"   Report : {result.report_html}")
+
+    if result.status == "success":
+        return 0
+    if result.status == "partial":
+        return 1
+    return 2
+
+
+def cmd_analyze(args: argparse.Namespace) -> int:
+    """Print a fixability summary -- read-only, no changes."""
+    report_path = Path(args.report)
+    if not report_path.exists():
+        print(f"\u274c Error: {report_path} not found", file=sys.stderr)
+        return 4
+
+    project_root = Path(args.project).resolve()
+
+    try:
+        phase3 = json.loads(report_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        print(f"\u274c Error: invalid JSON: {exc}", file=sys.stderr)
+        return 4
+
+    p2_path = report_path.parent / "phase2_findings.json"
+    phase2: dict = {}
+    if p2_path.exists():
+        try:
+            phase2 = json.loads(p2_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            pass
+
+    print(f"\U0001f50d Analyzing {report_path}\n")
+
+    for risk_label in ("LOW", "MEDIUM", "HIGH"):
+        eng = FixerEngine(
+            report_path=report_path,
+            project_root=project_root,
+            risk=risk_label,
+        )
+        try:
+            candidates = eng.load_report()
+        except Exception:
+            candidates = []
+
+        # count only items at exactly this risk level
+        exact = [
+            c for c in candidates
+            if c.get("risk", c.get("risk_level", "")).upper() == risk_label
+        ]
+        if not exact:
+            continue
+        total_lines = sum(c.get("lines", 0) for c in exact)
+        batches = max(1, len(exact) // 3)
+        icon = {"LOW": "\u2705", "MEDIUM": "\u26a1", "HIGH": "\u26a0\ufe0f"}.get(risk_label, "")
+        print(
+            f"  {icon} {risk_label:<8} {len(exact):>4} items"
+            f"  ~{total_lines:>5} lines  ~{batches} batches"
+        )
+
+    total_all = json.loads(report_path.read_text(encoding="utf-8")).get(
+        "safe_to_remove", "?"
+    )
+    print(f"\n   safe_to_remove (phase3): {total_all}")
+    print("   Run 'fixer fix --report ...' to apply fixes.")
+    return 0
+
+
+def cmd_plan(args: argparse.Namespace) -> int:
+    """Generate and write an execution plan JSON."""
+    report_path = Path(args.report)
+    if not report_path.exists():
+        print(f"\u274c Error: {report_path} not found", file=sys.stderr)
+        return 4
+
+    project_root = Path(args.project).resolve()
+    eng = FixerEngine(
+        report_path=report_path,
+        project_root=project_root,
+        risk=args.risk,
+        batch_size=args.batch_size,
+    )
+
+    try:
+        candidates = eng.load_report()
+    except (FileNotFoundError, json.JSONDecodeError) as exc:
+        print(f"\u274c Error loading report: {exc}", file=sys.stderr)
+        return 4
+
+    batches = eng.build_batches()
+    cand_map = {c["id"]: c for c in candidates}
+
+    plan = {
+        "generated_at": datetime.now().isoformat(timespec="seconds"),
+        "report_input": str(report_path),
+        "risk_filter": args.risk,
+        "batch_size": args.batch_size,
+        "total_candidates": len(candidates),
+        "total_batches": len(batches),
+        "batches": [
+            {
+                "batch_num": i,
+                "item_ids": batch,
+                "estimated_lines": sum(
+                    cand_map.get(fid, {}).get("lines", 0) for fid in batch
+                ),
+                "avg_confidence": round(
+                    sum(cand_map.get(fid, {}).get("confidence", 0) for fid in batch)
+                    / len(batch),
+                    3,
+                ) if batch else 0,
+                "command": (
+                    "python agents/code_fixer/cli.py fix"
+                    f" --report {report_path}"
+                    f" --items {' '.join(batch)}"
+                ),
+            }
+            for i, batch in enumerate(batches, start=1)
+        ],
+    }
+
+    out_path = Path(args.output)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(plan, indent=2), encoding="utf-8")
+    print(f"\U0001f4cb Plan written to {out_path}  ({len(batches)} batches)")
+    return 0
+
+
+def cmd_status(args: argparse.Namespace) -> int:
+    """Print current git state and any open audit branches."""
+    project_root = Path(args.project).resolve()
+    git = GitOrchestrator(project_root=project_root)
+
+    try:
+        status = git.get_status()
+    except RuntimeError as exc:
+        print(f"\u274c git error: {exc}", file=sys.stderr)
+        return 3
+
+    clean_icon = "\u2705" if status["clean"] else "\u274c"
+    print(f"\U0001f4cb Git Status")
+    print(f"   Branch : {status['branch']}")
+    print(f"   Clean  : {clean_icon} {'yes' if status['clean'] else 'no (uncommitted changes)'}")
+
+    audit = status.get("audit_branches", [])
+    if audit:
+        print(f"   Audit branches ({len(audit)}):")
+        for b in audit:
+            print(f"     \u2022 {b}")
+    else:
+        print("   Audit branches: none")
+
+    # Look for latest fix report
+    reports = sorted(project_root.glob("fix_report_*.json"), reverse=True)
+    if reports:
+        print(f"   Last report: {reports[0].name}")
+    return 0
+
+
+def cmd_verify(args: argparse.Namespace) -> int:
+    """Run all 6 safety layers on specific items without executing."""
+    report_path = Path(args.report)
+    if not report_path.exists():
+        print(f"\u274c Error: {report_path} not found", file=sys.stderr)
+        return 4
+
+    try:
+        phase3 = json.loads(report_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        print(f"\u274c Error: invalid JSON: {exc}", file=sys.stderr)
+        return 4
+
+    # Ensure all_checks is populated
+    p2_path = report_path.parent / "phase2_findings.json"
+    phase2: dict = {}
+    if p2_path.exists():
+        try:
+            phase2 = json.loads(p2_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            pass
+
+    if not phase3.get("all_checks"):
+        eng = FixerEngine(
+            report_path=report_path,
+            project_root=Path(args.project).resolve(),
+            risk="HIGH",
+        )
+        try:
+            eng.load_report()
+            phase3 = eng._phase3_data
+            phase2 = eng._phase2_data
+        except Exception:
+            pass
+
+    project_root = Path(args.project).resolve()
+    validator = SafetyValidator(
+        report_data=phase3, project_root=project_root, verbose=args.verbose
+    )
+
+    item_ids: List[str] = list(args.items)
+    print(f"\U0001f50d Verifying {', '.join(item_ids)}\n")
+
+    checks = [
+        ("Layer 1", validator.validate_report()),
+        ("Layer 2", validator.validate_git_clean()),
+        ("Layer 3", validator.validate_items_exist(item_ids)),
+        ("Layer 4", validator.validate_risk_filter(item_ids, max_risk=args.risk)),
+        ("Layer 5", validator.validate_batch_dry_run(item_ids, phase3, phase2)),
+        ("Layer 6", validator.run_baseline_tests()),
+    ]
+
+    all_passed = True
+    for label, result in checks:
+        icon = "\u2705" if result.passed else "\u274c"
+        print(f"  {icon} {label}: {result.message}")
+        if not result.passed:
+            all_passed = False
+            for detail in result.details:
+                print(f"       {detail}")
+
+    print()
+    if all_passed:
+        print("\u2705 All layers passed -- safe to run: fixer fix --items " + " ".join(item_ids))
+        return 0
+    else:
+        print("\u274c Verification failed -- do not execute until issues are resolved")
+        return 3
+
+
+# ---------------------------------------------------------------------------
+# Argument parser
+# ---------------------------------------------------------------------------
+
+
+def _build_parser() -> argparse.ArgumentParser:
+    """Build and return the top-level argparse parser."""
+    parser = argparse.ArgumentParser(
+        prog="code-fixer",
+        description="Code Fixer Agent -- batch orchestrator for Code Auditor findings.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+examples:
+  # Preview what would be fixed
+  python agents/code_fixer/cli.py fix --report phase3_verified.json --dry-run
+
+  # Fix all LOW-risk items automatically
+  python agents/code_fixer/cli.py fix --report phase3_verified.json
+
+  # Fix specific items
+  python agents/code_fixer/cli.py fix --report phase3_verified.json --items U001 U002 U003
+
+  # Fix LOW + MEDIUM risk items, skipping failures
+  python agents/code_fixer/cli.py fix --report phase3_verified.json --risk MEDIUM --skip-failed
+
+  # Show fixability breakdown
+  python agents/code_fixer/cli.py analyze --report phase3_verified.json
+
+  # Generate execution plan
+  python agents/code_fixer/cli.py plan --report phase3_verified.json --output plan.json
+
+  # Show git status
+  python agents/code_fixer/cli.py status
+
+  # Verify specific items before executing
+  python agents/code_fixer/cli.py verify --report phase3_verified.json --items U001 U002
+""",
+    )
+
+    subparsers = parser.add_subparsers(
+        title="subcommands",
+        dest="subcommand",
+        metavar="SUBCOMMAND",
+    )
+    subparsers.required = True
+
+    # Shared arguments
+    _project_arg = dict(
+        type=str, default=".",
+        help="Root of the git repository (default: current directory).",
+    )
+    _verbose_arg = dict(
+        action="store_true",
+        help="Print per-step progress.",
+    )
+    _risk_arg = dict(
+        type=str, default="LOW", choices=["LOW", "MEDIUM", "HIGH"],
+        help="Maximum risk level to include (default: LOW).",
+    )
+    _batch_size_arg = dict(
+        type=int, default=3,
+        help="Items per batch (default: 3).",
+    )
+
+    # ── fix ──────────────────────────────────────────────────────────────
+    fix_p = subparsers.add_parser(
+        "fix", help="Apply code fixes from phase3_verified.json."
+    )
+    fix_p.add_argument("--report", required=True, help="Path to phase3_verified.json.")
+    fix_p.add_argument("--phase2", default=None, help="Path to phase2_findings.json (auto-detected if omitted).")
+    fix_p.add_argument("--items", nargs="+", default=None, help="Specific finding IDs to fix.")
+    fix_p.add_argument("--risk", **_risk_arg)
+    fix_p.add_argument("--dry-run", action="store_true", help="Preview only, no changes.")
+    fix_p.add_argument("--batch-size", type=int, default=3, dest="batch_size", help="Items per batch (default: 3).")
+    fix_p.add_argument("--skip-failed", action="store_true", dest="skip_failed", help="Skip failing batches and continue.")
+    fix_p.add_argument("--no-cleanup", action="store_true", dest="no_cleanup", help="Leave failed branches for manual debug.")
+    fix_p.add_argument("--project", **_project_arg)
+    fix_p.add_argument("--verbose", "-v", **_verbose_arg)
+    fix_p.set_defaults(func=cmd_fix)
+
+    # ── analyze ──────────────────────────────────────────────────────────
+    ana_p = subparsers.add_parser(
+        "analyze", help="Show fixability analysis (read-only)."
+    )
+    ana_p.add_argument("--report", required=True, help="Path to phase3_verified.json.")
+    ana_p.add_argument("--project", **_project_arg)
+    ana_p.add_argument("--verbose", "-v", **_verbose_arg)
+    ana_p.set_defaults(func=cmd_analyze)
+
+    # ── plan ─────────────────────────────────────────────────────────────
+    plan_p = subparsers.add_parser(
+        "plan", help="Generate execution plan JSON."
+    )
+    plan_p.add_argument("--report", required=True, help="Path to phase3_verified.json.")
+    plan_p.add_argument("--output", default=None, help="Output path (default: fix_plan_DATE.json).")
+    plan_p.add_argument("--risk", **_risk_arg)
+    plan_p.add_argument("--batch-size", type=int, default=3, dest="batch_size")
+    plan_p.add_argument("--project", **_project_arg)
+    plan_p.set_defaults(func=cmd_plan)
+
+    # ── status ────────────────────────────────────────────────────────────
+    sta_p = subparsers.add_parser(
+        "status", help="Show git status and open audit branches."
+    )
+    sta_p.add_argument("--project", **_project_arg)
+    sta_p.set_defaults(func=cmd_status)
+
+    # ── verify ────────────────────────────────────────────────────────────
+    ver_p = subparsers.add_parser(
+        "verify", help="Run 6-layer safety check on specific items."
+    )
+    ver_p.add_argument("--report", required=True, help="Path to phase3_verified.json.")
+    ver_p.add_argument("--items", nargs="+", required=True, help="Finding IDs to verify.")
+    ver_p.add_argument("--risk", **_risk_arg)
+    ver_p.add_argument("--project", **_project_arg)
+    ver_p.add_argument("--verbose", "-v", **_verbose_arg)
+    ver_p.set_defaults(func=cmd_verify)
+
+    return parser
+
+
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
+
+
+def main(argv=None) -> int:
+    """Parse arguments and dispatch to the appropriate subcommand."""
+    parser = _build_parser()
+    args = parser.parse_args(argv)
+    # Default --output for plan subcommand
+    if args.subcommand == "plan" and args.output is None:
+        args.output = f"fix_plan_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
