@@ -84,6 +84,15 @@ _TYPE_ORDER: Dict[str, int] = {
     "unused_export": 2,
 }
 
+# Module-level names so tests can patch them via agents.code_fixer.cli.*
+try:
+    from agents.code_fixer.core.safety_validator import SafetyValidator
+    from agents.code_fixer.core.git_orchestrator import GitOrchestrator
+    from agents.code_fixer.core.report_generator import ReportGenerator
+    from agents.code_auditor.core.phase5_executor import BatchRemover, DryRunExecutor
+except ImportError:
+    SafetyValidator = GitOrchestrator = ReportGenerator = BatchRemover = DryRunExecutor = None  # type: ignore[assignment,misc]
+
 
 # ---------------------------------------------------------------------------
 # FixerEngine
@@ -237,6 +246,277 @@ class FixerEngine:
         )
         ids = [c["id"] for c in sorted_candidates]
         return [ids[i: i + self.batch_size] for i in range(0, len(ids), self.batch_size)]
+
+    def run(self) -> "RunResult":
+        """Execute the full batch loop: validate -> remove -> test -> commit.
+
+        Returns
+        -------
+        RunResult
+            Summary of the entire run including per-batch results.
+        """
+        global SafetyValidator, GitOrchestrator, BatchRemover, ReportGenerator  # noqa: PLW0603
+        if SafetyValidator is None:
+            from agents.code_fixer.core.safety_validator import SafetyValidator
+        if GitOrchestrator is None:
+            from agents.code_fixer.core.git_orchestrator import GitOrchestrator
+        if ReportGenerator is None:
+            from agents.code_fixer.core.report_generator import ReportGenerator
+        if BatchRemover is None:
+            try:
+                from agents.code_auditor.core.phase5_executor import BatchRemover
+            except ImportError as exc:
+                raise ImportError(
+                    f"Cannot import code_auditor modules: {exc}\n"
+                    "Run from repo root: python agents/code_fixer/cli.py ..."
+                ) from exc
+
+        git = GitOrchestrator(project_root=self.project_root, verbose=self.verbose)
+        validator = SafetyValidator(
+            report_data=self._phase3_data,
+            project_root=self.project_root,
+            verbose=self.verbose,
+        )
+        remover = BatchRemover(
+            project_root=str(self.project_root),
+            phase2_report=self._phase2_data,
+            verbose=self.verbose,
+        )
+
+        # ── Pre-flight checks ─────────────────────────────────────────
+        for check_fn, exit_code in [
+            (validator.validate_report,    3),
+            (validator.validate_git_clean, 3),
+            (validator.run_baseline_tests, 3),
+        ]:
+            result = check_fn()
+            if not result.passed:
+                raise SystemExit(
+                    f"Pre-flight layer {result.layer} failed: {result.message}"
+                )
+
+        batches = self.build_batches()
+        run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+        started_at = datetime.now().isoformat(timespec="seconds")
+
+        batch_results: List[BatchResult] = []
+        items_fixed: List[str] = []
+        items_failed: List[str] = []
+        commits: List[str] = []
+        lines_removed = 0
+        stopped = False
+
+        for batch_num, batch in enumerate(batches, start=1):
+            if stopped:
+                break
+
+            if self.verbose:
+                print(f"  Batch {batch_num}/{len(batches)}: {', '.join(batch)}")
+
+            # Layer 5: per-batch dry-run
+            dry_check = validator.validate_batch_dry_run(
+                batch, self._phase3_data, self._phase2_data
+            )
+            if not dry_check.passed:
+                br = BatchResult(
+                    batch_num=batch_num, item_ids=batch, status="skipped",
+                    lines_removed=0, commit_hash="", branch_name="",
+                    error=dry_check.message,
+                )
+                batch_results.append(br)
+                items_failed.extend(batch)
+                if not self.skip_failed:
+                    stopped = True
+                continue
+
+            # Execute removal
+            try:
+                removal = remover.remove_batch(
+                    batch, self._phase3_data,
+                    batch_id=f"fix-{run_id}-batch{batch_num}",
+                )
+            except Exception as exc:  # noqa: BLE001
+                br = BatchResult(
+                    batch_num=batch_num, item_ids=batch, status="failed",
+                    lines_removed=0, commit_hash="", branch_name="",
+                    error=str(exc),
+                )
+                batch_results.append(br)
+                items_failed.extend(batch)
+                if not self.skip_failed:
+                    stopped = True
+                continue
+
+            branch = removal.get("branch_created", "")
+
+            if removal.get("status") == "failed":
+                br = BatchResult(
+                    batch_num=batch_num, item_ids=batch, status="failed",
+                    lines_removed=0, commit_hash="", branch_name=branch,
+                    error=str(removal.get("errors", "")),
+                )
+                batch_results.append(br)
+                items_failed.extend(batch)
+                if not self.no_cleanup and branch:
+                    git.cleanup_branch(branch)
+                if not self.skip_failed:
+                    stopped = True
+                continue
+
+            # Run tests
+            tests_passed, test_output = git.run_tests()
+            if not tests_passed:
+                br = BatchResult(
+                    batch_num=batch_num, item_ids=batch, status="failed",
+                    lines_removed=0, commit_hash="", branch_name=branch,
+                    error=f"tests failed: {test_output[:200]}",
+                )
+                batch_results.append(br)
+                items_failed.extend(batch)
+                if not self.no_cleanup and branch:
+                    git.cleanup_branch(branch)
+                if not self.skip_failed:
+                    stopped = True
+                continue
+
+            # Commit and merge
+            ids_str = ", ".join(batch)
+            commit_hash = git.commit_batch(
+                f"fix: remove {ids_str} ({self.risk} risk)"
+            )
+            if branch:
+                try:
+                    git.merge_to_main(branch)
+                except RuntimeError:
+                    pass  # branch may already be on main
+
+            batch_lines = removal.get("total_lines_removed", 0)
+            br = BatchResult(
+                batch_num=batch_num, item_ids=batch, status="success",
+                lines_removed=batch_lines, commit_hash=commit_hash,
+                branch_name=branch,
+            )
+            batch_results.append(br)
+            items_fixed.extend(removal.get("items_removed", batch))
+            commits.append(commit_hash)
+            lines_removed += batch_lines
+
+        # ── Write reports ─────────────────────────────────────────────
+        succeeded = sum(1 for b in batch_results if b.status == "success")
+        failed = sum(1 for b in batch_results if b.status != "success")
+
+        if failed == 0:
+            final_status = "success"
+        elif succeeded > 0:
+            final_status = "partial"
+        else:
+            final_status = "failed"
+
+        run_data = {
+            "run_id": run_id,
+            "started_at": started_at,
+            "finished_at": datetime.now().isoformat(timespec="seconds"),
+            "report_input": str(self.report_path),
+            "risk_filter": self.risk,
+            "batch_size": self.batch_size,
+            "total_candidates": len(self._candidates),
+            "batches_attempted": len(batch_results),
+            "batches_succeeded": succeeded,
+            "batches_failed": failed,
+            "items_fixed": items_fixed,
+            "items_failed": items_failed,
+            "lines_removed": lines_removed,
+            "commits": commits,
+            "batches": [
+                {
+                    "batch_num": b.batch_num,
+                    "item_ids": b.item_ids,
+                    "status": b.status,
+                    "lines_removed": b.lines_removed,
+                    "commit_hash": b.commit_hash,
+                    "branch_name": b.branch_name,
+                    "error": b.error,
+                }
+                for b in batch_results
+            ],
+        }
+
+        reporter = ReportGenerator(run_data)
+        json_path = self.project_root / f"fix_report_{run_id}.json"
+        html_path = self.project_root / f"fix_report_{run_id}.html"
+        reporter.write_json(json_path)
+        reporter.write_html(html_path)
+
+        return RunResult(
+            status=final_status,
+            batches_attempted=len(batch_results),
+            batches_succeeded=succeeded,
+            batches_failed=failed,
+            items_fixed=items_fixed,
+            items_failed=items_failed,
+            lines_removed=lines_removed,
+            commits=commits,
+            batch_results=batch_results,
+            report_json=str(json_path),
+            report_html=str(html_path),
+        )
+
+    def dry_run(self) -> dict:
+        """Preview the full run without making any changes.
+
+        Returns
+        -------
+        dict
+            Summary with ``total_candidates``, ``batches``,
+            ``estimated_lines``, and per-batch details.
+        """
+        global DryRunExecutor  # noqa: PLW0603
+        if DryRunExecutor is None:
+            try:
+                from agents.code_auditor.core.phase5_executor import DryRunExecutor
+            except ImportError:
+                return {
+                    "error": "code_auditor modules not found",
+                    "total_candidates": len(self._candidates),
+                    "batches": [],
+                }
+
+        batches = self.build_batches()
+        executor = DryRunExecutor(
+            phase3_verified=self._phase3_data,
+            phase1_report={},
+            phase2_report=self._phase2_data,
+            verbose=self.verbose,
+        )
+
+        batch_previews = []
+        for i, batch in enumerate(batches, start=1):
+            try:
+                result = executor.run_dry_run(batch)
+                batch_previews.append({
+                    "batch_num": i,
+                    "item_ids": batch,
+                    "estimated_lines": result.lines_affected,
+                    "is_safe": result.is_safe,
+                    "warnings": result.warnings,
+                    "files_to_delete": result.files_to_delete,
+                })
+            except Exception as exc:  # noqa: BLE001
+                batch_previews.append({
+                    "batch_num": i, "item_ids": batch,
+                    "error": str(exc), "is_safe": False,
+                })
+
+        return {
+            "total_candidates": len(self._candidates),
+            "total_batches": len(batches),
+            "risk_filter": self.risk,
+            "batch_size": self.batch_size,
+            "batches": batch_previews,
+            "estimated_lines": sum(
+                b.get("estimated_lines", 0) for b in batch_previews
+            ),
+        }
 
     # ------------------------------------------------------------------ #
     # Private helpers                                                        #
