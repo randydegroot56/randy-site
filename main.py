@@ -17,7 +17,8 @@ import sys
 from pathlib import Path
 
 # Ensure repo root is importable when run as `python main.py`
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+if __name__ == "__main__":
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 # Force UTF-8 output on Windows (cp1252 default can't encode ✓/✗)
 if hasattr(sys.stdout, "reconfigure"):
@@ -80,7 +81,7 @@ def main() -> int:
 
     try:
         orch.run(parsed.command, parsed.args)
-    except (ValueError, KeyError) as exc:
+    except Exception as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1
     finally:
