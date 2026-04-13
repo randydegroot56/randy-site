@@ -71,6 +71,14 @@ def test_run_fix_with_explicit_target(tmp_path):
     assert result["target"] == "./src"
 
 
+def test_run_fix_with_explicit_target_does_not_inject_audit_result(tmp_path):
+    """When an explicit target is given to fix, audit_result should NOT be injected."""
+    orch, _, _ = make_orch(tmp_path)
+    orch.run("audit", ["./src"])  # stores last_AuditCompleted in state
+    result = orch.run("fix", ["./other"])  # explicit target given
+    assert result["audit_result_received"] is False
+
+
 def test_run_unknown_command_raises_value_error(tmp_path):
     orch, _, _ = make_orch(tmp_path)
     with pytest.raises(ValueError, match="Unknown command 'unknown'"):

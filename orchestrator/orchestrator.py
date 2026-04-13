@@ -55,8 +55,8 @@ class Orchestrator:
         if kwarg_key and args:
             kwargs[kwarg_key] = args[0]
 
-        # For "fix": if no target given and a previous audit exists, inject it
-        if command == "fix":
+        # For "fix": inject last audit result only when no explicit target was given
+        if command == "fix" and not args:
             audit_result = self._state.get("last_AuditCompleted")
             if audit_result:
                 kwargs.setdefault("audit_result", audit_result)
