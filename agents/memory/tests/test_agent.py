@@ -55,6 +55,17 @@ def test_add_missing_all_args_raises(tmp_path):
         agent.run(args=["add"])
 
 
+def test_add_publishes_memory_updated(tmp_path):
+    agent, bus, _ = make_agent(tmp_path)
+    received = []
+    bus.subscribe("MemoryUpdated", received.append)
+    agent.run(args=["add", "decisions", "We use FastAPI"])
+    # Filter out any MemoryUpdated events from other sources
+    agent_events = [e for e in received if e.agent_name == "memory"]
+    assert len(agent_events) >= 1
+    assert agent_events[0].event_type == "MemoryUpdated"
+
+
 # --- query ---
 
 def test_query_returns_results(tmp_path):

@@ -113,7 +113,12 @@ class MemoryAgent(BaseAgent):
         return {"results": results}
 
     def _cmd_list(self, args: List[str]) -> Dict[str, Any]:
-        """list [category] — show stored memories, optionally filtered by category."""
+        """list [category] — show stored memories, optionally filtered by category.
+
+        Without a category, returns all entries including auto-indexed 'history' entries.
+        Pass 'history' explicitly to show only the event log, or another category to
+        filter to that category only.
+        """
         category = args[0] if args else None
         entries = self._store.list(category=category)
         for entry in entries:
