@@ -20,8 +20,9 @@ from agents.orchestrator.state import StateStore
 
 # Maps CLI verb -> (agent_name, kwarg_key_for_first_positional_arg)
 INTENT_MAP: Dict[str, Tuple[str, Optional[str]]] = {
-    "audit": ("code_auditor", "target"),
-    "fix":   ("code_fixer",   "target"),
+    "audit":  ("code_auditor", "target"),
+    "fix":    ("code_fixer",   "target"),
+    "memory": ("memory",       "args"),    # memory agent receives full arg list
 }
 
 
@@ -52,8 +53,9 @@ class Orchestrator:
         kwargs: Dict[str, Any] = {}
 
         # Map first positional arg to the agent's expected kwarg
-        if kwarg_key and args:
-            kwargs[kwarg_key] = args[0]
+        if kwarg_key:
+            # "args" means pass the full list; other keys take only the first element
+            kwargs[kwarg_key] = args if kwarg_key == "args" else (args[0] if args else None)
 
         # For "fix": inject last audit result only when no explicit target was given
         if command == "fix" and not args:

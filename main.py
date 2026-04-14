@@ -28,6 +28,7 @@ if hasattr(sys.stderr, "reconfigure"):
 
 from agents.orchestrator.agents.audit_agent import AuditAgent
 from agents.orchestrator.agents.fixer_agent import FixerAgent
+from agents.memory.agent import MemoryAgent
 from agents.orchestrator.bus import EventBus
 from agents.orchestrator.logger import OrchestratorLogger
 from agents.orchestrator.orchestrator import Orchestrator
@@ -40,6 +41,7 @@ def build_registry() -> AgentRegistry:
     registry = AgentRegistry()
     registry.register(AuditAgent)
     registry.register(FixerAgent)
+    registry.register(MemoryAgent)
     return registry
 
 
