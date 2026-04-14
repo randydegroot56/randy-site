@@ -43,6 +43,14 @@ class MemoryAgent(BaseAgent):
         state: StateStore,
         memory_dir: Path = DEFAULT_MEMORY_DIR,
     ) -> None:
+        """Initialise the MemoryAgent and subscribe the MemoryIndexer to the bus.
+
+        Args:
+            bus: EventBus for publishing MemoryUpdated and ContextProvided events.
+            state: StateStore for persisting last event payloads (via BaseAgent).
+            memory_dir: Directory for JSON memory files.
+                        Defaults to ~/.agent-orchestrator/memory/.
+        """
         super().__init__(bus=bus, state=state)
         self._store = MemoryStore(base_dir=Path(memory_dir))
         self._context = ContextBuilder(self._store)
@@ -105,19 +113,9 @@ class MemoryAgent(BaseAgent):
         return {"results": results}
 
     def _cmd_list(self, args: List[str]) -> Dict[str, Any]:
-        """list [category] — show stored memories, optionally filtered.
-
-        When no category is given, returns all user-added entries (excludes
-        the 'history' category which is auto-populated by MemoryIndexer).
-        Pass 'history' explicitly to see the auto-indexed event log.
-        """
+        """list [category] — show stored memories, optionally filtered by category."""
         category = args[0] if args else None
-        if category is not None:
-            entries = self._store.list(category=category)
-        else:
-            # Exclude auto-indexed 'history' entries from the default listing
-            all_entries = self._store.list()
-            entries = [e for e in all_entries if e.get("category") != "history"]
+        entries = self._store.list(category=category)
         for entry in entries:
             pin = " [pinned]" if entry.get("pinned") else ""
             print(f"[{entry['category']}]{pin} {entry['content']}  (id: {entry['id']})")
