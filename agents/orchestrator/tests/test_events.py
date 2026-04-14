@@ -1,4 +1,4 @@
-from agents.orchestrator.events import AgentEvent, AuditCompleted, AuditFailed, FixCompleted, FixFailed
+from agents.orchestrator.events import AgentEvent, AuditCompleted, AuditFailed, ContextProvided, FixCompleted, FixFailed, MemoryUpdated
 
 
 def test_agent_event_defaults():
@@ -50,7 +50,6 @@ def test_payload_not_shared_between_instances():
 
 
 def test_memory_updated_event():
-    from agents.orchestrator.events import MemoryUpdated
     e = MemoryUpdated(agent_name="memory", payload={"entry_id": "abc"})
     assert e.event_type == "MemoryUpdated"
     assert e.status == "success"
@@ -58,7 +57,7 @@ def test_memory_updated_event():
 
 
 def test_context_provided_event():
-    from agents.orchestrator.events import ContextProvided
     e = ContextProvided(agent_name="memory", payload={"query": "fastapi"})
     assert e.event_type == "ContextProvided"
     assert e.status == "success"
+    assert e.payload == {"query": "fastapi"}
