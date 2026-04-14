@@ -26,6 +26,16 @@ class MemoryStore:
         base_dir: Path = DEFAULT_BASE_DIR,
         max_size: int = 500,
     ) -> None:
+        """Initialise the store.
+
+        Args:
+            base_dir: Directory where per-category JSON files are written.
+                      Created (with parents) if it does not exist.
+            max_size: Maximum number of entries per category file.
+                      When reached, the oldest unpinned entry is removed
+                      before the new one is written. Raises OverflowError
+                      if all entries are pinned.
+        """
         self._base_dir = Path(base_dir)
         self._base_dir.mkdir(parents=True, exist_ok=True)
         self._max_size = max_size
@@ -42,7 +52,8 @@ class MemoryStore:
         if not path.exists():
             return []
         try:
-            return json.loads(path.read_text(encoding="utf-8"))
+            data = json.loads(path.read_text(encoding="utf-8"))
+            return data if isinstance(data, list) else []
         except (json.JSONDecodeError, OSError):
             return []
 
@@ -75,10 +86,13 @@ class MemoryStore:
         entries = self._load(category)
 
         if len(entries) >= self._max_size:
-            for i, e in enumerate(entries):
-                if not e.get("pinned", False):
-                    entries.pop(i)
-                    break
+            unpinned = [i for i, e in enumerate(entries) if not e.get("pinned", False)]
+            if not unpinned:
+                raise OverflowError(
+                    f"Category '{category}' is at max_size ({self._max_size}) "
+                    "and all entries are pinned; unpin an entry before adding more."
+                )
+            entries.pop(unpinned[0])
 
         entry: Dict[str, Any] = {
             "id": uuid.uuid4().hex,

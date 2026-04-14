@@ -3,7 +3,7 @@ import json
 
 import pytest
 
-from agents.memory.store import MemoryStore, VALID_CATEGORIES
+from agents.memory.store import MemoryStore
 
 
 def make_store(tmp_path, max_size=500):
@@ -145,3 +145,13 @@ def test_data_survives_reconstruction(tmp_path):
 
     store2 = MemoryStore(base_dir=base_dir)
     assert store2.get(entry["id"]) == entry
+
+
+# --- all-pinned edge case ---
+
+def test_pruning_raises_when_all_entries_pinned(tmp_path):
+    store = make_store(tmp_path, max_size=2)
+    store.add("decisions", "pinned one", "user:cli", pinned=True)
+    store.add("decisions", "pinned two", "user:cli", pinned=True)
+    with pytest.raises(OverflowError, match="all entries are pinned"):
+        store.add("decisions", "third", "user:cli")
