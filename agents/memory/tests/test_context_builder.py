@@ -91,3 +91,17 @@ def test_pinned_entries_do_not_consume_scored_slots(tmp_path):
     assert pinned["id"] in ids
     assert scored1["id"] in ids
     assert scored2["id"] in ids
+
+
+def test_expired_entries_excluded(tmp_path):
+    """Entries older than horizon_days get recency=0.0 and must not appear in results."""
+    store, builder = make_store_and_builder(tmp_path)
+    store.add("decisions", "fastapi dummy", "user:cli", keywords=["fastapi"])  # creates file
+    cat_file = tmp_path / "memory" / "decisions.json"
+    data = json.loads(cat_file.read_text())
+    data[0]["timestamp"] = (
+        datetime.now(timezone.utc) - timedelta(days=400)
+    ).isoformat()
+    cat_file.write_text(json.dumps(data))
+    results = builder.query("fastapi", horizon_days=365)
+    assert results == []

@@ -34,9 +34,9 @@ class ContextBuilder:
         """Linear decay from 1.0 (brand-new) to 0.0 at horizon_days old."""
         try:
             ts = datetime.fromisoformat(entry["timestamp"])
-        except (ValueError, KeyError):
+            age_days = (datetime.now(timezone.utc) - ts).total_seconds() / 86400
+        except (ValueError, KeyError, TypeError):
             return 0.0
-        age_days = (datetime.now(timezone.utc) - ts).days
         return max(0.0, 1.0 - age_days / horizon_days)
 
     def query(
@@ -66,7 +66,10 @@ class ContextBuilder:
             if rel == 0:
                 continue
             rec = self._recency(entry, horizon_days)
-            scored.append((rel * rec, entry["timestamp"], entry))
+            score = rel * rec
+            if score == 0:
+                continue
+            scored.append((score, entry["timestamp"], entry))
 
         scored.sort(key=lambda x: (x[0], x[1]), reverse=True)
         top_unpinned = [entry for _, _, entry in scored[:max_results]]
