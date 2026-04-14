@@ -47,3 +47,18 @@ def test_payload_not_shared_between_instances():
     e2 = AgentEvent(agent_name="b")
     e1.payload["x"] = 1
     assert "x" not in e2.payload
+
+
+def test_memory_updated_event():
+    from agents.orchestrator.events import MemoryUpdated
+    e = MemoryUpdated(agent_name="memory", payload={"entry_id": "abc"})
+    assert e.event_type == "MemoryUpdated"
+    assert e.status == "success"
+    assert e.payload == {"entry_id": "abc"}
+
+
+def test_context_provided_event():
+    from agents.orchestrator.events import ContextProvided
+    e = ContextProvided(agent_name="memory", payload={"query": "fastapi"})
+    assert e.event_type == "ContextProvided"
+    assert e.status == "success"

@@ -49,3 +49,13 @@ class FixCompleted(AgentEvent):
 class FixFailed(AgentEvent):
     event_type: str = "FixFailed"
     status: str = "failed"
+
+
+@dataclass
+class MemoryUpdated(AgentEvent):
+    event_type: str = "MemoryUpdated"
+
+
+@dataclass
+class ContextProvided(AgentEvent):
+    event_type: str = "ContextProvided"
