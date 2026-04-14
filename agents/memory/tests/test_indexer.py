@@ -1,6 +1,4 @@
 """Tests for agents.memory.indexer.MemoryIndexer."""
-import pytest
-
 from agents.orchestrator.bus import EventBus
 from agents.orchestrator.events import AgentEvent, AuditCompleted
 from agents.memory.indexer import MemoryIndexer
@@ -76,3 +74,17 @@ def test_source_is_agent_name(tmp_path):
     bus.publish(AgentEvent(agent_name="code_auditor", event_type="SomeEvent"))
     history = store.list(category="history")
     assert history[0]["source"] == "agent:code_auditor"
+
+
+def test_failed_event_without_error_includes_failed_suffix(tmp_path):
+    bus, store, _ = make_indexer(tmp_path)
+    bus.publish(AgentEvent(
+        agent_name="code_auditor",
+        event_type="AuditFailed",
+        status="failed",
+        error=None,
+    ))
+    history = store.list(category="history")
+    assert len(history) == 1
+    assert "FAILED" in history[0]["content"]
+    assert "ERROR" not in history[0]["content"]

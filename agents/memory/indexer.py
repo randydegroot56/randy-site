@@ -17,7 +17,8 @@ from agents.orchestrator.bus import EventBus
 from agents.orchestrator.events import AgentEvent, MemoryUpdated
 from agents.memory.store import MemoryStore
 
-# Maps event_type -> (target_category, content_factory)
+# Maps event_type -> (target_category, content_factory).
+# target_category should differ from "history" (layer 1 always writes there).
 EVENT_CATEGORY_MAP: Dict[str, Tuple[str, Callable[[AgentEvent], str]]] = {
     "AuditCompleted": (
         "patterns",
@@ -27,7 +28,7 @@ EVENT_CATEGORY_MAP: Dict[str, Tuple[str, Callable[[AgentEvent], str]]] = {
         ),
     ),
     "FixCompleted": (
-        "history",
+        "decisions",
         lambda e: f"Fix applied to {e.payload.get('target', '?')}",
     ),
 }
@@ -50,12 +51,15 @@ class MemoryIndexer:
             return
 
         # Layer 1 — always: human-readable summary in history
-        if event.status == "failed" and event.error:
-            content = f"{event.event_type} by {event.agent_name} — ERROR: {event.error}"
+        if event.status == "failed":
+            error_part = f" — ERROR: {event.error}" if event.error else " — FAILED"
+            content = f"{event.event_type} by {event.agent_name}{error_part}"
         else:
             content = f"{event.event_type} by {event.agent_name}"
 
-        keywords = [event.event_type.lower(), event.agent_name.lower(), event.status]
+        keywords = [event.event_type.lower(), event.agent_name.lower()]
+        if event.status != "success":
+            keywords.append(event.status)
         source = f"agent:{event.agent_name}"
 
         entry = self._store.add("history", content, source, keywords=keywords)
