@@ -48,13 +48,28 @@ class MemoryStore:
         return self._base_dir / f"{category}.json"
 
     def _load(self, category: str) -> List[Dict[str, Any]]:
+        """Load entries for a category from disk. Returns [] on missing or corrupt files."""
         path = self._path(category)
         if not path.exists():
             return []
         try:
             data = json.loads(path.read_text(encoding="utf-8"))
             return data if isinstance(data, list) else []
-        except (json.JSONDecodeError, OSError):
+        except json.JSONDecodeError:
+            import sys
+            import shutil
+            backup = path.with_suffix(".json.bak")
+            try:
+                shutil.copy2(path, backup)
+            except OSError:
+                pass
+            print(
+                f"WARNING: {path.name} was corrupt and could not be loaded; "
+                f"backed up to {backup.name}. Starting fresh.",
+                file=sys.stderr,
+            )
+            return []
+        except OSError:
             return []
 
     def _save(self, category: str, entries: List[Dict[str, Any]]) -> None:

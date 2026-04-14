@@ -97,3 +97,27 @@ def test_print_summary_calls_logger_summary(tmp_path, capsys):
     orch.print_summary()
     captured = capsys.readouterr()
     assert "AuditCompleted" in captured.out
+
+
+def test_memory_command_routes_to_memory_agent(tmp_path):
+    """Orchestrator correctly routes 'memory' command with full arg list."""
+    from agents.memory.agent import MemoryAgent
+
+    bus = EventBus()
+    state = StateStore(tmp_path / "state.json")
+    logger = OrchestratorLogger(bus)
+    registry = AgentRegistry()
+
+    # Patch memory_dir to use tmp_path to avoid writing to ~/.agent-orchestrator
+    import agents.memory.agent as agent_module
+    original_dir = agent_module.DEFAULT_MEMORY_DIR
+    agent_module.DEFAULT_MEMORY_DIR = tmp_path / "memory"
+    try:
+        registry.register(MemoryAgent)
+        orch = Orchestrator(registry, bus, state, logger)
+        result = orch.run("memory", ["stats"])
+    finally:
+        agent_module.DEFAULT_MEMORY_DIR = original_dir
+
+    assert "stats" in result
+    assert isinstance(result["stats"], dict)

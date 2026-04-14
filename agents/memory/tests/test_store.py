@@ -155,3 +155,30 @@ def test_pruning_raises_when_all_entries_pinned(tmp_path):
     store.add("decisions", "pinned two", "user:cli", pinned=True)
     with pytest.raises(OverflowError, match="all entries are pinned"):
         store.add("decisions", "third", "user:cli")
+
+
+# --- corrupt JSON ---
+
+def test_corrupt_json_returns_empty_and_creates_backup(tmp_path):
+    """Corrupt JSON returns empty list and backs up the bad file to .json.bak."""
+    import sys
+    from io import StringIO
+
+    base_dir = tmp_path / "memory"
+    base_dir.mkdir()
+    cat_file = base_dir / "decisions.json"
+    cat_file.write_text("NOT VALID JSON {{{{", encoding="utf-8")
+
+    store = MemoryStore(base_dir=base_dir)
+    stderr_capture = StringIO()
+    # Redirect stderr to capture the warning
+    old_stderr = sys.stderr
+    sys.stderr = stderr_capture
+    try:
+        result = store.list(category="decisions")
+    finally:
+        sys.stderr = old_stderr
+
+    assert result == []
+    assert (base_dir / "decisions.json.bak").exists()
+    assert "corrupt" in stderr_capture.getvalue().lower()
