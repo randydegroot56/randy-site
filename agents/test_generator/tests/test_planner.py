@@ -147,3 +147,32 @@ def test_plan_database_template_detection(tmp_path, planner):
     module = make_module(tmp_path, [make_fn("save_to_database")])
     plan = planner.plan(module=module)
     assert any(s.template == "database" for s in plan.scenarios)
+
+
+def test_plan_combined_spec_and_code_deduplicates(tmp_path, planner):
+    """Spec scenarios take priority over code scenarios with the same name."""
+    from unittest.mock import MagicMock
+
+    # Spec with one feature whose slugified name collides with the function name
+    spec = MagicMock()
+    spec.spec_id = "spec_test"
+    feature = MagicMock()
+    feature.name = "greet"
+    feature.description = "Greet a user"
+    feature.id = "F1"
+    feature.acceptance_criteria = []   # no criteria → one placeholder scenario named test_greet_happy_path
+    spec.features = [feature]
+
+    # Code module with a public function also named "greet" → also produces test_greet_happy_path
+    module = make_module(tmp_path, [make_fn("greet", params=["name"])])
+
+    plan = planner.plan(module=module, spec=spec, spec_id="spec_test")
+
+    # After deduplication, test_greet_happy_path must appear exactly once
+    names = [s.name for s in plan.scenarios]
+    assert names.count("test_greet_happy_path") == 1
+
+    # The surviving scenario must be the spec one (tdd_pending=True)
+    surviving = next(s for s in plan.scenarios if s.name == "test_greet_happy_path")
+    assert surviving.tdd_pending is True
+    assert surviving.source.startswith("spec:")

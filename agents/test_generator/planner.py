@@ -89,7 +89,10 @@ class TestPlanner:
                 seen.add(s.name)
                 unique.append(s)
 
-        fn_count = len(module.functions) if module else max(len(unique), 1)
+        fn_count = (
+            len([f for f in module.functions if not f.name.startswith("_")])
+            if module else max(len(unique), 1)
+        ) or 1  # guard against all-private modules
         coverage = min(90, int((len(unique) / fn_count) * 100)) if fn_count else 0
 
         return TestPlan(
