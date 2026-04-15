@@ -59,3 +59,24 @@ class MemoryUpdated(AgentEvent):
 @dataclass
 class ContextProvided(AgentEvent):
     event_type: str = "ContextProvided"
+
+
+@dataclass
+class SpecCreated(AgentEvent):
+    event_type: str = "SpecCreated"
+
+
+@dataclass
+class SpecValidated(AgentEvent):
+    event_type: str = "SpecValidated"
+
+
+@dataclass
+class SpecUpdated(AgentEvent):
+    event_type: str = "SpecUpdated"
+
+
+@dataclass
+class SpecFailed(AgentEvent):
+    event_type: str = "SpecFailed"
+    status: str = "failed"

@@ -61,3 +61,31 @@ def test_context_provided_event():
     assert e.event_type == "ContextProvided"
     assert e.status == "success"
     assert e.payload == {"query": "fastapi"}
+
+
+# ── Spec events ────────────────────────────────────────────────────────────────
+
+def test_spec_created_event():
+    from agents.orchestrator.events import SpecCreated
+    e = SpecCreated(agent_name="spec", payload={"spec_id": "spec_20260415_001"})
+    assert e.event_type == "SpecCreated"
+    assert e.status == "success"
+
+
+def test_spec_validated_event():
+    from agents.orchestrator.events import SpecValidated
+    e = SpecValidated(agent_name="spec", payload={"spec_id": "spec_20260415_001"})
+    assert e.event_type == "SpecValidated"
+
+
+def test_spec_updated_event():
+    from agents.orchestrator.events import SpecUpdated
+    e = SpecUpdated(agent_name="spec", payload={"spec_id": "spec_20260415_001"})
+    assert e.event_type == "SpecUpdated"
+
+
+def test_spec_failed_event():
+    from agents.orchestrator.events import SpecFailed
+    e = SpecFailed(agent_name="spec", error="something went wrong")
+    assert e.event_type == "SpecFailed"
+    assert e.status == "failed"
