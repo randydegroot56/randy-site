@@ -32,12 +32,12 @@ class AgentRegistry:
             )
         self._classes[agent_class.name] = agent_class
 
-    def get(self, name: str, bus: EventBus, state: StateStore) -> BaseAgent:
+    def get(self, name: str, bus: EventBus, state: StateStore, **kwargs) -> BaseAgent:
         """Instantiate and return a registered agent by name."""
         if name not in self._classes:
             available = ", ".join(sorted(self._classes))
             raise KeyError(f"No agent '{name}'. Available: {available or '(none)'}")
-        return self._classes[name](bus=bus, state=state)
+        return self._classes[name](bus=bus, state=state, **kwargs)
 
     def list_agents(self) -> Dict[str, str]:
         """Return {name: description} for all registered agents, sorted."""

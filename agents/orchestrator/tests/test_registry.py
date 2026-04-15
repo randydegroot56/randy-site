@@ -88,3 +88,30 @@ def test_list_agents_returns_alphabetical_order(tmp_path):
 def test_empty_registry_list_agents_returns_empty_dict():
     registry = AgentRegistry()
     assert registry.list_agents() == {}
+
+
+def test_registry_get_forwards_kwargs(tmp_path):
+    """Extra kwargs passed to get() are forwarded to the agent constructor."""
+    from agents.orchestrator.base_agent import BaseAgent
+    from agents.orchestrator.bus import EventBus
+    from agents.orchestrator.registry import AgentRegistry
+    from agents.orchestrator.state import StateStore
+
+    class KwargsCapture(BaseAgent):
+        name = "kwarg_test"
+        description = "captures kwargs"
+        received_extra = None
+
+        def __init__(self, bus, state, extra_param=None, **kwargs):
+            super().__init__(bus=bus, state=state)
+            KwargsCapture.received_extra = extra_param
+
+        def run(self, **kwargs):
+            return {}
+
+    bus = EventBus()
+    state = StateStore(tmp_path / "state.json")
+    registry = AgentRegistry()
+    registry.register(KwargsCapture)
+    registry.get("kwarg_test", bus, state, extra_param="hello")
+    assert KwargsCapture.received_extra == "hello"
