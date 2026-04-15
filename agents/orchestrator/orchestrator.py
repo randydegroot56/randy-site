@@ -23,6 +23,7 @@ INTENT_MAP: Dict[str, Tuple[str, Optional[str]]] = {
     "audit":  ("code_auditor", "target"),
     "fix":    ("code_fixer",   "target"),
     "memory": ("memory",       "args"),    # memory agent receives full arg list
+    "spec":   ("spec",         "args"),    # spec agent receives full arg list
 }
 
 
@@ -69,7 +70,11 @@ class Orchestrator:
             if audit_result:
                 kwargs.setdefault("audit_result", audit_result)
 
-        agent = self._registry.get(agent_name, self._bus, self._state)
+        extra: Dict[str, Any] = {}
+        if command == "spec":
+            extra["registry"] = self._registry
+
+        agent = self._registry.get(agent_name, self._bus, self._state, **extra)
         return agent.run(**kwargs)
 
     def print_summary(self) -> None:

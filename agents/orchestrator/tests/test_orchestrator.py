@@ -121,3 +121,29 @@ def test_memory_command_routes_to_memory_agent(tmp_path):
 
     assert "stats" in result
     assert isinstance(result["stats"], dict)
+
+
+def test_spec_create_dispatches_to_spec_agent(tmp_path):
+    import io
+    from agents.orchestrator.bus import EventBus
+    from agents.orchestrator.logger import OrchestratorLogger
+    from agents.orchestrator.orchestrator import Orchestrator
+    from agents.orchestrator.registry import AgentRegistry
+    from agents.orchestrator.state import StateStore
+    from agents.spec_writer.agent import SpecWriterAgent
+
+    bus = EventBus()
+    state = StateStore(tmp_path / "state.json")
+    logger = OrchestratorLogger(bus, stream=io.StringIO())
+    registry = AgentRegistry()
+
+    class TestSpecAgent(SpecWriterAgent):
+        def __init__(self, bus, state, **kwargs):
+            super().__init__(bus=bus, state=state, specs_dir=tmp_path / "specs", **kwargs)
+
+    TestSpecAgent.name = "spec"
+    registry.register(TestSpecAgent)
+
+    orch = Orchestrator(registry, bus, state, logger)
+    result = orch.run("spec", ["create", "Build a Python API"])
+    assert "spec_id" in result
