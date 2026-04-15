@@ -89,3 +89,33 @@ def test_spec_failed_event():
     e = SpecFailed(agent_name="spec", error="something went wrong")
     assert e.event_type == "SpecFailed"
     assert e.status == "failed"
+
+
+# ── Test Generator events ──────────────────────────────────────────────────────
+
+def test_tests_generated_event():
+    from agents.orchestrator.events import TestsGenerated
+    e = TestsGenerated(agent_name="testgen", payload={"output_path": "tests/test_foo.py"})
+    assert e.event_type == "TestsGenerated"
+    assert e.status == "success"
+
+
+def test_tests_passed_event():
+    from agents.orchestrator.events import TestsPassed
+    e = TestsPassed(agent_name="testgen", payload={"passed": 3})
+    assert e.event_type == "TestsPassed"
+    assert e.status == "success"
+
+
+def test_tests_failed_event():
+    from agents.orchestrator.events import TestsFailed
+    e = TestsFailed(agent_name="testgen", payload={"failed": 1})
+    assert e.event_type == "TestsFailed"
+    assert e.status == "failed"
+
+
+def test_coverage_report_event():
+    from agents.orchestrator.events import CoverageReport
+    e = CoverageReport(agent_name="testgen", payload={"estimated_coverage": 72})
+    assert e.event_type == "CoverageReport"
+    assert e.status == "success"

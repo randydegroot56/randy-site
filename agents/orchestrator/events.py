@@ -80,3 +80,24 @@ class SpecUpdated(AgentEvent):
 class SpecFailed(AgentEvent):
     event_type: str = "SpecFailed"
     status: str = "failed"
+
+
+@dataclass
+class TestsGenerated(AgentEvent):
+    event_type: str = "TestsGenerated"
+
+
+@dataclass
+class TestsPassed(AgentEvent):
+    event_type: str = "TestsPassed"
+
+
+@dataclass
+class TestsFailed(AgentEvent):
+    event_type: str = "TestsFailed"
+    status: str = "failed"
+
+
+@dataclass
+class CoverageReport(AgentEvent):
+    event_type: str = "CoverageReport"
