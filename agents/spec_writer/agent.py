@@ -13,7 +13,6 @@ run(args=[subcommand, ...]) dispatches to:
 """
 from __future__ import annotations
 
-import json
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -165,6 +164,8 @@ class SpecWriterAgent(BaseAgent):
             idx = args.index("--format")
             if idx + 1 < len(args):
                 fmt = args[idx + 1]
+        if fmt not in ("json", "md"):
+            raise ValueError(f"Unsupported format '{fmt}'. Use json or md.")
         spec = self._formatter.load(spec_id)
         output = self._formatter.to_markdown(spec) if fmt == "md" else self._formatter.to_json(spec)
         print(output)
@@ -183,5 +184,6 @@ class SpecWriterAgent(BaseAgent):
 
     def _next_spec_id(self) -> str:
         today = datetime.now(timezone.utc).strftime("%Y%m%d")
-        existing = list(self._formatter._specs_dir.glob(f"spec_{today}_*.json"))
-        return f"spec_{today}_{len(existing) + 1:03d}"
+        prefix = f"spec_{today}_"
+        count = sum(1 for s in self._formatter.list_specs() if s["spec_id"].startswith(prefix))
+        return f"spec_{today}_{count + 1:03d}"
