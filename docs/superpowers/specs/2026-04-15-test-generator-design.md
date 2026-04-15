@@ -214,7 +214,7 @@ class TestGeneratorAgent(BaseAgent):
     name = "testgen"
     description = "Generates test files from specs or existing code"
 
-    def __init__(self, bus, state, registry=None, tests_dir=Path("tests")):
+    def __init__(self, bus, state, registry=None, tests_dir=Path("tests"), auto_generate=False):
         super().__init__(bus=bus, state=state)
         self._registry = registry
         self._tests_dir = Path(tests_dir)
