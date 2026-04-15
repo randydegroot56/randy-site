@@ -157,6 +157,10 @@ class CodeAnalyzer:
         r"\s*(?::\s*[\w<>\[\],\s|]+)?\s*=>",
         re.MULTILINE,
     )
+    # NOTE: _FN_METHOD matches indented function-like constructs. Class association
+    # is inferred from the nearest class declaration above the match — it does not
+    # verify the function is actually inside the class body. Nested functions inside
+    # other functions may be falsely attributed to a class (best-effort, regex limitation).
     _FN_METHOD = re.compile(
         r"^\s{2,}(?:(?:public|private|protected|static|async|override|readonly|abstract)\s+)*"
         r"(\w+)\s*\(([^)]*)\)\s*(?::\s*[\w<>\[\],\s|]+)?\s*\{",
@@ -239,7 +243,8 @@ class CodeAnalyzer:
             if not part:
                 continue
             name = part.split(":")[0].strip().split("=")[0].strip()
-            if name:
+            # Only accept valid identifiers (reject destructured, generic, etc.)
+            if name and re.match(r"^\.{0,3}\w+$", name):
                 params.append(name)
         return params or ["...args"]
 

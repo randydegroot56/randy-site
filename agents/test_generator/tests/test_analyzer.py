@@ -137,3 +137,14 @@ def test_parse_ts_params_strips_types(analyzer):
 
 def test_parse_ts_params_empty(analyzer):
     assert analyzer._parse_ts_params("") == []
+
+
+def test_parse_ts_params_with_default_values(analyzer):
+    params = analyzer._parse_ts_params("x: number = 0, y: string = 'hi'")
+    assert params == ["x", "y"]
+
+
+def test_parse_ts_params_rest_param(analyzer):
+    params = analyzer._parse_ts_params("...args: string[]")
+    # rest params with '...' prefix are accepted as-is
+    assert params == ["...args"]
