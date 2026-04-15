@@ -17,7 +17,7 @@ from agents.spec_writer.schema import (
 
 # ── Compiled patterns ──────────────────────────────────────────────────────────
 
-_SECTION_HEADER = re.compile(r'^#{1,3}\s+(.+)$', re.MULTILINE)
+_SECTION_HEADER = re.compile(r'^#{1,3}\s+(.+)$')
 _LIST_ITEM = re.compile(r'^[ \t]*[-*]\s+(.+)$|^[ \t]*\d+\.\s+(.+)$', re.MULTILINE)
 
 _LANGUAGE = re.compile(
@@ -129,8 +129,13 @@ class SpecParser:
                         spec.project.framework = _normalise_framework(m_fw.group(1))
                     else:
                         spec.technical.dependencies.append(item)
-                if body.strip():
-                    spec.technical.architecture_notes = body.strip()[:500]
+                # Only set architecture_notes when there's prose beyond the list items
+                non_list_lines = [
+                    line for line in body.splitlines()
+                    if line.strip() and not re.match(r'^[ \t]*[-*\d]', line)
+                ]
+                if non_list_lines:
+                    spec.technical.architecture_notes = "\n".join(non_list_lines)[:500]
             elif _H_CONSTRAINTS.search(header):
                 for item in _list_items(body):
                     if _SECURITY_WORDS.search(item):
@@ -142,6 +147,10 @@ class SpecParser:
 
         if acceptance_buffer and spec.features:
             spec.features[-1].acceptance_criteria = acceptance_buffer
+        elif acceptance_buffer:
+            spec.warnings.append(
+                "Acceptance criteria found but no features defined — criteria not attached"
+            )
 
     # ── Keyword heuristics ─────────────────────────────────────────────────────
 
