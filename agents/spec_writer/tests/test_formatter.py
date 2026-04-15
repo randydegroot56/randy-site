@@ -57,3 +57,33 @@ def test_list_specs_returns_metadata(tmp_path):
 
 def test_list_specs_empty_dir(tmp_path):
     assert SpecFormatter(specs_dir=tmp_path).list_specs() == []
+
+
+# ── Markdown output ────────────────────────────────────────────────────────────
+
+def test_to_markdown_contains_project_name(tmp_path):
+    md = SpecFormatter(specs_dir=tmp_path).to_markdown(make_spec())
+    assert "TestApp" in md
+
+
+def test_to_markdown_contains_feature_name(tmp_path):
+    md = SpecFormatter(specs_dir=tmp_path).to_markdown(make_spec())
+    assert "Login" in md
+
+
+def test_to_markdown_contains_feature_id(tmp_path):
+    md = SpecFormatter(specs_dir=tmp_path).to_markdown(make_spec())
+    assert "F001" in md
+
+
+def test_to_markdown_contains_acceptance_criteria(tmp_path):
+    md = SpecFormatter(specs_dir=tmp_path).to_markdown(make_spec())
+    assert "Returns 200 on success" in md
+
+
+def test_to_markdown_warnings_section(tmp_path):
+    spec = make_spec()
+    spec.warnings = ["project.name is TODO"]
+    md = SpecFormatter(specs_dir=tmp_path).to_markdown(spec)
+    assert "Warnings" in md
+    assert "project.name is TODO" in md
