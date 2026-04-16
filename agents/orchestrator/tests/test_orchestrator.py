@@ -147,3 +147,35 @@ def test_spec_create_dispatches_to_spec_agent(tmp_path):
     orch = Orchestrator(registry, bus, state, logger)
     result = orch.run("spec", ["create", "Build a Python API"])
     assert "spec_id" in result
+
+
+def test_test_generate_routes_to_testgen_agent(tmp_path):
+    """Orchestrator routes 'test generate --from-code' to TestGeneratorAgent."""
+    import io
+    from agents.orchestrator.bus import EventBus
+    from agents.orchestrator.logger import OrchestratorLogger
+    from agents.orchestrator.orchestrator import Orchestrator
+    from agents.orchestrator.registry import AgentRegistry
+    from agents.orchestrator.state import StateStore
+    from agents.test_generator.agent import TestGeneratorAgent
+
+    src = tmp_path / "greet.py"
+    src.write_text("def greet(name):\n    return f'Hello {name}'\n")
+
+    bus = EventBus()
+    state = StateStore(tmp_path / "state.json")
+    logger = OrchestratorLogger(bus, stream=io.StringIO())
+    registry = AgentRegistry()
+
+    # Subclass to redirect tests_dir to tmp_path
+    class TmpTestAgent(TestGeneratorAgent):
+        def __init__(self, bus, state, **kwargs):
+            super().__init__(bus=bus, state=state, tests_dir=tmp_path / "tests", **kwargs)
+
+    TmpTestAgent.name = "testgen"
+    registry.register(TmpTestAgent)
+
+    orch = Orchestrator(registry, bus, state, logger)
+    result = orch.run("test", ["generate", "--from-code", str(src)])
+    assert "path" in result        # key is "path" (not "output_path")
+    assert result["scenarios"] >= 1

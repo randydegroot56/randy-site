@@ -38,10 +38,15 @@ from agents.orchestrator.state import StateStore
 
 def build_registry() -> AgentRegistry:
     """Register all known agents. Add new agents here."""
+    from agents.spec_writer.agent import SpecWriterAgent
+    from agents.test_generator.agent import TestGeneratorAgent
+
     registry = AgentRegistry()
     registry.register(AuditAgent)
     registry.register(FixerAgent)
     registry.register(MemoryAgent)
+    registry.register(SpecWriterAgent)
+    registry.register(TestGeneratorAgent)
     return registry
 
 
@@ -50,7 +55,7 @@ def main() -> int:
         prog="main.py",
         description="AI Command Center — orchestrate your agents",
     )
-    parser.add_argument("command", help="Command to run: audit | fix | list")
+    parser.add_argument("command", help="Command to run: audit | fix | memory | spec | test | list")
     parser.add_argument("args", nargs="*", help="Arguments (e.g. ./src)")
     parser.add_argument(
         "--log-file",
@@ -63,7 +68,8 @@ def main() -> int:
         help="Path for state file (default: .orchestrator_state.json)",
     )
     parser.add_argument("--verbose", "-v", action="store_true", help="Print event payloads")
-    parsed = parser.parse_args()
+    parsed, extra_args = parser.parse_known_args()
+    parsed.args = parsed.args + extra_args
 
     bus = EventBus()
     state = StateStore(Path(parsed.state_file))
