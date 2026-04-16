@@ -47,8 +47,8 @@ def test_generate_from_code_creates_test_file(tmp_path):
     src = write_source(tmp_path)
     agent, _, _ = make_agent(tmp_path)
     result = agent.run(args=["generate", "--from-code", str(src)])
-    assert "output_path" in result
-    assert Path(result["output_path"]).exists()
+    assert "path" in result
+    assert Path(result["path"]).exists()
 
 
 def test_generate_from_code_publishes_tests_generated(tmp_path):

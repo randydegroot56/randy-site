@@ -95,6 +95,7 @@ class TestGeneratorAgent(BaseAgent):
         try:
             parsed = parser.parse_args(args)
         except (argparse.ArgumentError, SystemExit) as exc:
+            # argparse raises for invalid flag values (e.g. wrong types) — convert to ValueError
             available = ", ".join(sorted(["generate", "coverage", "validate", "list", "run"]))
             raise ValueError(
                 f"Unknown test subcommand '{args[0] if args else None}'. Available: {available}"
@@ -107,7 +108,8 @@ class TestGeneratorAgent(BaseAgent):
             "list":     self._cmd_list,
             "run":      self._cmd_run,
         }
-        if parsed.subcommand not in dispatch:
+        # parsed.subcommand is None when no args given; is unknown string when unrecognised
+        if not parsed.subcommand or parsed.subcommand not in dispatch:
             available = ", ".join(sorted(dispatch))
             raise ValueError(
                 f"Unknown test subcommand '{parsed.subcommand}'. Available: {available}"
@@ -144,12 +146,12 @@ class TestGeneratorAgent(BaseAgent):
 
         module = self._analyzer.analyze(Path(from_code)) if from_code else None
 
-        plan = self._planner.plan(module=module, spec=spec, spec_id=from_spec or "")
+        plan = self._planner.plan(module=module, spec=spec, spec_id=from_spec or spec_id or "")
         output_path = self._writer.write(plan)
         vr = self._validator.validate(output_path)
 
         payload = {
-            "output_path":        str(output_path),
+            "path":               str(output_path),
             "scenarios":          len(plan.scenarios),
             "estimated_coverage": plan.estimated_coverage,
             "passed":             vr.passed,
@@ -173,7 +175,7 @@ class TestGeneratorAgent(BaseAgent):
                 for p in target.rglob(f"*{ext}"):
                     if p.name.startswith("test_") or "test" in p.stem.lower():
                         continue
-                    if any(part in ("tests", "__pycache__", "node_modules") for part in p.parts):
+                    if any(part in ("tests", "test", "__tests__", "__pycache__", "node_modules", ".git") for part in p.parts):
                         continue
                     try:
                         modules.append(self._analyzer.analyze(p))
