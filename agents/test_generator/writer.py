@@ -75,6 +75,7 @@ class TestWriter:
             "source_path": source_path,
             "source_ref": source_ref,
             "generated_at": datetime.now(timezone.utc).isoformat(),
+            "functions": [],
             "scenarios": plan.scenarios,
             "fixtures_needed": plan.fixtures_needed,
             "tdd_mode": tdd_mode,
@@ -87,5 +88,6 @@ class TestWriter:
         try:
             rel = path.resolve().relative_to(Path.cwd().resolve())
         except ValueError:
-            rel = path
+            # Path is outside cwd (e.g. tmp_path in tests); fall back to filename only.
+            rel = Path(path.stem)
         return str(rel.with_suffix("")).replace("\\", ".").replace("/", ".")
