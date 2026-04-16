@@ -71,3 +71,12 @@ def test_validate_returns_validation_result_type(tmp_path, validator):
     result = validator.validate(f)
     assert isinstance(result, ValidationResult)
     assert result.path == f
+
+
+def test_genuine_failure_not_reclassified(tmp_path, validator):
+    """A real assertion failure must NOT be promoted to pending."""
+    f = tmp_path / "test_real_fail.py"
+    f.write_text("def test_real_fail():\n    assert 1 == 2\n")
+    result = validator.validate(f)
+    assert result.failed >= 1
+    assert result.pending == 0

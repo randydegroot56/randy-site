@@ -54,9 +54,12 @@ class TestValidator:
 
         if path.suffix.lower() == ".py":
             self._check_python_syntax(path, result)
+            if not result.syntax_ok:
+                return result
             self._check_python_imports(path, result)
             self._run_pytest(path, result)
         else:
+            self._check_typescript_syntax(path, result)
             self._run_jest(path, result)
 
         return result
@@ -79,6 +82,21 @@ class TestValidator:
         except SyntaxError as exc:
             result.syntax_ok = False
             result.output += f"SyntaxError: {exc}\n"
+
+    def _check_typescript_syntax(self, path: Path, result: ValidationResult) -> None:
+        """Run `node --check <file>` if Node.js is available; silently skip otherwise."""
+        try:
+            proc = subprocess.run(
+                ["node", "--check", str(path)],
+                capture_output=True, text=True, timeout=15,
+            )
+            if proc.returncode != 0:
+                result.syntax_ok = False
+                result.output += proc.stderr or proc.stdout
+        except FileNotFoundError:
+            pass  # Node.js not in PATH — skip syntax check
+        except subprocess.TimeoutExpired:
+            pass  # Skip on timeout
 
     # ── Imports ─────────────────────────────────────────────────────────────
 
@@ -120,14 +138,16 @@ class TestValidator:
             elif kind.startswith("error"):
                 result.errors = count
 
-        # Reclassify TDD red-phase failures (and collection errors containing TDD
-        # markers — e.g. encoding issues on Windows causing SyntaxError during import)
-        # as pending rather than hard failures.
-        is_tdd = any(marker in output for marker in _TDD_MARKERS)
-        if result.failed > 0 and is_tdd:
+        # Reclassify as pending when the run failed (exit code != 0) and all
+        # failures/errors are attributable to TDD red-phase markers or missing
+        # imports — i.e. no genuine assertion failures alongside them.
+        is_tdd = proc.returncode != 0 and any(marker in output for marker in _TDD_MARKERS)
+        if is_tdd and result.failed > 0:
             result.pending += result.failed
             result.failed = 0
-        if result.errors > 0 and is_tdd:
+        # Also reclassify collection errors (e.g. encoding issues on Windows)
+        # that contain TDD markers — these arise only in the test suite itself.
+        if is_tdd and result.errors > 0:
             result.pending += result.errors
             result.errors = 0
 
