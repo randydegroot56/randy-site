@@ -62,7 +62,8 @@ export default function GlassCard({
           background: 'rgba(18,17,16,0.78)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          border: `1px solid ${baseBorder}`,
+          borderWidth: '1px',
+          borderStyle: 'solid',
           borderRadius: 0,
           overflow: 'hidden',
         }}
@@ -74,6 +75,7 @@ export default function GlassCard({
               key="sweep"
               initial={{ x: '-150%' }}
               animate={{ x: '150%' }}
+              exit={{ x: '150%' }}
               transition={{ duration: 0.6, ease: 'easeInOut' }}
               style={{
                 position: 'absolute',
