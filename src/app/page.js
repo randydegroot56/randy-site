@@ -1,8 +1,10 @@
 'use client';
 
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import AnimateIn from '../components/AnimateIn';
 import StaggerChildren from '../components/StaggerChildren';
+import GlassCard from '../components/GlassCard';
 
 /* ── Data ───────────────────────────────────────────────────── */
 
@@ -120,6 +122,32 @@ function EditorialHeadline({ line1, line2, line3, size = 'var(--text-3xl)' }) {
 /* ── Page ──────────────────────────────────────────────────────── */
 
 export default function Page() {
+  const photoRef = useRef(null);
+  const textRef  = useRef(null);
+
+  function handleHeroMouseMove(e) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const cx = (e.clientX - rect.left) / rect.width  - 0.5;
+    const cy = (e.clientY - rect.top)  / rect.height - 0.5;
+    if (photoRef.current) {
+      photoRef.current.style.transform = `translate(${cx * 38}px, ${cy * 22}px)`;
+    }
+    if (textRef.current) {
+      textRef.current.style.transform = `translate(${cx * -14}px, ${cy * -9}px)`;
+    }
+  }
+
+  function handleHeroMouseLeave() {
+    [photoRef, textRef].forEach((ref) => {
+      if (!ref.current) return;
+      ref.current.style.transition = 'transform 0.6s ease';
+      ref.current.style.transform  = 'translate(0,0)';
+      setTimeout(() => {
+        if (ref.current) ref.current.style.transition = 'transform 0.1s linear';
+      }, 600);
+    });
+  }
+
   return (
     <div className="homepage-scroll">
 
@@ -128,6 +156,8 @@ export default function Page() {
       {/* ─────────────────────────────────────────────────────── */}
       <section
         className="snap-section"
+        onMouseMove={handleHeroMouseMove}
+        onMouseLeave={handleHeroMouseLeave}
         style={{
           height: 'calc(100vh - 4rem)',
           minHeight: 'unset',
@@ -136,9 +166,63 @@ export default function Page() {
           flexDirection: 'column',
           justifyContent: 'center',
           position: 'relative',
+          overflow: 'hidden',
         }}
       >
-        <div className="container" style={{ paddingTop: 'var(--space-16)', paddingBottom: 'var(--space-16)' }}>
+        {/* Layer 0: Photo */}
+        <div
+          ref={photoRef}
+          style={{
+            position: 'absolute',
+            inset: '-10% -5%',
+            backgroundImage: "url('/herofoto.jpeg')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'brightness(0.28) saturate(0.75)',
+            willChange: 'transform',
+            transition: 'transform 0.1s linear',
+          }}
+        />
+
+        {/* Layer 1: Gold tint wash */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(135deg, rgba(232,185,49,0.06) 0%, transparent 50%, rgba(232,185,49,0.03) 100%)',
+            pointerEvents: 'none',
+          }}
+        />
+
+        {/* Layer 2: Readability gradient mask */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: [
+              'linear-gradient(90deg, rgba(18,17,16,0.92) 0%, rgba(18,17,16,0.75) 40%, rgba(18,17,16,0.35) 70%, rgba(18,17,16,0.55) 100%)',
+              'linear-gradient(180deg, rgba(18,17,16,0.5) 0%, transparent 20%, transparent 80%, rgba(18,17,16,0.6) 100%)',
+            ].join(', '),
+            pointerEvents: 'none',
+            zIndex: 1,
+          }}
+        />
+
+        {/* Layer 3: Text content */}
+        <div
+          ref={textRef}
+          className="container"
+          style={{
+            position: 'relative',
+            zIndex: 10,
+            paddingTop: 'var(--space-16)',
+            paddingBottom: 'var(--space-16)',
+            willChange: 'transform',
+            transition: 'transform 0.1s linear',
+          }}
+        >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -164,6 +248,7 @@ export default function Page() {
               lineHeight: 1.7,
               maxWidth: '520px',
               marginBottom: 'var(--space-10)',
+              textShadow: '0 1px 12px rgba(18,17,16,0.9)',
             }}
           >
             From property document analysis to market intelligence — I build the AI pipelines
@@ -234,20 +319,34 @@ export default function Page() {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
+        {/* Scroll indicator — scan line */}
+        <style>{`
+          @keyframes scanLine {
+            0%   { transform: translateX(-100%); }
+            50%  { transform: translateX(100%); }
+            100% { transform: translateX(100%); }
+          }
+        `}</style>
         <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.4, duration: 0.6 }}
           style={{
-            position: 'absolute', bottom: 'var(--space-8)', left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px',
-            color: 'rgba(232,185,49,0.4)',
+            position: 'absolute',
+            bottom: 'var(--space-8)',
+            left: '80px',
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
           }}
         >
-          <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
-            <path d="M1 1l9 9 9-9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-          </svg>
+          <div style={{ width: 32, height: 1, background: 'rgba(232,185,49,0.4)', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', inset: 0, background: '#E8B931', animation: 'scanLine 1.8s ease-in-out infinite' }} />
+          </div>
+          <span style={{ fontFamily: 'monospace', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(237,232,220,0.3)' }}>
+            Scroll to explore
+          </span>
         </motion.div>
       </section>
 
@@ -269,22 +368,13 @@ export default function Page() {
 
           <StaggerChildren style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 'var(--space-4)' }}>
             {capabilities.map(cap => (
-              <div
-                key={cap.title}
-                style={{
-                  padding: 'var(--space-6)',
-                  border: '1px solid rgba(232,185,49,0.1)',
-                  borderLeft: `2px solid ${cap.accent === 'full' ? 'var(--accent-primary)' : cap.accent === 'mid' ? 'rgba(232,185,49,0.5)' : 'rgba(232,185,49,0.25)'}`,
-                  transition: 'background-color var(--transition-base), border-color var(--transition-base)',
-                  cursor: 'default',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'rgba(232,185,49,0.03)'; }}
-                onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; }}
-              >
-                <div style={{ fontFamily: 'monospace', fontSize: '20px', color: 'var(--accent-primary)', marginBottom: 'var(--space-4)', opacity: 0.8 }}>{cap.icon}</div>
-                <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 'var(--text-base)', color: 'var(--text-primary)', marginBottom: 'var(--space-2)', letterSpacing: '0.02em' }}>{cap.title}</div>
-                <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', lineHeight: 1.65, margin: 0 }}>{cap.desc}</p>
-              </div>
+              <GlassCard key={cap.title}>
+                <div style={{ padding: 'var(--space-6)' }}>
+                  <div style={{ fontFamily: 'monospace', fontSize: '20px', color: 'var(--accent-primary)', marginBottom: 'var(--space-4)', opacity: 0.8 }}>{cap.icon}</div>
+                  <div style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 'var(--text-base)', color: 'var(--text-primary)', marginBottom: 'var(--space-2)', letterSpacing: '0.02em' }}>{cap.title}</div>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', lineHeight: 1.65, margin: 0 }}>{cap.desc}</p>
+                </div>
+              </GlassCard>
             ))}
           </StaggerChildren>
         </div>
@@ -307,45 +397,40 @@ export default function Page() {
 
           <StaggerChildren style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: 'var(--space-8)' }}>
             {projects.map(project => (
-              <motion.div
-                key={project.title}
-                whileHover={{ backgroundColor: 'rgba(232,185,49,0.03)', borderLeftColor: 'var(--accent-primary)' }}
-                transition={{ duration: 0.15 }}
-                style={{
+              <GlassCard key={project.title}>
+                <div style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                   gap: 'var(--space-4)',
                   padding: 'var(--space-4) var(--space-4)',
-                  borderLeft: '2px solid transparent',
                   borderBottom: '1px solid rgba(232,185,49,0.06)',
-                  transition: 'background-color var(--transition-fast), border-left-color var(--transition-fast)',
-                }}
-              >
-                <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 'var(--text-base)', color: 'var(--text-primary)', minWidth: 0 }}>
-                  {project.title}
-                </span>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', flex: 1, justifyContent: 'center' }}>
-                  {project.tags.map(tag => (
-                    <span key={tag} style={{
-                      padding: '0.15rem var(--space-2)', fontFamily: 'var(--font-heading)', fontWeight: 500,
-                      fontSize: 'var(--text-xs)', color: 'var(--text-muted)',
-                      backgroundColor: 'rgba(232,185,49,0.04)', border: '1px solid rgba(232,185,49,0.1)',
-                    }}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <span style={{
-                  flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)',
-                  padding: '0.2rem var(--space-3)',
-                  fontSize: 'var(--text-xs)', fontFamily: 'var(--font-heading)', fontWeight: 600,
-                  backgroundColor: project.statusStyle.bg,
-                  color: project.statusStyle.text,
-                  border: `1px solid ${project.statusStyle.border}`,
                 }}>
-                  <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: project.statusStyle.dot, display: 'inline-block' }} />
-                  {project.status}
-                </span>
-              </motion.div>
+                  <span style={{ fontFamily: 'var(--font-heading)', fontWeight: 700, fontSize: 'var(--text-base)', color: 'var(--text-primary)', minWidth: 0 }}>
+                    {project.title}
+                  </span>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)', flex: 1, justifyContent: 'center' }}>
+                    {project.tags.map(tag => (
+                      <span key={tag} style={{
+                        padding: '0.15rem var(--space-2)', fontFamily: 'var(--font-heading)', fontWeight: 500,
+                        fontSize: 'var(--text-xs)', color: 'var(--text-muted)',
+                        backgroundColor: 'rgba(232,185,49,0.04)', border: '1px solid rgba(232,185,49,0.1)',
+                      }}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <span style={{
+                    flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)',
+                    padding: '0.2rem var(--space-3)',
+                    fontSize: 'var(--text-xs)', fontFamily: 'var(--font-heading)', fontWeight: 600,
+                    backgroundColor: project.statusStyle.bg,
+                    color: project.statusStyle.text,
+                    border: `1px solid ${project.statusStyle.border}`,
+                  }}>
+                    <span style={{ width: 5, height: 5, borderRadius: '50%', backgroundColor: project.statusStyle.dot, display: 'inline-block' }} />
+                    {project.status}
+                  </span>
+                </div>
+              </GlassCard>
             ))}
           </StaggerChildren>
 
