@@ -1,8 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import AnimateIn from '../../components/AnimateIn';
 import StaggerChildren from '../../components/StaggerChildren';
+import GlassCard from '../../components/GlassCard';
 
 const posts = [
   {
@@ -51,38 +51,30 @@ export default function BlogPage() {
 
         <StaggerChildren style={{ display: 'flex', flexDirection: 'column' }}>
           {posts.map((post, i) => (
-            <motion.article
-              key={post.title}
-              whileHover={{ backgroundColor: 'rgba(232,185,49,0.02)', borderLeftColor: 'var(--accent-primary)' }}
-              transition={{ duration: 0.15 }}
-              style={{
-                padding: 'var(--space-8) var(--space-4)',
-                borderLeft: '2px solid transparent',
-                borderBottom: i < posts.length - 1 ? '1px solid rgba(232,185,49,0.06)' : 'none',
-                transition: 'background-color var(--transition-fast), border-left-color var(--transition-fast)',
-              }}
-            >
-              <a href={post.href} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
-                <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
-                  <span style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.06em' }}>{post.date}</span>
-                  <span style={{ color: 'rgba(232,185,49,0.2)' }}>·</span>
-                  <span style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.06em' }}>{post.readTime} read</span>
-                </div>
-                <h2
-                  style={{
-                    fontFamily: 'var(--font-heading)', fontSize: 'var(--text-xl)', fontWeight: 700,
-                    color: 'var(--text-primary)', letterSpacing: '-0.01em',
-                    marginBottom: 'var(--space-3)', lineHeight: 1.2,
-                    transition: 'color var(--transition-fast)',
-                  }}
-                >
-                  {post.title}
-                </h2>
-                <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', lineHeight: 1.7, margin: 0 }}>
-                  {post.preview}
-                </p>
-              </a>
-            </motion.article>
+            <GlassCard key={post.title} style={{ marginBottom: i < posts.length - 1 ? 'var(--space-4)' : 0 }}>
+              <div style={{ padding: 'var(--space-8) var(--space-4)' }}>
+                <a href={post.href} style={{ display: 'block', textDecoration: 'none', color: 'inherit' }}>
+                  <div style={{ display: 'flex', gap: 'var(--space-3)', alignItems: 'center', marginBottom: 'var(--space-3)' }}>
+                    <span style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.06em' }}>{post.date}</span>
+                    <span style={{ color: 'rgba(232,185,49,0.2)' }}>·</span>
+                    <span style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.06em' }}>{post.readTime} read</span>
+                  </div>
+                  <h2
+                    style={{
+                      fontFamily: 'var(--font-heading)', fontSize: 'var(--text-xl)', fontWeight: 700,
+                      color: 'var(--text-primary)', letterSpacing: '-0.01em',
+                      marginBottom: 'var(--space-3)', lineHeight: 1.2,
+                      transition: 'color var(--transition-fast)',
+                    }}
+                  >
+                    {post.title}
+                  </h2>
+                  <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', lineHeight: 1.7, margin: 0 }}>
+                    {post.preview}
+                  </p>
+                </a>
+              </div>
+            </GlassCard>
           ))}
         </StaggerChildren>
       </div>
