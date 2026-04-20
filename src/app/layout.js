@@ -4,7 +4,8 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import PageTransition from '../components/PageTransition';
 import NetworkBackground from '../components/NetworkBackground';
-import DataGrid from '../components/DataGrid';
+import AuroraBackground from '../components/AuroraBackground';
+import BlueprintRaster from '../components/BlueprintRaster';
 import AuthProvider from '../components/AuthProvider';
 
 export const metadata = {
@@ -18,8 +19,11 @@ export default function RootLayout({ children }) {
       <body style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <AuthProvider>
           <ThemeProvider>
-            {/* Layer 1: subtle data grid (slowest parallax) */}
-            <DataGrid />
+            {/* Layer 0: aurora pulse (slowest, fixed) */}
+            <AuroraBackground />
+
+            {/* Layer 1: blueprint raster grid (scroll parallax) */}
+            <BlueprintRaster />
 
             {/* Layer 2: particle network canvas (existing, fastest) */}
             <NetworkBackground
