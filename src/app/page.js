@@ -94,27 +94,28 @@ function EditorialHeadline({ line1, line2, line3, size = 'var(--text-3xl)' }) {
   return (
     <div style={{ marginBottom: 'var(--space-8)' }}>
       {lines.map(({ text, outline }, i) => (
-        <motion.div
-          key={i}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-          style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: size,
-            fontWeight: 900,
-            lineHeight: 0.92,
-            letterSpacing: '-0.03em',
-            ...(outline
-              ? {
-                  color: 'transparent',
-                  WebkitTextStroke: '1px rgba(232,185,49,0.5)',
-                }
-              : { color: 'var(--text-primary)' }),
-          }}
-        >
-          {text}
-        </motion.div>
+        <div key={i} style={{ overflow: 'hidden', lineHeight: 1.05 }}>
+          <motion.div
+            initial={{ y: '110%' }}
+            animate={{ y: '0%' }}
+            transition={{ duration: 0.75, delay: 0.4 + i * 0.15, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: size,
+              fontWeight: 900,
+              lineHeight: 0.92,
+              letterSpacing: '-0.03em',
+              ...(outline
+                ? {
+                    color: 'transparent',
+                    WebkitTextStroke: '1px rgba(232,185,49,0.5)',
+                  }
+                : { color: 'var(--text-primary)' }),
+            }}
+          >
+            {text}
+          </motion.div>
+        </div>
       ))}
     </div>
   );
