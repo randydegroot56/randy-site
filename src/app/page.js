@@ -133,7 +133,8 @@ export default function Page() {
   const heroHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
   const photoScrollY = useTransform(scrollY, [0, heroHeight], ['0%', '20%']);
   const textScrollY  = useTransform(scrollY, [0, heroHeight], ['0%', '-7%']);
-  const heroOpacity  = useTransform(scrollY, [0, heroHeight * 0.6], [1, 0]);
+  const textOpacity  = useTransform(scrollY, [0, heroHeight * 0.25], [1, 0]);
+  const photoOpacity = useTransform(scrollY, [heroHeight * 0.25, heroHeight * 0.85], [1, 0]);
 
   function handleHeroMouseMove(e) {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -180,7 +181,7 @@ export default function Page() {
         }}
       >
         {/* Layer 0: Photo */}
-        <motion.div style={{ position: 'absolute', inset: 0, y: photoScrollY, opacity: heroOpacity }}>
+        <motion.div style={{ position: 'absolute', inset: 0, y: photoScrollY, opacity: photoOpacity }}>
           <div
             ref={photoRef}
             style={{
@@ -196,31 +197,30 @@ export default function Page() {
           />
         </motion.div>
 
-        {/* Layer 1: Gold tint wash */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(135deg, rgba(232,185,49,0.06) 0%, transparent 50%, rgba(232,185,49,0.03) 100%)',
-            pointerEvents: 'none',
-          }}
-        />
-
-        {/* Layer 2: Readability gradient scrim */}
-        <div
-          aria-hidden="true"
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'linear-gradient(90deg, rgba(12,10,8,0.88) 0%, rgba(12,10,8,0.72) 30%, rgba(12,10,8,0.22) 65%, transparent 100%)',
-            pointerEvents: 'none',
-            zIndex: 1,
-          }}
-        />
+        {/* Layers 1 + 2: Scrim (fades with text) */}
+        <motion.div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none', opacity: textOpacity }}>
+          {/* Layer 1: Gold tint wash */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(135deg, rgba(232,185,49,0.06) 0%, transparent 50%, rgba(232,185,49,0.03) 100%)',
+            }}
+          />
+          {/* Layer 2: Readability gradient scrim */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(90deg, rgba(12,10,8,0.88) 0%, rgba(12,10,8,0.72) 30%, rgba(12,10,8,0.22) 65%, transparent 100%)',
+            }}
+          />
+        </motion.div>
 
         {/* Layer 3: Text content */}
-        <motion.div style={{ position: 'relative', zIndex: 10, y: textScrollY, opacity: heroOpacity }}>
+        <motion.div style={{ position: 'relative', zIndex: 10, y: textScrollY, opacity: textOpacity }}>
           <div
             ref={textRef}
             className="container"
