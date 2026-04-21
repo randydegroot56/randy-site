@@ -94,7 +94,7 @@ function EditorialHeadline({ line1, line2, line3, size = 'var(--text-3xl)' }) {
   return (
     <div style={{ marginBottom: 'var(--space-8)' }}>
       {lines.map(({ text, outline }, i) => (
-        <div key={i} style={{ overflow: 'hidden', lineHeight: 1.05 }}>
+        <div key={i} style={{ overflow: 'hidden', lineHeight: 1.1 }}>
           <motion.div
             initial={{ y: '110%' }}
             animate={{ y: '0%' }}
