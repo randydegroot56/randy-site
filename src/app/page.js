@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import AnimateIn from '../components/AnimateIn';
 import StaggerChildren from '../components/StaggerChildren';
 import GlassCard from '../components/GlassCard';
+import { useTheme } from '../components/ThemeProvider';
 
 /* ── Data ───────────────────────────────────────────────────── */
 
@@ -124,6 +125,8 @@ function EditorialHeadline({ line1, line2, line3, size = 'var(--text-3xl)' }) {
 export default function Page() {
   const photoRef = useRef(null);
   const textRef  = useRef(null);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   function handleHeroMouseMove(e) {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -178,7 +181,7 @@ export default function Page() {
             backgroundImage: "url('/herofoto.jpeg')",
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            filter: 'brightness(0.28) saturate(0.75)',
+            filter: `brightness(${isDark ? '0.65' : '0.80'}) saturate(0.75)`,
             willChange: 'transform',
             transition: 'transform 0.1s linear',
           }}
@@ -195,16 +198,13 @@ export default function Page() {
           }}
         />
 
-        {/* Layer 2: Readability gradient mask */}
+        {/* Layer 2: Readability gradient scrim */}
         <div
           aria-hidden="true"
           style={{
             position: 'absolute',
             inset: 0,
-            background: [
-              'linear-gradient(90deg, rgba(18,17,16,0.92) 0%, rgba(18,17,16,0.75) 40%, rgba(18,17,16,0.35) 70%, rgba(18,17,16,0.55) 100%)',
-              'linear-gradient(180deg, rgba(18,17,16,0.5) 0%, transparent 20%, transparent 80%, rgba(18,17,16,0.6) 100%)',
-            ].join(', '),
+            background: 'linear-gradient(90deg, rgba(12,10,8,0.88) 0%, rgba(12,10,8,0.72) 30%, rgba(12,10,8,0.22) 65%, transparent 100%)',
             pointerEvents: 'none',
             zIndex: 1,
           }}
