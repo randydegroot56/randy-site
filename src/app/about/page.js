@@ -1,6 +1,7 @@
 'use client';
 
 import AnimateIn from '../../components/AnimateIn';
+import GlassCard from '../../components/GlassCard';
 
 const stack = [
   { category: 'AI & LLMs', skills: ['LangChain', 'RAG Systems', 'Claude API', 'OpenAI', 'Vector Embeddings'] },
@@ -48,11 +49,13 @@ export default function AboutPage() {
               Currently exploring: automated valuation models, Dutch property data APIs, and LLM pipelines for lease contract analysis.
             </p>
 
-            <div style={{ marginBottom: 'var(--space-8)', padding: 'var(--space-4) var(--space-5)', borderLeft: '2px solid var(--accent-primary)', backgroundColor: 'rgba(232,185,49,0.03)' }}>
-              <p style={{ fontFamily: 'monospace', fontSize: 'var(--text-sm)', color: 'var(--accent-secondary)', margin: 0, lineHeight: 1.6 }}>
-                &ldquo;Geen buzzwords — alleen pipelines die draaien.&rdquo;
-              </p>
-            </div>
+            <GlassCard style={{ marginBottom: 'var(--space-8)' }}>
+              <div style={{ padding: 'var(--space-4) var(--space-5)' }}>
+                <p style={{ fontFamily: 'monospace', fontSize: 'var(--text-sm)', color: 'var(--accent-secondary)', margin: 0, lineHeight: 1.6 }}>
+                  &ldquo;Geen buzzwords — alleen pipelines die draaien.&rdquo;
+                </p>
+              </div>
+            </GlassCard>
 
             <div>
               <p style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 'var(--space-4)' }}>
@@ -85,27 +88,28 @@ export default function AboutPage() {
               TECH STACK
             </p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
               {stack.map((group, i) => (
-                <div key={group.category}>
-                  <p style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--accent-secondary)', marginBottom: 'var(--space-3)' }}>
-                    {group.category}
-                  </p>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
-                    {group.skills.map(skill => (
-                      <span key={skill} style={{
-                        padding: 'var(--space-1) var(--space-3)',
-                        fontSize: 'var(--text-sm)', fontFamily: 'var(--font-heading)', fontWeight: 500,
-                        color: 'var(--accent-secondary)',
-                        backgroundColor: 'rgba(232,185,49,0.05)',
-                        border: '1px solid rgba(232,185,49,0.18)',
-                      }}>
-                        {skill}
-                      </span>
-                    ))}
+                <GlassCard key={group.category}>
+                  <div style={{ padding: 'var(--space-5)' }}>
+                    <p style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--accent-secondary)', marginBottom: 'var(--space-3)' }}>
+                      {group.category}
+                    </p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
+                      {group.skills.map(skill => (
+                        <span key={skill} style={{
+                          padding: 'var(--space-1) var(--space-3)',
+                          fontSize: 'var(--text-sm)', fontFamily: 'var(--font-heading)', fontWeight: 500,
+                          color: 'var(--accent-secondary)',
+                          backgroundColor: 'rgba(232,185,49,0.05)',
+                          border: '1px solid rgba(232,185,49,0.18)',
+                        }}>
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                  {i < stack.length - 1 && <div style={{ marginTop: 'var(--space-8)', height: '1px', backgroundColor: 'rgba(232,185,49,0.08)' }} />}
-                </div>
+                </GlassCard>
               ))}
             </div>
           </AnimateIn>
