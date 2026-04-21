@@ -1,11 +1,39 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import AnimateIn from '../../components/AnimateIn';
 import StaggerChildren from '../../components/StaggerChildren';
+import GlassCard from '../../components/GlassCard';
 
 const agents = [
+  {
+    id: 'memory',
+    name: 'Memory Agent',
+    cli: 'memory',
+    featured: true,
+    description: 'Persistent memory layer of the multi-agent system. Stores project context, architectural decisions, and agent history — delivers ranked, relevant context to other agents on demand.',
+    status: 'Live',
+    statusStyle: {
+      bg: 'rgba(34,197,94,0.10)',
+      border: 'rgba(34,197,94,0.25)',
+      text: 'rgba(34,197,94,0.9)',
+      dot: 'rgba(34,197,94,0.9)',
+    },
+    tags: ['Python', 'EventBus', 'JSON Store', 'Relevance Scoring'],
+    phases: [
+      { label: 'MemoryStore', detail: 'CRUD + pruning + JSON persistence. Flat key-value store with category (context/decisions/history) and keyword metadata.' },
+      { label: 'MemoryIndexer', detail: 'EventBus wildcard subscriber. On every agent event, writes a summary to history; routes specific event types to other categories via EVENT_CATEGORY_MAP.' },
+      { label: 'ContextBuilder', detail: 'Query → ranked MemoryEntry list. Scores by substring relevance + linear recency decay (horizon: 365 days). Returns top-N entries.' },
+      { label: 'MemoryAgent', detail: 'BaseAgent subclass. Dispatches subcommands: store, query, list, clear. Integrates with AgentRegistry and StateStore.' },
+    ],
+    commands: [
+      { label: 'Store a memory', cmd: 'python main.py memory store --category context --content "..." --keywords arch,api' },
+      { label: 'Query memories', cmd: 'python main.py memory query --q "architecture decisions"' },
+      { label: 'List all memories', cmd: 'python main.py memory list' },
+      { label: 'Clear category', cmd: 'python main.py memory clear --category history' },
+    ],
+  },
   {
     id: 'code-auditor',
     name: 'Code Auditor',
@@ -90,19 +118,186 @@ const agents = [
   },
 ];
 
+function MemoryAgentCard({ agent }) {
+  const [open, setOpen] = useState(false);
+  const feedEntries = [
+    '> [context] arch: event-driven multi-agent system',
+    '> [decisions] api: orchestrator uses pub/sub EventBus',
+    '> [history] audit: Phase 1 discover run on ./src',
+    '> [context] stack: Python + JSON Store + relevance scoring',
+    '> [decisions] memory: 365-day recency decay horizon',
+  ];
+
+  return (
+    <GlassCard featured={true}>
+      <div style={{ padding: 'var(--space-8)' }}>
+        {/* Two-column layout */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-8)', alignItems: 'start' }}>
+
+          {/* LEFT COLUMN */}
+          <div>
+            {/* Eyebrow */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-4)' }}>
+              <span style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--accent-primary)' }}>
+                NEW // MEMORY AGENT
+              </span>
+              <span style={{ display: 'inline-block', width: 8, height: 14, backgroundColor: 'var(--accent-primary)', animation: 'blink 1s step-end infinite' }} />
+            </div>
+
+            {/* Name + status */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', marginBottom: 'var(--space-4)', flexWrap: 'wrap' }}>
+              <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.01em', margin: 0 }}>
+                {agent.name}
+              </h2>
+              <span style={{
+                flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: 'var(--space-1)',
+                padding: '0.25rem var(--space-3)',
+                fontSize: 'var(--text-xs)', fontFamily: 'var(--font-heading)', fontWeight: 600,
+                backgroundColor: agent.statusStyle.bg, color: agent.statusStyle.text,
+                border: `1px solid ${agent.statusStyle.border}`,
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', backgroundColor: agent.statusStyle.dot, display: 'inline-block' }} />
+                {agent.status}
+              </span>
+              <span style={{
+                display: 'inline-flex', alignItems: 'center',
+                padding: '0.25rem var(--space-3)',
+                fontSize: 'var(--text-xs)', fontFamily: 'monospace',
+                color: 'var(--accent-secondary)',
+                border: '1px solid rgba(232,185,49,0.2)',
+              }}>v0.1</span>
+            </div>
+
+            {/* Description */}
+            <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-sm)', lineHeight: 1.75, marginBottom: 'var(--space-5)' }}>
+              {agent.description}
+            </p>
+
+            {/* Tags */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 'var(--space-2)' }}>
+              {agent.tags.map(tag => (
+                <span key={tag} style={{
+                  padding: '0.2rem var(--space-3)',
+                  fontSize: 'var(--text-xs)', fontFamily: 'var(--font-heading)', fontWeight: 500,
+                  color: 'var(--text-muted)',
+                  backgroundColor: 'rgba(232,185,49,0.04)',
+                  border: '1px solid rgba(232,185,49,0.1)',
+                }}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {/* Toggle button */}
+            <button
+              onClick={() => setOpen(v => !v)}
+              style={{
+                marginTop: 'var(--space-5)',
+                background: 'none',
+                border: '1px solid rgba(232,185,49,0.2)',
+                color: 'var(--accent-secondary)',
+                fontFamily: 'monospace',
+                fontSize: 'var(--text-xs)',
+                padding: '0.3rem var(--space-3)',
+                cursor: 'pointer',
+                letterSpacing: '0.08em',
+                transition: 'border-color var(--transition-fast), color var(--transition-fast)',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--accent-primary)'; e.currentTarget.style.color = 'var(--accent-primary)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(232,185,49,0.2)'; e.currentTarget.style.color = 'var(--accent-secondary)'; }}
+            >
+              {open ? '[ COLLAPSE ]' : '[ MANUAL ]'}
+            </button>
+          </div>
+
+          {/* RIGHT COLUMN — decorative memory feed */}
+          <div style={{ borderLeft: '1px solid rgba(232,185,49,0.12)', paddingLeft: 'var(--space-8)' }}>
+            <p style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 'var(--space-4)' }}>
+              MEMORY FEED
+            </p>
+            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+              {feedEntries.map((entry, i) => (
+                <motion.li
+                  key={i}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.3, duration: 0.4, ease: 'easeOut' }}
+                  style={{
+                    fontFamily: 'monospace',
+                    fontSize: '11px',
+                    color: i === 0 ? 'var(--accent-secondary)' : 'var(--text-muted)',
+                    lineHeight: 1.6,
+                    paddingLeft: 'var(--space-2)',
+                    borderLeft: i === 0 ? '1px solid var(--accent-primary)' : '1px solid transparent',
+                  }}
+                >
+                  {entry}
+                </motion.li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {/* Expandable — same as AgentCard */}
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            key="manual"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            style={{ overflow: 'hidden' }}
+          >
+            <div style={{ padding: 'var(--space-8)', paddingTop: 0, borderTop: '1px solid rgba(232,185,49,0.08)' }}>
+              <p style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 'var(--space-5)' }}>
+                COMPONENTS
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginBottom: 'var(--space-8)' }}>
+                {agent.phases.map((phase, i) => (
+                  <div key={i} style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'flex-start' }}>
+                    <span style={{ width: 14, height: 1, backgroundColor: 'var(--accent-primary)', flexShrink: 0, marginTop: '0.6rem' }} />
+                    <div>
+                      <span style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)', display: 'block', marginBottom: 'var(--space-1)' }}>
+                        {phase.label}
+                      </span>
+                      <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', lineHeight: 1.7, margin: 0 }}>
+                        {phase.detail}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <p style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--text-muted)', marginBottom: 'var(--space-4)' }}>
+                COMMANDS
+              </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
+                {agent.commands.map((c, i) => (
+                  <div key={i}>
+                    <span style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--text-muted)', letterSpacing: '0.06em', display: 'block', marginBottom: 'var(--space-1)' }}>
+                      # {c.label}
+                    </span>
+                    <div style={{ fontFamily: 'monospace', fontSize: 'var(--text-sm)', color: 'var(--accent-secondary)', backgroundColor: 'rgba(232,185,49,0.04)', border: '1px solid rgba(232,185,49,0.1)', padding: 'var(--space-3) var(--space-4)', wordBreak: 'break-all' }}>
+                      <span style={{ color: 'var(--accent-primary)', userSelect: 'none' }}>$ </span>
+                      {c.cmd}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </GlassCard>
+  );
+}
+
 function AgentCard({ agent }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <motion.article
-      whileHover={{ borderLeftColor: 'var(--accent-primary)', backgroundColor: 'rgba(232,185,49,0.02)' }}
-      transition={{ duration: 0.15 }}
-      style={{
-        border: '1px solid rgba(232,185,49,0.1)',
-        borderLeft: `2px solid ${open ? 'var(--accent-primary)' : 'rgba(232,185,49,0.2)'}`,
-        transition: 'border-left-color var(--transition-fast), background-color var(--transition-fast)',
-      }}
-    >
+    <GlassCard featured={agent.featured || false}>
       {/* Card header — always visible */}
       <div style={{ padding: 'var(--space-8)' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 'var(--space-4)', marginBottom: 'var(--space-4)' }}>
@@ -246,38 +441,62 @@ function AgentCard({ agent }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.article>
+    </GlassCard>
   );
 }
 
 export default function AgentsPage() {
+  const [typedText, setTypedText] = useState('');
+  const fullText = '> 4 agents registered. 1 new.';
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      let i = 0;
+      const interval = setInterval(() => {
+        setTypedText(fullText.slice(0, i + 1));
+        i++;
+        if (i >= fullText.length) clearInterval(interval);
+      }, 40);
+      return () => clearInterval(interval);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
-    <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 'var(--space-20) var(--space-6)' }}>
-      <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto' }}>
+    <>
+      <style>{`@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }`}</style>
+      <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 'var(--space-20) var(--space-6)' }}>
+        <div style={{ width: '100%', maxWidth: '900px', margin: '0 auto' }}>
 
-        <AnimateIn delay={0.05}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 'var(--space-4)' }}>
-            <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-primary)', boxShadow: '0 0 8px rgba(232,185,49,0.7)' }} />
-            <span style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--accent-secondary)' }}>
-              SYS.INDEX // AGENTS
-            </span>
-          </div>
-          <div style={{ marginBottom: 'var(--space-4)' }}>
-            <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-3xl)', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>AI</div>
-            <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-3xl)', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.03em', color: 'transparent', WebkitTextStroke: '1px rgba(232,185,49,0.5)' }}>AGENTS.</div>
-          </div>
-          <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-md)', lineHeight: 1.7, maxWidth: '580px', marginBottom: 'var(--space-16)' }}>
-            Specialized agents that audit, fix, and coordinate — built on a shared event-driven framework. Click <span style={{ fontFamily: 'monospace', fontSize: 'var(--text-sm)', color: 'var(--accent-secondary)' }}>[ MANUAL ]</span> to expand commands and documentation.
-          </p>
-        </AnimateIn>
+          <AnimateIn delay={0.05}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 'var(--space-4)' }}>
+              <span style={{ display: 'inline-block', width: 6, height: 6, borderRadius: '50%', background: 'var(--accent-primary)', boxShadow: '0 0 8px rgba(232,185,49,0.7)' }} />
+              <span style={{ fontFamily: 'monospace', fontSize: '10px', fontWeight: 600, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--accent-secondary)' }}>
+                SYS.INDEX // AGENTS
+              </span>
+            </div>
+            <div style={{ marginBottom: 'var(--space-4)' }}>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-3xl)', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>AI</div>
+              <div style={{ fontFamily: 'var(--font-heading)', fontSize: 'var(--text-3xl)', fontWeight: 900, lineHeight: 0.92, letterSpacing: '-0.03em', color: 'transparent', WebkitTextStroke: '1px rgba(232,185,49,0.5)' }}>AGENTS.</div>
+            </div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: 'var(--text-md)', lineHeight: 1.7, maxWidth: '580px', marginBottom: 'var(--space-4)' }}>
+              Specialized agents that audit, fix, and coordinate — built on a shared event-driven framework. Click <span style={{ fontFamily: 'monospace', fontSize: 'var(--text-sm)', color: 'var(--accent-secondary)' }}>[ MANUAL ]</span> to expand commands and documentation.
+            </p>
+            <p style={{ fontFamily: 'monospace', fontSize: 'var(--text-sm)', color: 'var(--accent-secondary)', marginBottom: 'var(--space-16)', marginTop: 'var(--space-2)' }}>
+              {typedText}<span style={{ opacity: typedText.length < fullText.length ? 1 : 0, transition: 'opacity 0.3s' }}>_</span>
+            </p>
+          </AnimateIn>
 
-        <StaggerChildren style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
-          {agents.map(agent => (
-            <AgentCard key={agent.id} agent={agent} />
-          ))}
-        </StaggerChildren>
+          <StaggerChildren style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
+            {agents.map(agent => (
+              agent.featured
+                ? <MemoryAgentCard key={agent.id} agent={agent} />
+                : <AgentCard key={agent.id} agent={agent} />
+            ))}
+          </StaggerChildren>
 
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }
