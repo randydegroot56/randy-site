@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import AnimateIn from '../components/AnimateIn';
 import StaggerChildren from '../components/StaggerChildren';
 import GlassCard from '../components/GlassCard';
@@ -129,6 +129,12 @@ export default function Page() {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
+  const { scrollY } = useScroll();
+  const heroHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+  const photoScrollY = useTransform(scrollY, [0, heroHeight], ['0%', '20%']);
+  const textScrollY  = useTransform(scrollY, [0, heroHeight], ['0%', '-7%']);
+  const heroOpacity  = useTransform(scrollY, [0, heroHeight * 0.6], [1, 0]);
+
   function handleHeroMouseMove(e) {
     const rect = e.currentTarget.getBoundingClientRect();
     const cx = (e.clientX - rect.left) / rect.width  - 0.5;
@@ -174,19 +180,21 @@ export default function Page() {
         }}
       >
         {/* Layer 0: Photo */}
-        <div
-          ref={photoRef}
-          style={{
-            position: 'absolute',
-            inset: '-10% -5%',
-            backgroundImage: "url('/herofoto.jpeg')",
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: `brightness(${isDark ? '0.65' : '0.80'}) saturate(0.75)`,
-            willChange: 'transform',
-            transition: 'transform 0.1s linear',
-          }}
-        />
+        <motion.div style={{ position: 'absolute', inset: 0, y: photoScrollY, opacity: heroOpacity }}>
+          <div
+            ref={photoRef}
+            style={{
+              position: 'absolute',
+              inset: '-10% -5%',
+              backgroundImage: "url('/herofoto.jpeg')",
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: `brightness(${isDark ? '0.65' : '0.80'}) saturate(0.75)`,
+              willChange: 'transform',
+              transition: 'transform 0.1s linear',
+            }}
+          />
+        </motion.div>
 
         {/* Layer 1: Gold tint wash */}
         <div
@@ -212,113 +220,113 @@ export default function Page() {
         />
 
         {/* Layer 3: Text content */}
-        <div
-          ref={textRef}
-          className="container"
-          style={{
-            position: 'relative',
-            zIndex: 10,
-            paddingTop: 'var(--space-16)',
-            paddingBottom: 'var(--space-16)',
-            willChange: 'transform',
-            transition: 'transform 0.1s linear',
-          }}
-        >
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.15 }}
-          >
-            <Eyebrow>Real Estate × AI Automation</Eyebrow>
-          </motion.div>
-
-          <EditorialHeadline
-            line1="I BUILD AI TOOLS"
-            line2="THAT AUTOMATE"
-            line3="REAL ESTATE WORKFLOWS."
-            size="clamp(2rem, 5.5vw, var(--text-4xl))"
-          />
-
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8, ease: 'easeOut' }}
+        <motion.div style={{ position: 'relative', zIndex: 10, y: textScrollY, opacity: heroOpacity }}>
+          <div
+            ref={textRef}
+            className="container"
             style={{
-              color: 'var(--text-secondary)',
-              fontSize: 'var(--text-md)',
-              lineHeight: 1.7,
-              maxWidth: '520px',
-              marginBottom: 'var(--space-10)',
-              textShadow: '0 1px 12px rgba(18,17,16,0.9)',
+              paddingTop: 'var(--space-16)',
+              paddingBottom: 'var(--space-16)',
+              willChange: 'transform',
+              transition: 'transform 0.1s linear',
             }}
           >
-            From property document analysis to market intelligence — I build the AI pipelines
-            that save hours of manual work for real estate professionals.
-          </motion.p>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.4, delay: 0.15 }}
+            >
+              <Eyebrow>Real Estate × AI Automation</Eyebrow>
+            </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 1.0, ease: 'easeOut' }}
-            style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}
-          >
-            <a
-              href="/work"
+            <EditorialHeadline
+              line1="I BUILD AI TOOLS"
+              line2="THAT AUTOMATE"
+              line3="REAL ESTATE WORKFLOWS."
+              size="clamp(2rem, 5.5vw, var(--text-4xl))"
+            />
+
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8, ease: 'easeOut' }}
               style={{
-                display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)',
-                padding: 'var(--space-3) var(--space-8)',
-                backgroundColor: 'var(--accent-primary)',
-                color: '#121110',
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 700,
-                fontSize: 'var(--text-xs)',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                textDecoration: 'none',
-                transition: 'background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast)',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.backgroundColor = 'var(--accent-primary-hover)';
-                e.currentTarget.style.boxShadow = 'var(--shadow-glow)';
-                e.currentTarget.style.transform = 'translateY(-1px)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.backgroundColor = 'var(--accent-primary)';
-                e.currentTarget.style.boxShadow = 'none';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-            >
-              VIEW PROJECTS →
-            </a>
-            <a
-              href="/about"
-              style={{
-                display: 'inline-flex', alignItems: 'center',
-                padding: 'var(--space-3) var(--space-8)',
-                backgroundColor: 'transparent',
                 color: 'var(--text-secondary)',
-                fontFamily: 'var(--font-heading)',
-                fontWeight: 600,
-                fontSize: 'var(--text-xs)',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-                textDecoration: 'none',
-                border: '1px solid var(--border-default)',
-                transition: 'border-color var(--transition-fast), color var(--transition-fast)',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = 'rgba(232,185,49,0.4)';
-                e.currentTarget.style.color = 'var(--text-primary)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = 'var(--border-default)';
-                e.currentTarget.style.color = 'var(--text-secondary)';
+                fontSize: 'var(--text-md)',
+                lineHeight: 1.7,
+                maxWidth: '520px',
+                marginBottom: 'var(--space-10)',
+                textShadow: '0 1px 12px rgba(18,17,16,0.9)',
               }}
             >
-              ABOUT ME
-            </a>
-          </motion.div>
-        </div>
+              From property document analysis to market intelligence — I build the AI pipelines
+              that save hours of manual work for real estate professionals.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 1.0, ease: 'easeOut' }}
+              style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}
+            >
+              <a
+                href="/work"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 'var(--space-2)',
+                  padding: 'var(--space-3) var(--space-8)',
+                  backgroundColor: 'var(--accent-primary)',
+                  color: '#121110',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 700,
+                  fontSize: 'var(--text-xs)',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  textDecoration: 'none',
+                  transition: 'background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast)',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.backgroundColor = 'var(--accent-primary-hover)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-glow)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.backgroundColor = 'var(--accent-primary)';
+                  e.currentTarget.style.boxShadow = 'none';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                VIEW PROJECTS →
+              </a>
+              <a
+                href="/about"
+                style={{
+                  display: 'inline-flex', alignItems: 'center',
+                  padding: 'var(--space-3) var(--space-8)',
+                  backgroundColor: 'transparent',
+                  color: 'var(--text-secondary)',
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 600,
+                  fontSize: 'var(--text-xs)',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  textDecoration: 'none',
+                  border: '1px solid var(--border-default)',
+                  transition: 'border-color var(--transition-fast), color var(--transition-fast)',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.borderColor = 'rgba(232,185,49,0.4)';
+                  e.currentTarget.style.color = 'var(--text-primary)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.borderColor = 'var(--border-default)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                }}
+              >
+                ABOUT ME
+              </a>
+            </motion.div>
+          </div>
+        </motion.div>
 
         {/* Scroll indicator — scan line */}
         <style>{`
