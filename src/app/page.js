@@ -357,6 +357,86 @@ export default function Page() {
             Scroll to explore
           </span>
         </motion.div>
+
+        {/* Hero border strip */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            bottom: 0, left: 0, right: 0,
+            height: '72px',
+            zIndex: 11,
+            pointerEvents: 'none',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Blueprint grid */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: `linear-gradient(${isDark ? 'rgba(232,185,49,0.10)' : 'rgba(232,185,49,0.18)'} 1px, transparent 1px), linear-gradient(90deg, ${isDark ? 'rgba(232,185,49,0.10)' : 'rgba(232,185,49,0.18)'} 1px, transparent 1px)`,
+            backgroundSize: '20px 20px',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 70%)',
+            maskImage: 'linear-gradient(to bottom, transparent 0%, black 70%)',
+          }} />
+
+          {/* Diagonal ruler line */}
+          <div style={{
+            position: 'absolute',
+            top: '16px', left: 0, right: 0,
+            height: '1px',
+            background: 'linear-gradient(90deg, transparent 0%, rgba(232,185,49,0.85) 8%, rgba(232,185,49,0.85) 92%, transparent 100%)',
+            transform: 'rotate(-1deg)',
+            transformOrigin: 'left center',
+          }} />
+
+          {/* Fine tick marks every 24px */}
+          <div style={{
+            position: 'absolute',
+            top: '17px', left: 0, right: 0,
+            height: '6px',
+            background: 'repeating-linear-gradient(90deg, rgba(232,185,49,0.45) 0, rgba(232,185,49,0.45) 1px, transparent 1px, transparent 24px)',
+          }} />
+
+          {/* Major tick marks every 120px */}
+          <div style={{
+            position: 'absolute',
+            top: '17px', left: 0, right: 0,
+            height: '12px',
+            background: 'repeating-linear-gradient(90deg, rgba(232,185,49,0.8) 0, rgba(232,185,49,0.8) 1px, transparent 1px, transparent 120px)',
+          }} />
+
+          {/* Corner mark — left */}
+          <div style={{
+            position: 'absolute',
+            bottom: '8px', left: '16px',
+            width: '8px', height: '8px',
+            borderBottom: `1px solid ${isDark ? 'rgba(232,185,49,0.5)' : 'rgba(26,23,20,0.25)'}`,
+            borderLeft: `1px solid ${isDark ? 'rgba(232,185,49,0.5)' : 'rgba(26,23,20,0.25)'}`,
+          }} />
+
+          {/* Corner mark — right */}
+          <div style={{
+            position: 'absolute',
+            bottom: '8px', right: '16px',
+            width: '8px', height: '8px',
+            borderBottom: `1px solid ${isDark ? 'rgba(232,185,49,0.5)' : 'rgba(26,23,20,0.25)'}`,
+            borderRight: `1px solid ${isDark ? 'rgba(232,185,49,0.5)' : 'rgba(26,23,20,0.25)'}`,
+          }} />
+
+          {/* Label */}
+          <span style={{
+            position: 'absolute',
+            bottom: '10px', left: '32px',
+            fontFamily: 'monospace',
+            fontSize: '7px',
+            letterSpacing: '0.18em',
+            textTransform: 'uppercase',
+            color: isDark ? 'rgba(232,185,49,0.35)' : 'rgba(26,23,20,0.25)',
+          }}>
+            // SYS.BOUNDARY_01
+          </span>
+        </div>
       </section>
 
       <div style={{ height: '45vh' }} />
