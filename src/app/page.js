@@ -383,7 +383,7 @@ export default function Page() {
           {/* Diagonal ruler line */}
           <div style={{
             position: 'absolute',
-            top: '16px', left: 0, right: 0,
+            top: 'var(--space-4)', left: 0, right: 0,
             height: '1px',
             background: 'linear-gradient(90deg, transparent 0%, rgba(232,185,49,0.85) 8%, rgba(232,185,49,0.85) 92%, transparent 100%)',
             transform: 'rotate(-1deg)',
@@ -393,7 +393,7 @@ export default function Page() {
           {/* Fine tick marks every 24px */}
           <div style={{
             position: 'absolute',
-            top: '17px', left: 0, right: 0,
+            top: 'calc(var(--space-4) + 1px)', left: 0, right: 0,
             height: '6px',
             background: 'repeating-linear-gradient(90deg, rgba(232,185,49,0.45) 0, rgba(232,185,49,0.45) 1px, transparent 1px, transparent 24px)',
           }} />
@@ -401,7 +401,7 @@ export default function Page() {
           {/* Major tick marks every 120px */}
           <div style={{
             position: 'absolute',
-            top: '17px', left: 0, right: 0,
+            top: 'calc(var(--space-4) + 1px)', left: 0, right: 0,
             height: '12px',
             background: 'repeating-linear-gradient(90deg, rgba(232,185,49,0.8) 0, rgba(232,185,49,0.8) 1px, transparent 1px, transparent 120px)',
           }} />
@@ -409,7 +409,7 @@ export default function Page() {
           {/* Corner mark — left */}
           <div style={{
             position: 'absolute',
-            bottom: '8px', left: '16px',
+            bottom: 'var(--space-2)', left: 'var(--space-4)',
             width: '8px', height: '8px',
             borderBottom: `1px solid ${isDark ? 'rgba(232,185,49,0.5)' : 'rgba(26,23,20,0.25)'}`,
             borderLeft: `1px solid ${isDark ? 'rgba(232,185,49,0.5)' : 'rgba(26,23,20,0.25)'}`,
@@ -418,7 +418,7 @@ export default function Page() {
           {/* Corner mark — right */}
           <div style={{
             position: 'absolute',
-            bottom: '8px', right: '16px',
+            bottom: 'var(--space-2)', right: 'var(--space-4)',
             width: '8px', height: '8px',
             borderBottom: `1px solid ${isDark ? 'rgba(232,185,49,0.5)' : 'rgba(26,23,20,0.25)'}`,
             borderRight: `1px solid ${isDark ? 'rgba(232,185,49,0.5)' : 'rgba(26,23,20,0.25)'}`,
@@ -427,7 +427,7 @@ export default function Page() {
           {/* Label */}
           <span style={{
             position: 'absolute',
-            bottom: '10px', left: '32px',
+            bottom: 'var(--space-2)', left: 'calc(var(--space-4) * 2)',
             fontFamily: 'monospace',
             fontSize: '7px',
             letterSpacing: '0.18em',
