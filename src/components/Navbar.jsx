@@ -5,6 +5,7 @@ import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from './ThemeToggle';
+import { useTheme } from './ThemeProvider';
 
 const NAV_LINKS = [
   { label: 'WORK',     href: '/work' },
@@ -18,6 +19,9 @@ export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredHref, setHoveredHref] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
@@ -25,6 +29,12 @@ export default function Navbar() {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const isActive = href =>
     href === '/' ? pathname === '/' : pathname.startsWith(href);
@@ -48,12 +58,33 @@ export default function Navbar() {
           position: 'sticky',
           top: 0,
           zIndex: 100,
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          backgroundColor: 'color-mix(in srgb, var(--bg-primary) 85%, transparent)',
-          borderBottom: '1px solid rgba(232,185,49,0.08)',
+          transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease',
+          backdropFilter: scrolled ? 'blur(16px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
+          backgroundColor: scrolled
+            ? (isDark ? 'rgba(18,17,16,0.82)' : 'rgba(251,248,240,0.88)')
+            : 'transparent',
+          borderBottom: scrolled
+            ? '1px solid rgba(232,185,49,0.15)'
+            : '1px solid transparent',
+          boxShadow: scrolled
+            ? (isDark ? '0 1px 32px rgba(0,0,0,0.5)' : '0 1px 20px rgba(26,23,20,0.08)')
+            : 'none',
         }}
       >
+        {/* Vertical gold accent line */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            left: 0, top: 'var(--space-2)', bottom: 'var(--space-2)',
+            width: '2px',
+            background: 'linear-gradient(to bottom, transparent, #E8B931 35%, #E8B931 65%, transparent)',
+            opacity: scrolled ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+            pointerEvents: 'none',
+          }}
+        />
         <div
           className="container"
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '4rem' }}
@@ -68,6 +99,7 @@ export default function Navbar() {
               color: 'var(--accent-primary)',
               letterSpacing: '0.05em',
               textDecoration: 'none',
+              paddingLeft: 'var(--space-3)',
             }}
           >
             RDG<span style={{ color: 'rgba(232,185,49,0.4)' }}>.</span>
@@ -130,6 +162,25 @@ export default function Navbar() {
                 </div>
               ))}
             </LayoutGroup>
+
+            {/* SYS.ONLINE badge — desktop only, fades in on scroll */}
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: '5px',
+              fontFamily: 'monospace', fontSize: '8px', letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: isDark ? 'rgba(232,185,49,0.3)' : 'rgba(26,23,20,0.25)',
+              opacity: scrolled ? 1 : 0,
+              transition: 'opacity 0.4s ease',
+              userSelect: 'none',
+            }}>
+              <span style={{
+                width: 5, height: 5, borderRadius: '50%',
+                backgroundColor: 'rgba(34,197,94,0.85)',
+                boxShadow: '0 0 6px rgba(34,197,94,0.5)',
+                display: 'inline-block', flexShrink: 0,
+              }} />
+              SYS.ONLINE
+            </div>
 
             {/* Contact button */}
             <a
