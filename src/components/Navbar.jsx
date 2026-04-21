@@ -170,7 +170,7 @@ export default function Navbar() {
               textTransform: 'uppercase',
               color: isDark ? 'rgba(232,185,49,0.3)' : 'rgba(26,23,20,0.25)',
               opacity: scrolled ? 1 : 0,
-              transition: 'opacity 0.4s ease',
+              transition: 'opacity 0.3s ease',
               userSelect: 'none',
             }}>
               <span style={{
