@@ -85,12 +85,15 @@ function Eyebrow({ children }) {
 
 /* ── Editorial headline (3-line stacked with outline on line 3) */
 
-function EditorialHeadline({ line1, line2, line3, size = 'var(--text-3xl)' }) {
+function EditorialHeadline({ line1, line2, line3, size = 'var(--text-3xl)', isDark = true }) {
   const lines = [
     { text: line1, outline: false },
     { text: line2, outline: false },
     { text: line3, outline: true },
   ];
+  const headingShadow = isDark
+    ? '0 2px 16px rgba(12,10,8,0.95)'
+    : '0 2px 14px rgba(251,248,240,0.90)';
   return (
     <div style={{ marginBottom: 'var(--space-8)' }}>
       {lines.map(({ text, outline }, i) => (
@@ -105,6 +108,7 @@ function EditorialHeadline({ line1, line2, line3, size = 'var(--text-3xl)' }) {
               fontWeight: 900,
               lineHeight: 0.92,
               letterSpacing: '-0.03em',
+              textShadow: headingShadow,
               ...(outline
                 ? {
                     color: 'transparent',
@@ -239,7 +243,7 @@ export default function Page() {
               inset: 0,
               background: isDark
                 ? 'linear-gradient(90deg, rgba(12,10,8,0.96) 0%, rgba(12,10,8,0.82) 30%, rgba(12,10,8,0.35) 65%, transparent 100%)'
-                : 'linear-gradient(90deg, rgba(26,23,20,0.78) 0%, rgba(26,23,20,0.58) 30%, rgba(26,23,20,0.18) 65%, transparent 100%)',
+                : 'linear-gradient(90deg, rgba(26,23,20,0.52) 0%, rgba(26,23,20,0.34) 30%, rgba(26,23,20,0.08) 65%, transparent 100%)',
             }}
           />
           {/* Layer 3: Top edge darkening — top to bottom */}
@@ -294,6 +298,7 @@ export default function Page() {
               line2="THAT AUTOMATE"
               line3="REAL ESTATE WORKFLOWS."
               size="clamp(2rem, 5.5vw, var(--text-4xl))"
+              isDark={isDark}
             />
 
             <motion.p
@@ -306,7 +311,7 @@ export default function Page() {
                 lineHeight: 1.7,
                 maxWidth: '520px',
                 marginBottom: 'var(--space-10)',
-                textShadow: '0 1px 12px rgba(18,17,16,0.9)',
+                textShadow: isDark ? '0 1px 12px rgba(12,10,8,0.95)' : '0 1px 10px rgba(251,248,240,0.90)',
               }}
             >
               From property document analysis to market intelligence — I build the AI pipelines
