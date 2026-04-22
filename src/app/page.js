@@ -137,7 +137,15 @@ export default function Page() {
   // Phase 3: scrim dissolves               (45% → 75%)
   // Phase 4: photo revealed, holds still   (45% → 88%) — scrim gone at 75%
   // Phase 5: photo surges upward           (88% → 100%)
-  const photoScrollY = useTransform(scrollY, [heroHeight * 0.88, heroHeight],        ['0%', '22%']);
+  //
+  // photoScrollY uses px to counteract the section scrolling up.
+  // y = +scrollY keeps photo fixed in viewport; reducing y in phase 5 lets it rise.
+  const hh = heroHeight;
+  const photoScrollY = useTransform(
+    scrollY,
+    [0,  hh * 0.88,  hh],
+    [0,  hh * 0.88,  hh * 0.82]
+  );
   const textScrollY  = useTransform(scrollY, [0,                 heroHeight * 0.22], ['0%', '-5%']);
   const textOpacity  = useTransform(scrollY, [0,                 heroHeight * 0.18], [1, 0]);
   const scrimOpacity = useTransform(scrollY, [heroHeight * 0.45, heroHeight * 0.75], [1, 0]);
