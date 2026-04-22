@@ -124,28 +124,27 @@ function EditorialHeadline({ line1, line2, line3, size = 'var(--text-3xl)' }) {
 /* ── Page ──────────────────────────────────────────────────────── */
 
 export default function Page() {
-  const photoRef   = useRef(null);
-  const textRef    = useRef(null);
-  const wrapperRef = useRef(null);
+  const photoRef = useRef(null);
+  const textRef  = useRef(null);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  // scrollYProgress runs 0→1 over the 200vh wrapper.
-  // Sticky positioning keeps the hero fixed — no px-offset hacks needed.
-  const { scrollYProgress } = useScroll({
-    target: wrapperRef,
-    offset: ['start start', 'end end'],
-  });
+  const { scrollY } = useScroll();
+  const hh = typeof window !== 'undefined' ? window.innerHeight : 800;
 
-  // Act 1 (0–0.30): text + scrim dissolve together; indicator leaves first
-  // Act 2 (0.30–0.75): everything holds — full photo visible, mouse parallax active
-  // Act 3 (0.75–1.00): photo surges up and hard-fades out
-  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.20], [1, 0]);
-  const textOpacity      = useTransform(scrollYProgress, [0, 0.30], [1, 0]);
-  const textY            = useTransform(scrollYProgress, [0, 0.30], ['0%', '-4%']);
-  const scrimOpacity     = useTransform(scrollYProgress, [0, 0.30], [1, 0]);
-  const photoY           = useTransform(scrollYProgress, [0.75, 1.0], ['0%', '-120%']);
-  const photoOpacity     = useTransform(scrollYProgress, [0.75, 1.0], [1, 0]);
+  // Act 1 (0–30%): tekst + scrim faden tegelijk weg
+  // Act 2 (30–75%): hold — foto volledig zichtbaar, mouse parallax actief
+  // Act 3 (75–100%): foto schiet omhoog en faded hard uit
+  //
+  // photoScrollY gebruikt px-offset om de foto stil te houden terwijl de sectie omhoog scrollt.
+  // y = +scrollY counteracteert de sectie-beweging → foto blijft op viewportpositie.
+  // In Act 3 daalt y onder de compensatiewaarde → foto schiet omhoog ten opzichte van viewport.
+  const indicatorOpacity = useTransform(scrollY, [0, hh * 0.20], [1, 0]);
+  const textOpacity      = useTransform(scrollY, [0, hh * 0.30], [1, 0]);
+  const textY            = useTransform(scrollY, [0, hh * 0.30], ['0%', '-4%']);
+  const scrimOpacity     = useTransform(scrollY, [0, hh * 0.30], [1, 0]);
+  const photoScrollY     = useTransform(scrollY, [0, hh * 0.75, hh], [0, hh * 0.75, -hh * 0.45]);
+  const photoOpacity     = useTransform(scrollY, [hh * 0.75, hh], [1, 0]);
 
 
   function handleHeroMouseMove(e) {
@@ -177,27 +176,23 @@ export default function Page() {
       {/* ─────────────────────────────────────────────────────── */}
       {/* SECTION 1 — HERO                                       */}
       {/* ─────────────────────────────────────────────────────── */}
-      <div
-        ref={wrapperRef}
-        style={{ height: '200vh' }}
-      >
-      {/* sticky acts as containing block for absolute children; overflow:hidden clips the photo surge */}
       <section
+        className="snap-section"
         onMouseMove={handleHeroMouseMove}
         onMouseLeave={handleHeroMouseLeave}
         style={{
-          position: 'sticky',
-          top: 0,
-          height: '100vh',
+          height: 'calc(100vh - 4rem)',
+          minHeight: 'unset',
           padding: 0,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
+          position: 'relative',
           overflow: 'hidden',
         }}
       >
         {/* Layer 0: Photo */}
-        <motion.div style={{ position: 'absolute', inset: 0, y: photoY, opacity: photoOpacity }}>
+        <motion.div style={{ position: 'absolute', inset: 0, y: photoScrollY, opacity: photoOpacity }}>
           <div
             ref={photoRef}
             style={{
@@ -455,7 +450,6 @@ export default function Page() {
           </span>
         </div>
       </section>
-      </div>
 
       <div style={{ height: '45vh' }} />
 
