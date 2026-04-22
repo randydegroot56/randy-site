@@ -181,6 +181,7 @@ export default function Page() {
         ref={wrapperRef}
         style={{ height: '200vh', scrollSnapAlign: 'start' }}
       >
+      {/* sticky acts as containing block for absolute children; overflow:hidden clips the photo surge */}
       <section
         onMouseMove={handleHeroMouseMove}
         onMouseLeave={handleHeroMouseLeave}
