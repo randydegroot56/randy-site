@@ -134,8 +134,10 @@ export default function Page() {
 
   // Phase 1: text drifts up and fades      (0% → 18% of hero height)
   // Phase 2: hold — nothing animates       (18% → 45%)
-  // Phase 3: scrim dissolves, photo surges (45% → 100% / scrim gone by 75%)
-  const photoScrollY = useTransform(scrollY, [heroHeight * 0.45, heroHeight],        ['0%', '22%']);
+  // Phase 3: scrim dissolves               (45% → 75%)
+  // Phase 4: photo revealed, holds still   (45% → 68%)
+  // Phase 5: photo surges upward           (68% → 100%)
+  const photoScrollY = useTransform(scrollY, [heroHeight * 0.68, heroHeight],        ['0%', '22%']);
   const textScrollY  = useTransform(scrollY, [0,                 heroHeight * 0.22], ['0%', '-5%']);
   const textOpacity  = useTransform(scrollY, [0,                 heroHeight * 0.18], [1, 0]);
   const scrimOpacity = useTransform(scrollY, [heroHeight * 0.45, heroHeight * 0.75], [1, 0]);
