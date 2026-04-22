@@ -131,10 +131,15 @@ export default function Page() {
 
   const { scrollY } = useScroll();
   const heroHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
-  const photoScrollY = useTransform(scrollY, [0, heroHeight], ['0%', '20%']);
-  const textScrollY  = useTransform(scrollY, [0, heroHeight], ['0%', '-7%']);
-  const textOpacity  = useTransform(scrollY, [0, heroHeight * 0.25], [1, 0]);
-  const photoOpacity = useTransform(scrollY, [heroHeight * 0.25, heroHeight * 0.85], [1, 0]);
+
+  // Phase 1: text drifts up and fades      (0% → 18% of hero height)
+  // Phase 2: hold — nothing animates       (18% → 45%)
+  // Phase 3: scrim dissolves, photo surges (45% → 100% / scrim gone by 75%)
+  const photoScrollY = useTransform(scrollY, [heroHeight * 0.45, heroHeight],        ['0%', '22%']);
+  const textScrollY  = useTransform(scrollY, [0,                 heroHeight * 0.22], ['0%', '-5%']);
+  const textOpacity  = useTransform(scrollY, [0,                 heroHeight * 0.18], [1, 0]);
+  const scrimOpacity = useTransform(scrollY, [heroHeight * 0.45, heroHeight * 0.75], [1, 0]);
+
 
   function handleHeroMouseMove(e) {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -181,7 +186,7 @@ export default function Page() {
         }}
       >
         {/* Layer 0: Photo */}
-        <motion.div style={{ position: 'absolute', inset: 0, y: photoScrollY, opacity: photoOpacity }}>
+        <motion.div style={{ position: 'absolute', inset: 0, y: photoScrollY }}>
           <div
             ref={photoRef}
             style={{
@@ -197,8 +202,8 @@ export default function Page() {
           />
         </motion.div>
 
-        {/* Layers 1 + 2: Scrim (fades with text) */}
-        <motion.div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none', opacity: textOpacity }}>
+        {/* Layers 1 + 2: Scrim (dissolves in phase 3) */}
+        <motion.div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none', opacity: scrimOpacity }}>
           {/* Layer 1: Gold tint wash */}
           <div
             aria-hidden="true"
