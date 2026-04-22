@@ -237,7 +237,9 @@ export default function Page() {
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(90deg, rgba(12,10,8,0.96) 0%, rgba(12,10,8,0.82) 30%, rgba(12,10,8,0.35) 65%, transparent 100%)',
+              background: isDark
+                ? 'linear-gradient(90deg, rgba(12,10,8,0.96) 0%, rgba(12,10,8,0.82) 30%, rgba(12,10,8,0.35) 65%, transparent 100%)'
+                : 'linear-gradient(90deg, rgba(26,23,20,0.78) 0%, rgba(26,23,20,0.58) 30%, rgba(26,23,20,0.18) 65%, transparent 100%)',
             }}
           />
           {/* Layer 3: Top edge darkening — top to bottom */}
@@ -248,7 +250,7 @@ export default function Page() {
               inset: 0,
               background: isDark
                 ? 'linear-gradient(to bottom, rgba(12,10,8,0.80) 0%, transparent 28%)'
-                : 'linear-gradient(to bottom, rgba(251,248,240,0.90) 0%, transparent 28%)',
+                : 'linear-gradient(to bottom, rgba(251,248,240,0.60) 0%, transparent 28%)',
             }}
           />
         </motion.div>
@@ -263,7 +265,7 @@ export default function Page() {
             pointerEvents: 'none',
             background: isDark
               ? 'linear-gradient(to top, rgba(12,10,8,0.90) 0%, transparent 22%)'
-              : 'linear-gradient(to top, rgba(251,248,240,0.95) 0%, transparent 22%)',
+              : 'linear-gradient(to top, rgba(251,248,240,0.78) 0%, transparent 22%)',
           }}
         />
 
