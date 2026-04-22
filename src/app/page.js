@@ -143,7 +143,8 @@ export default function Page() {
   const textOpacity      = useTransform(scrollY, [0, hh * 0.30], [1, 0]);
   const textY            = useTransform(scrollY, [0, hh * 0.30], ['0%', '-4%']);
   const scrimOpacity     = useTransform(scrollY, [0, hh * 0.30], [1, 0]);
-  const photoScrollY     = useTransform(scrollY, [0, hh * 0.75, hh], [0, hh * 0.75, -hh * 0.45]);
+  // Photo is position:fixed so no px-counteraction needed — y=0 holds it in place, y<0 surges it up
+  const photoScrollY     = useTransform(scrollY, [0, hh * 0.75, hh], [0, 0, -hh * 1.2]);
   const photoOpacity     = useTransform(scrollY, [hh * 0.75, hh], [1, 0]);
 
 
@@ -176,6 +177,32 @@ export default function Page() {
       {/* ─────────────────────────────────────────────────────── */}
       {/* SECTION 1 — HERO                                       */}
       {/* ─────────────────────────────────────────────────────── */}
+      {/* Photo — fixed overlay, outside the section so overflow:hidden can't clip it */}
+      <motion.div
+        aria-hidden="true"
+        style={{
+          position: 'fixed', inset: 0,
+          zIndex: 0,
+          y: photoScrollY,
+          opacity: photoOpacity,
+          pointerEvents: 'none',
+        }}
+      >
+        <div
+          ref={photoRef}
+          style={{
+            position: 'absolute',
+            inset: '-10% -5%',
+            backgroundImage: "url('/herofoto.jpeg')",
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: `brightness(${isDark ? '0.65' : '0.80'}) saturate(0.75)`,
+            willChange: 'transform',
+            transition: 'transform 0.1s linear',
+          }}
+        />
+      </motion.div>
+
       <section
         className="snap-section"
         onMouseMove={handleHeroMouseMove}
@@ -191,24 +218,7 @@ export default function Page() {
           overflow: 'hidden',
         }}
       >
-        {/* Layer 0: Photo */}
-        <motion.div style={{ position: 'absolute', inset: 0, y: photoScrollY, opacity: photoOpacity }}>
-          <div
-            ref={photoRef}
-            style={{
-              position: 'absolute',
-              inset: '-10% -5%',
-              backgroundImage: "url('/herofoto.jpeg')",
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              filter: `brightness(${isDark ? '0.65' : '0.80'}) saturate(0.75)`,
-              willChange: 'transform',
-              transition: 'transform 0.1s linear',
-            }}
-          />
-        </motion.div>
-
-        {/* Layers 1 + 2: Scrim (dissolves in phase 3) */}
+        {/* Layers 1 + 2: Scrim (dissolves in Act 1) */}
         <motion.div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none', opacity: scrimOpacity }}>
           {/* Layer 1: Gold tint wash */}
           <div
