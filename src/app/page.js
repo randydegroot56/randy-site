@@ -124,31 +124,28 @@ function EditorialHeadline({ line1, line2, line3, size = 'var(--text-3xl)' }) {
 /* ── Page ──────────────────────────────────────────────────────── */
 
 export default function Page() {
-  const photoRef = useRef(null);
-  const textRef  = useRef(null);
+  const photoRef   = useRef(null);
+  const textRef    = useRef(null);
+  const wrapperRef = useRef(null);
   const { theme } = useTheme();
   const isDark = theme === 'dark';
 
-  const { scrollY } = useScroll();
-  const heroHeight = typeof window !== 'undefined' ? window.innerHeight : 800;
+  // scrollYProgress runs 0→1 over the 200vh wrapper.
+  // Sticky positioning keeps the hero fixed — no px-offset hacks needed.
+  const { scrollYProgress } = useScroll({
+    target: wrapperRef,
+    offset: ['start start', 'end end'],
+  });
 
-  // Phase 1: text drifts up and fades      (0% → 18% of hero height)
-  // Phase 2: hold — nothing animates       (18% → 45%)
-  // Phase 3: scrim dissolves               (45% → 75%)
-  // Phase 4: photo revealed, holds still   (45% → 88%) — scrim gone at 75%
-  // Phase 5: photo surges upward           (88% → 100%)
-  //
-  // photoScrollY uses px to counteract the section scrolling up.
-  // y = +scrollY keeps photo fixed in viewport; reducing y in phase 5 lets it rise.
-  const hh = heroHeight;
-  const photoScrollY = useTransform(
-    scrollY,
-    [0,  hh * 0.88,  hh],
-    [0,  hh * 0.88,  hh * 0.82]
-  );
-  const textScrollY  = useTransform(scrollY, [0,                 heroHeight * 0.22], ['0%', '-5%']);
-  const textOpacity  = useTransform(scrollY, [0,                 heroHeight * 0.18], [1, 0]);
-  const scrimOpacity = useTransform(scrollY, [heroHeight * 0.45, heroHeight * 0.75], [1, 0]);
+  // Act 1 (0–0.30): text + scrim dissolve together; indicator leaves first
+  // Act 2 (0.30–0.75): everything holds — full photo visible, mouse parallax active
+  // Act 3 (0.75–1.00): photo surges up and hard-fades out
+  const indicatorOpacity = useTransform(scrollYProgress, [0, 0.20], [1, 0]);
+  const textOpacity      = useTransform(scrollYProgress, [0, 0.30], [1, 0]);
+  const textY            = useTransform(scrollYProgress, [0, 0.30], ['0%', '-4%']);
+  const scrimOpacity     = useTransform(scrollYProgress, [0, 0.30], [1, 0]);
+  const photoY           = useTransform(scrollYProgress, [0.75, 1.0], ['0%', '-120%']);
+  const photoOpacity     = useTransform(scrollYProgress, [0.75, 1.0], [1, 0]);
 
 
   function handleHeroMouseMove(e) {
@@ -180,23 +177,26 @@ export default function Page() {
       {/* ─────────────────────────────────────────────────────── */}
       {/* SECTION 1 — HERO                                       */}
       {/* ─────────────────────────────────────────────────────── */}
+      <div
+        ref={wrapperRef}
+        style={{ height: '200vh', scrollSnapAlign: 'start' }}
+      >
       <section
-        className="snap-section"
         onMouseMove={handleHeroMouseMove}
         onMouseLeave={handleHeroMouseLeave}
         style={{
-          height: 'calc(100vh - 4rem)',
-          minHeight: 'unset',
+          position: 'sticky',
+          top: 0,
+          height: '100vh',
           padding: 0,
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          position: 'relative',
           overflow: 'hidden',
         }}
       >
         {/* Layer 0: Photo */}
-        <motion.div style={{ position: 'absolute', inset: 0, y: photoScrollY }}>
+        <motion.div style={{ position: 'absolute', inset: 0, y: photoY, opacity: photoOpacity }}>
           <div
             ref={photoRef}
             style={{
@@ -235,7 +235,7 @@ export default function Page() {
         </motion.div>
 
         {/* Layer 3: Text content */}
-        <motion.div style={{ position: 'relative', zIndex: 10, y: textScrollY, opacity: textOpacity }}>
+        <motion.div style={{ position: 'relative', zIndex: 10, y: textY, opacity: textOpacity }}>
           <div
             ref={textRef}
             className="container"
@@ -363,6 +363,7 @@ export default function Page() {
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
+            opacity: indicatorOpacity,
           }}
         >
           <div style={{ width: 32, height: 1, background: 'rgba(232,185,49,0.4)', position: 'relative', overflow: 'hidden' }}>
@@ -453,6 +454,7 @@ export default function Page() {
           </span>
         </div>
       </section>
+      </div>
 
       <div style={{ height: '45vh' }} />
 
