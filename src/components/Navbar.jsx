@@ -31,7 +31,7 @@ export default function Navbar() {
   }, [menuOpen]);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
+    const onScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -58,7 +58,7 @@ export default function Navbar() {
           position: 'sticky',
           top: 0,
           zIndex: 100,
-          transition: 'background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease',
+          transition: 'background-color 0.7s ease, border-color 0.7s ease, box-shadow 0.7s ease, backdrop-filter 0.7s ease',
           backdropFilter: scrolled ? 'blur(16px)' : 'none',
           WebkitBackdropFilter: scrolled ? 'blur(16px)' : 'none',
           backgroundColor: scrolled

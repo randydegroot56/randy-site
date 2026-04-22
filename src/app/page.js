@@ -210,7 +210,7 @@ export default function Page() {
           position: 'fixed',
           top: 0, left: 0, right: 0,
           height: '100vh',
-          zIndex: 1,
+          zIndex: 6,
           padding: 0,
           paddingTop: 'calc(4rem + var(--space-16))',
           display: 'flex',
@@ -250,6 +250,18 @@ export default function Page() {
             }}
           />
         </motion.div>
+
+        {/* Permanent bottom edge fade */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 2,
+            pointerEvents: 'none',
+            background: 'linear-gradient(to top, rgba(12,10,8,0.90) 0%, transparent 22%)',
+          }}
+        />
 
         {/* Layer 3: Text content */}
         <motion.div style={{ position: 'relative', zIndex: 10, y: textY, opacity: textOpacity }}>
