@@ -196,7 +196,7 @@ export default function Page() {
             backgroundImage: "url('/herofoto.jpeg')",
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            filter: `brightness(${isDark ? '0.65' : '0.80'}) saturate(0.75)`,
+            filter: `brightness(${isDark ? '0.65' : '0.72'}) saturate(0.75)`,
             willChange: 'transform',
             transition: 'transform 0.1s linear',
           }}
@@ -246,7 +246,9 @@ export default function Page() {
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(to bottom, rgba(12,10,8,0.80) 0%, transparent 28%)',
+              background: isDark
+                ? 'linear-gradient(to bottom, rgba(12,10,8,0.80) 0%, transparent 28%)'
+                : 'linear-gradient(to bottom, rgba(251,248,240,0.90) 0%, transparent 28%)',
             }}
           />
         </motion.div>
@@ -259,7 +261,9 @@ export default function Page() {
             inset: 0,
             zIndex: 2,
             pointerEvents: 'none',
-            background: 'linear-gradient(to top, rgba(12,10,8,0.90) 0%, transparent 22%)',
+            background: isDark
+              ? 'linear-gradient(to top, rgba(12,10,8,0.90) 0%, transparent 22%)'
+              : 'linear-gradient(to top, rgba(251,248,240,0.95) 0%, transparent 22%)',
           }}
         />
 
@@ -398,7 +402,7 @@ export default function Page() {
           <div style={{ width: 32, height: 1, background: 'rgba(232,185,49,0.4)', position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', inset: 0, background: '#E8B931', animation: 'scanLine 1.8s ease-in-out infinite' }} />
           </div>
-          <span style={{ fontFamily: 'monospace', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(237,232,220,0.3)' }}>
+          <span style={{ fontFamily: 'monospace', fontSize: '9px', letterSpacing: '0.18em', textTransform: 'uppercase', color: isDark ? 'rgba(237,232,220,0.3)' : 'rgba(26,23,20,0.4)' }}>
             Scroll to explore
           </span>
         </motion.div>
