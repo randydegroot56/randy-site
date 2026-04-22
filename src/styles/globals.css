@@ -212,7 +212,7 @@ html:has(.homepage-scroll) {
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: clip; /* clip instead of hidden — preserves overflow clipping without creating a scroll container, which would break position:sticky */
 }
 
 .snap-section {

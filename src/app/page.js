@@ -179,7 +179,7 @@ export default function Page() {
       {/* ─────────────────────────────────────────────────────── */}
       <div
         ref={wrapperRef}
-        style={{ height: '200vh', scrollSnapAlign: 'start' }}
+        style={{ height: '200vh' }}
       >
       {/* sticky acts as containing block for absolute children; overflow:hidden clips the photo surge */}
       <section
