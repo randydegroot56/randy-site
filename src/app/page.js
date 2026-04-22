@@ -208,12 +208,13 @@ export default function Page() {
         onMouseMove={handleHeroMouseMove}
         onMouseLeave={handleHeroMouseLeave}
         style={{
-          height: 'calc(100vh - 4rem)',
+          height: '100vh',
           minHeight: 'unset',
           padding: 0,
+          paddingTop: 'calc(4rem + var(--space-16))',
           display: 'flex',
           flexDirection: 'column',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           position: 'relative',
           overflow: 'hidden',
         }}
@@ -226,7 +227,7 @@ export default function Page() {
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(135deg, rgba(232,185,49,0.06) 0%, transparent 50%, rgba(232,185,49,0.03) 100%)',
+              background: 'linear-gradient(135deg, rgba(232,185,49,0.10) 0%, transparent 50%, rgba(232,185,49,0.05) 100%)',
             }}
           />
           {/* Layer 2: Readability gradient scrim */}
@@ -235,7 +236,7 @@ export default function Page() {
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(90deg, rgba(12,10,8,0.88) 0%, rgba(12,10,8,0.72) 30%, rgba(12,10,8,0.22) 65%, transparent 100%)',
+              background: 'linear-gradient(90deg, rgba(12,10,8,0.96) 0%, rgba(12,10,8,0.82) 30%, rgba(12,10,8,0.35) 65%, transparent 100%)',
             }}
           />
         </motion.div>
