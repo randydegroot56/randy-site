@@ -203,23 +203,24 @@ export default function Page() {
         />
       </motion.div>
 
-      <section
-        className="snap-section"
+      <motion.section
         onMouseMove={handleHeroMouseMove}
         onMouseLeave={handleHeroMouseLeave}
         style={{
+          position: 'fixed',
+          top: 0, left: 0, right: 0,
           height: '100vh',
-          minHeight: 'unset',
+          zIndex: 1,
           padding: 0,
           paddingTop: 'calc(4rem + var(--space-16))',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'flex-start',
-          position: 'relative',
           overflow: 'hidden',
+          y: photoScrollY,
         }}
       >
-        {/* Layers 1 + 2: Scrim (dissolves in Act 1) */}
+        {/* Layers 1–3: Scrim (dissolves in Act 1) */}
         <motion.div style={{ position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none', opacity: scrimOpacity }}>
           {/* Layer 1: Gold tint wash */}
           <div
@@ -230,13 +231,22 @@ export default function Page() {
               background: 'linear-gradient(135deg, rgba(232,185,49,0.10) 0%, transparent 50%, rgba(232,185,49,0.05) 100%)',
             }}
           />
-          {/* Layer 2: Readability gradient scrim */}
+          {/* Layer 2: Readability gradient scrim — left to right */}
           <div
             aria-hidden="true"
             style={{
               position: 'absolute',
               inset: 0,
               background: 'linear-gradient(90deg, rgba(12,10,8,0.96) 0%, rgba(12,10,8,0.82) 30%, rgba(12,10,8,0.35) 65%, transparent 100%)',
+            }}
+          />
+          {/* Layer 3: Top edge darkening — top to bottom */}
+          <div
+            aria-hidden="true"
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(to bottom, rgba(12,10,8,0.80) 0%, transparent 28%)',
             }}
           />
         </motion.div>
@@ -460,7 +470,10 @@ export default function Page() {
             // SYS.BOUNDARY_01
           </span>
         </div>
-      </section>
+      </motion.section>
+
+      {/* Scroll placeholder — creates the 100vh scroll space the fixed hero used to occupy */}
+      <div style={{ height: '100vh', scrollSnapAlign: 'start' }} />
 
       <div style={{ height: '45vh' }} />
 
