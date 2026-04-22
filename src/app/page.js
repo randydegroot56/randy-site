@@ -192,7 +192,7 @@ export default function Page() {
           ref={photoRef}
           style={{
             position: 'absolute',
-            inset: '-10% -5%',
+            top: '-10%', right: '-5%', bottom: 0, left: '-5%',
             backgroundImage: "url('/herofoto.jpeg')",
             backgroundSize: 'cover',
             backgroundPosition: 'center',
