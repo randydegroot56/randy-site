@@ -1,0 +1,16 @@
+{
+    "name": "fastapi-service",
+    "version": "1.0.0",
+    "description": "FastAPI service with pytest and pyproject.toml",
+    "language": "python",
+    "files": [
+        {"path": "src/{{ project_name_snake }}/__init__.py",   "template": "templates/pkg_init.py.jinja2",    "header": true},
+        {"path": "src/{{ project_name_snake }}/main.py",       "template": "templates/main.py.jinja2",        "header": true},
+        {"path": "tests/__init__.py",                          "template": "templates/tests_init.py.jinja2",  "header": true},
+        {"path": "tests/test_{{ project_name_snake }}.py",     "template": "templates/test_main.py.jinja2",   "header": true},
+        {"path": "pyproject.toml",                             "template": "templates/pyproject.toml.jinja2", "header": false},
+        {"path": "README.md",                                  "template": "templates/README.md.jinja2",      "header": false}
+    ],
+    "required_spec_fields": ["project.name", "project.language"],
+    "optional_spec_fields": ["technical.dependencies", "features"]
+}

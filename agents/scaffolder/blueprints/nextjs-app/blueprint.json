@@ -1,0 +1,16 @@
+{
+    "name": "nextjs-app",
+    "version": "1.0.0",
+    "description": "Next.js 14 app with TypeScript and Jest",
+    "language": "typescript",
+    "files": [
+        {"path": "src/app/page.tsx",    "template": "templates/page.tsx.jinja2",       "header": true},
+        {"path": "src/app/layout.tsx",  "template": "templates/layout.tsx.jinja2",     "header": true},
+        {"path": "tests/page.test.tsx", "template": "templates/page.test.tsx.jinja2",  "header": true},
+        {"path": "package.json",        "template": "templates/package.json.jinja2",   "header": false},
+        {"path": "tsconfig.json",       "template": "templates/tsconfig.json.jinja2",  "header": false},
+        {"path": "README.md",           "template": "templates/README.md.jinja2",      "header": false}
+    ],
+    "required_spec_fields": ["project.name", "project.language"],
+    "optional_spec_fields": ["technical.dependencies", "features"]
+}

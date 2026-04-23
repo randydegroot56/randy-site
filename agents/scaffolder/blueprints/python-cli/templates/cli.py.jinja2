@@ -1,0 +1,16 @@
+import click
+
+
+@click.group()
+def cli() -> None:
+    """{{ project.name }} command-line interface."""
+
+
+@cli.command()
+def version() -> None:
+    """Print version."""
+    click.echo("0.1.0")
+
+
+if __name__ == "__main__":
+    cli()

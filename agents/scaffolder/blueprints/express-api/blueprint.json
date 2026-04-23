@@ -1,0 +1,16 @@
+{
+    "name": "express-api",
+    "version": "1.0.0",
+    "description": "Express TypeScript API with Jest",
+    "language": "typescript",
+    "files": [
+        {"path": "src/app.ts",        "template": "templates/app.ts.jinja2",        "header": true},
+        {"path": "src/index.ts",      "template": "templates/index.ts.jinja2",      "header": true},
+        {"path": "tests/app.test.ts", "template": "templates/app.test.ts.jinja2",   "header": true},
+        {"path": "package.json",      "template": "templates/package.json.jinja2",  "header": false},
+        {"path": "tsconfig.json",     "template": "templates/tsconfig.json.jinja2", "header": false},
+        {"path": "README.md",         "template": "templates/README.md.jinja2",     "header": false}
+    ],
+    "required_spec_fields": ["project.name", "project.language"],
+    "optional_spec_fields": ["technical.dependencies", "features"]
+}
