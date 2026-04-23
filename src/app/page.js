@@ -59,7 +59,7 @@ const projects = [
 
 /* ── Reusable section eyebrow ────────────────────────────────── */
 
-function Eyebrow({ children }) {
+function Eyebrow({ children, shadow }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: 'var(--space-6)' }}>
       <span style={{
@@ -76,6 +76,7 @@ function Eyebrow({ children }) {
         letterSpacing: '0.18em',
         textTransform: 'uppercase',
         color: 'var(--accent-secondary)',
+        textShadow: shadow,
       }}>
         {children}
       </span>
@@ -290,7 +291,7 @@ export default function Page() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.4, delay: 0.15 }}
             >
-              <Eyebrow>Real Estate × AI Automation</Eyebrow>
+              <Eyebrow shadow={isDark ? '0 1px 8px rgba(12,10,8,0.9)' : '0 1px 8px rgba(251,248,240,0.85)'}>Real Estate × AI Automation</Eyebrow>
             </motion.div>
 
             <EditorialHeadline
@@ -306,7 +307,7 @@ export default function Page() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.8, ease: 'easeOut' }}
               style={{
-                color: 'var(--text-secondary)',
+                color: isDark ? 'var(--text-secondary)' : 'var(--text-primary)',
                 fontSize: 'var(--text-md)',
                 lineHeight: 1.7,
                 maxWidth: '520px',
@@ -358,14 +359,14 @@ export default function Page() {
                   display: 'inline-flex', alignItems: 'center',
                   padding: 'var(--space-3) var(--space-8)',
                   backgroundColor: 'transparent',
-                  color: 'var(--text-secondary)',
+                  color: isDark ? 'var(--text-secondary)' : 'var(--text-primary)',
                   fontFamily: 'var(--font-heading)',
                   fontWeight: 600,
                   fontSize: 'var(--text-xs)',
                   letterSpacing: '0.12em',
                   textTransform: 'uppercase',
                   textDecoration: 'none',
-                  border: '1px solid var(--border-default)',
+                  border: `1px solid ${isDark ? 'var(--border-default)' : 'rgba(26,23,20,0.35)'}`,
                   transition: 'border-color var(--transition-fast), color var(--transition-fast)',
                 }}
                 onMouseEnter={e => {
@@ -373,7 +374,7 @@ export default function Page() {
                   e.currentTarget.style.color = 'var(--text-primary)';
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.borderColor = 'var(--border-default)';
+                  e.currentTarget.style.borderColor = isDark ? 'var(--border-default)' : 'rgba(26,23,20,0.35)';
                   e.currentTarget.style.color = 'var(--text-secondary)';
                 }}
               >
