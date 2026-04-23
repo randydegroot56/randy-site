@@ -119,3 +119,30 @@ def test_coverage_report_event():
     e = CoverageReport(agent_name="testgen", payload={"estimated_coverage": 72})
     assert e.event_type == "CoverageReport"
     assert e.status == "success"
+
+
+# ── Scaffold events ────────────────────────────────────────────────────────────
+
+def test_scaffold_completed_event():
+    from agents.orchestrator.events import ScaffoldCompleted
+    e = ScaffoldCompleted(
+        agent_name="scaffold",
+        payload={"spec_id": "spec_001", "blueprint": "fastapi-service", "files_written": 5},
+    )
+    assert e.event_type == "ScaffoldCompleted"
+    assert e.status == "success"
+
+
+def test_scaffold_failed_event():
+    from agents.orchestrator.events import ScaffoldFailed
+    e = ScaffoldFailed(agent_name="scaffold", error="blueprint not found")
+    assert e.event_type == "ScaffoldFailed"
+    assert e.status == "failed"
+    assert e.error == "blueprint not found"
+
+
+def test_scaffold_cleaned_event():
+    from agents.orchestrator.events import ScaffoldCleaned
+    e = ScaffoldCleaned(agent_name="scaffold", payload={"spec_id": "spec_001"})
+    assert e.event_type == "ScaffoldCleaned"
+    assert e.status == "success"

@@ -101,3 +101,19 @@ class TestsFailed(AgentEvent):
 @dataclass
 class CoverageReport(AgentEvent):
     event_type: str = "CoverageReport"
+
+
+@dataclass
+class ScaffoldCompleted(AgentEvent):
+    event_type: str = "ScaffoldCompleted"
+
+
+@dataclass
+class ScaffoldFailed(AgentEvent):
+    event_type: str = "ScaffoldFailed"
+    status: str = "failed"
+
+
+@dataclass
+class ScaffoldCleaned(AgentEvent):
+    event_type: str = "ScaffoldCleaned"
