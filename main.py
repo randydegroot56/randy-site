@@ -39,6 +39,7 @@ def build_registry() -> AgentRegistry:
     """Register all known agents. Add new agents here."""
     from agents.spec_writer.agent import SpecWriterAgent
     from agents.test_generator.agent import TestGeneratorAgent
+    from agents.scaffolder.agent import ScaffolderAgent
 
     registry = AgentRegistry()
     registry.register(AuditAgent)
@@ -46,6 +47,7 @@ def build_registry() -> AgentRegistry:
     registry.register(MemoryAgent)
     registry.register(SpecWriterAgent)
     registry.register(TestGeneratorAgent)
+    registry.register(ScaffolderAgent)
     return registry
 
 
@@ -54,7 +56,7 @@ def main() -> int:
         prog="main.py",
         description="AI Command Center — orchestrate your agents",
     )
-    parser.add_argument("command", help="Command to run: audit | fix | memory | spec | test | list")
+    parser.add_argument("command", help="Command to run: audit | fix | memory | spec | test | scaffold | list")
     parser.add_argument("args", nargs="*", help="Arguments (e.g. ./src)")
     parser.add_argument(
         "--log-file",

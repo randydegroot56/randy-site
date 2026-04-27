@@ -20,11 +20,12 @@ from agents.orchestrator.state import StateStore
 
 # Maps CLI verb -> (agent_name, kwarg_key_for_first_positional_arg)
 INTENT_MAP: Dict[str, Tuple[str, Optional[str]]] = {
-    "audit":  ("code_auditor", "target"),
-    "fix":    ("code_fixer",   "target"),
-    "memory": ("memory",       "args"),    # memory agent receives full arg list
-    "spec":   ("spec",         "args"),    # spec agent receives full arg list
-    "test":   ("testgen",      "args"),    # test generator receives full arg list
+    "audit":    ("code_auditor", "target"),
+    "fix":      ("code_fixer",   "target"),
+    "memory":   ("memory",       "args"),    # memory agent receives full arg list
+    "spec":     ("spec",         "args"),    # spec agent receives full arg list
+    "test":     ("testgen",      "args"),    # test generator receives full arg list
+    "scaffold": ("scaffold",     "args"),    # scaffolder agent receives full arg list
 }
 
 
@@ -75,6 +76,8 @@ class Orchestrator:
         if command == "spec":
             extra["registry"] = self._registry
         if command == "test":
+            extra["registry"] = self._registry
+        if command == "scaffold":
             extra["registry"] = self._registry
 
         agent = self._registry.get(agent_name, self._bus, self._state, **extra)
