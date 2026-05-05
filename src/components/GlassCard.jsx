@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from './ThemeProvider';
 
 /**
  * Shared glass card — Style C: offset shadow + full perimeter glow + sweep on hover.
@@ -21,6 +22,9 @@ export default function GlassCard({
   style = {},
 }) {
   const [hovered, setHovered] = useState(false);
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  const cardBg = isDark ? 'rgba(18,17,16,0.78)' : 'rgba(251,248,240,0.82)';
 
   const baseBorder  = featured ? 'rgba(232,185,49,0.40)' : 'rgba(232,185,49,0.18)';
   const hoverBorder = featured ? 'rgba(232,185,49,0.65)' : 'rgba(232,185,49,0.55)';
@@ -59,7 +63,7 @@ export default function GlassCard({
         transition={{ duration: 0.25, ease: 'easeOut' }}
         style={{
           position: 'relative',
-          background: 'rgba(18,17,16,0.78)',
+          background: cardBg,
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
           borderWidth: '1px',

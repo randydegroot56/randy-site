@@ -1,0 +1,34 @@
+{
+  "last_AuditCompleted": {
+    "target": ".",
+    "issues_found": 0,
+    "status": "stub"
+  },
+  "last_FixCompleted": {
+    "target": null,
+    "fixes_applied": 0,
+    "audit_result_received": true,
+    "status": "stub"
+  },
+  "last_MemoryUpdated": {
+    "entry_id": "f72e881eba844f1daa2bf76edaabf9b3",
+    "category": "decisions"
+  },
+  "last_ContextProvided": {
+    "query": "review",
+    "results_count": 1
+  },
+  "last_TestsGenerated": {
+    "path": "agents\\memory\\tests\\test_agent.py",
+    "scenarios": 3,
+    "estimated_coverage": 90,
+    "passed": 3,
+    "pending": 0,
+    "failed": 0,
+    "errors": 0
+  },
+  "last_TestsPassed": {
+    "path": "agents\\memory\\tests\\test_agent.py",
+    "passed": 3
+  }
+}

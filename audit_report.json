@@ -1,7 +1,46 @@
 {
-  "timestamp": "2026-04-08T21:51:56.720246+00:00",
+  "timestamp": "2026-04-13T18:40:26.229965+00:00",
   "project_root": "C:\\Users\\degro\\OneDrive\\Bureaublad\\coderen\\Claude Code\\randy-site",
   "files": [
+    {
+      "path": ".orchestrator_log.json",
+      "file_type": "json",
+      "size_bytes": 1460,
+      "lines": 64,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-13T18:14:20.498614+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": ".orchestrator_state.json",
+      "file_type": "json",
+      "size_bytes": 242,
+      "lines": 13,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-13T18:14:20.499610+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "audit_report.json",
+      "file_type": "json",
+      "size_bytes": 64641,
+      "lines": 1893,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-13T18:40:14.305140+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
     {
       "path": "layout.js",
       "file_type": "javascript",
@@ -20,6 +59,34 @@
       "complexity_score": 1.0,
       "imports_count": 2,
       "exports_count": 2
+    },
+    {
+      "path": "main.py",
+      "file_type": "python",
+      "size_bytes": 3071,
+      "lines": 94,
+      "imports": [
+        "__future__",
+        "argparse",
+        "io",
+        "sys",
+        "pathlib",
+        "agents.orchestrator.agents.audit_agent",
+        "agents.orchestrator.agents.fixer_agent",
+        "agents.orchestrator.bus",
+        "agents.orchestrator.logger",
+        "agents.orchestrator.orchestrator",
+        "agents.orchestrator.registry",
+        "agents.orchestrator.state"
+      ],
+      "exports": [
+        "build_registry"
+      ],
+      "docstring": "main.py \u2014 AI Command Center entry point.\n\nUsage::\n    python main.py list                  # Show all registered agents\n    python main.py audit ./src           # Run Code Auditor on ./src\n    python main.py audit ./src -v        # Verbose: show event payloads\n    python main.py fix ./src             # Run Code Fixer on ./src\n    python main.py fix                   # Fix using last audit result from state",
+      "last_modified": "2026-04-13T18:24:41.014070+00:00",
+      "complexity_score": 2.0,
+      "imports_count": 12,
+      "exports_count": 1
     },
     {
       "path": "package.json",
@@ -53,22 +120,60 @@
       "exports_count": 1
     },
     {
+      "path": "phase2_findings.json",
+      "file_type": "json",
+      "size_bytes": 71411,
+      "lines": 2681,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-12T17:19:55.243959+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "phase3_verified.json",
+      "file_type": "json",
+      "size_bytes": 96363,
+      "lines": 3367,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-12T17:19:55.243959+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "phase4_report.json",
+      "file_type": "json",
+      "size_bytes": 65123,
+      "lines": 2335,
+      "imports": [],
+      "exports": [],
+      "docstring": null,
+      "last_modified": "2026-04-12T17:19:55.243959+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
       "path": "ThemeProvider.jsx",
       "file_type": "javascript",
-      "size_bytes": 3084,
-      "lines": 95,
+      "size_bytes": 3110,
+      "lines": 92,
       "imports": [
         "react"
       ],
       "exports": [
-        "useTheme",
         "ThemeProvider"
       ],
       "docstring": null,
-      "last_modified": "2026-03-31T19:15:09.599742+00:00",
-      "complexity_score": 3.0,
+      "last_modified": "2026-04-12T17:19:55.194767+00:00",
+      "complexity_score": 2.0,
       "imports_count": 1,
-      "exports_count": 2
+      "exports_count": 1
     },
     {
       "path": "ThemeToggle.jsx",
@@ -90,12 +195,12 @@
     {
       "path": ".claude/settings.local.json",
       "file_type": "json",
-      "size_bytes": 2160,
-      "lines": 29,
+      "size_bytes": 4927,
+      "lines": 64,
       "imports": [],
       "exports": [],
       "docstring": null,
-      "last_modified": "2026-04-08T21:26:49.157144+00:00",
+      "last_modified": "2026-04-13T18:40:20.610606+00:00",
       "complexity_score": 0.0,
       "imports_count": 0,
       "exports_count": 0
@@ -114,14 +219,14 @@
       "exports_count": 0
     },
     {
-      "path": "agents/code_auditor/audit_report.json",
-      "file_type": "json",
-      "size_bytes": 10126,
-      "lines": 249,
+      "path": "agents/__init__.py",
+      "file_type": "python",
+      "size_bytes": 40,
+      "lines": 1,
       "imports": [],
       "exports": [],
-      "docstring": null,
-      "last_modified": "2026-04-08T21:41:17.572020+00:00",
+      "docstring": "AI Command Center agents package.",
+      "last_modified": "2026-04-13T18:23:29.196296+00:00",
       "complexity_score": 0.0,
       "imports_count": 0,
       "exports_count": 0
@@ -129,8 +234,8 @@
     {
       "path": "agents/code_auditor/cli.py",
       "file_type": "python",
-      "size_bytes": 10073,
-      "lines": 291,
+      "size_bytes": 51737,
+      "lines": 1202,
       "imports": [
         "__future__",
         "argparse",
@@ -141,15 +246,25 @@
         "pathlib",
         "agents.code_auditor.core.config",
         "agents.code_auditor.core.phase1_analyzer",
-        "agents.code_auditor.core.phase1_discovery"
+        "agents.code_auditor.core.phase1_discovery",
+        "datetime",
+        "agents.code_auditor.core.phase4_reporting",
+        "agents.code_auditor.core.phase4_analyzer",
+        "agents.code_auditor.core.phase2_detection",
+        "agents.code_auditor.core.phase2_analyzer",
+        "agents.code_auditor.core.phase3_verification",
+        "agents.code_auditor.core.phase3_analyzer",
+        "agents.code_auditor.core.phase5_executor",
+        "agents.code_auditor.core.phase5_analyzer",
+        "traceback"
       ],
       "exports": [
         "cmd_discover"
       ],
-      "docstring": "agents/code_auditor/cli.py\n===========================\nMain CLI entry point for the Code Auditor Agent.\n\nUsage::\n\n    # Discover\n    python -m agents.code_auditor.cli discover --project . --verbose\n    python -m agents.code_auditor.cli discover --project /repo --output report.json --config ai-command-center\n\n    # Analyze\n    python -m agents.code_auditor.cli analyze report.json\n    python -m agents.code_auditor.cli analyze report.json --csv files.csv",
-      "last_modified": "2026-04-08T21:31:52.625356+00:00",
-      "complexity_score": 6.0,
-      "imports_count": 10,
+      "docstring": "agents/code_auditor/cli.py\n===========================\nMain CLI entry point for the Code Auditor Agent.\n\nUsage::\n\n    # Discover\n    python -m agents.code_auditor.cli discover --project . --verbose\n    python -m agents.code_auditor.cli discover --project /repo --output report.json --config ai-command-center\n\n    # Analyze (Phase 1 insights)\n    python -m agents.code_auditor.cli analyze report.json\n    python -m agents.code_auditor.cli analyze report.json --csv files.csv\n\n    # Detect (Phase 2 unused code)\n    python -m agents.code_auditor.cli detect --report audit_report.json\n    python -m agents.code_auditor.cli detect --report audit_report.json --output phase2.json --verbose\n\n    # Verify (Phase 3 safety verification)\n    python -m agents.code_auditor.cli verify --report phase2_findings.json\n    python -m agents.code_auditor.cli verify --report phase2_findings.json --phase1 audit_report.json --verbose",
+      "last_modified": "2026-04-13T18:39:43.105706+00:00",
+      "complexity_score": 13.0,
+      "imports_count": 20,
       "exports_count": 1
     },
     {
@@ -161,6 +276,200 @@
       "exports": [],
       "docstring": null,
       "last_modified": "2026-04-08T19:33:55.976029+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "agents/code_fixer/cli.py",
+      "file_type": "python",
+      "size_bytes": 38514,
+      "lines": 1015,
+      "imports": [
+        "__future__",
+        "argparse",
+        "json",
+        "sys",
+        "dataclasses",
+        "datetime",
+        "pathlib",
+        "typing",
+        "agents.code_fixer.core.safety_validator",
+        "agents.code_fixer.core.git_orchestrator",
+        "agents.code_fixer.core.report_generator",
+        "agents.code_auditor.core.phase5_executor"
+      ],
+      "exports": [
+        "BatchResult",
+        "RunResult",
+        "FixerEngine"
+      ],
+      "docstring": "agents/code_fixer/cli.py\n========================\nCode Fixer Agent \u2014 production orchestrator for Code Auditor findings.\n\nBatches phase3_verified.json findings, removes them via Code Auditor's\nPhase 5 engine, tests each batch, commits atomically, and produces\nHTML + JSON reports.\n\nUsage::\n\n    python agents/code_fixer/cli.py fix --report phase3_verified.json\n    python agents/code_fixer/cli.py analyze --report phase3_verified.json\n    python agents/code_fixer/cli.py plan --report phase3_verified.json\n    python agents/code_fixer/cli.py status\n    python agents/code_fixer/cli.py verify --report phase3_verified.json --items U001 U002",
+      "last_modified": "2026-04-13T18:39:48.266243+00:00",
+      "complexity_score": 19.0,
+      "imports_count": 12,
+      "exports_count": 3
+    },
+    {
+      "path": "agents/orchestrator/base_agent.py",
+      "file_type": "python",
+      "size_bytes": 1440,
+      "lines": 47,
+      "imports": [
+        "__future__",
+        "abc",
+        "typing",
+        "agents.orchestrator.bus",
+        "agents.orchestrator.events",
+        "agents.orchestrator.state"
+      ],
+      "exports": [
+        "BaseAgent"
+      ],
+      "docstring": "orchestrator/base_agent.py\n==========================\nAbstract base class for all Command Center agents.\n\nTo create a new agent:\n1. Subclass BaseAgent\n2. Set class attributes: name (unique str) and description (str)\n3. Implement run(**kwargs) -> Dict[str, Any]\n4. Call self.emit(event) to publish results to the bus",
+      "last_modified": "2026-04-13T18:24:33.306752+00:00",
+      "complexity_score": 6.0,
+      "imports_count": 6,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/bus.py",
+      "file_type": "python",
+      "size_bytes": 1138,
+      "lines": 37,
+      "imports": [
+        "__future__",
+        "typing",
+        "agents.orchestrator.events"
+      ],
+      "exports": [
+        "EventBus"
+      ],
+      "docstring": "orchestrator/bus.py\n===================\nSynchronous pub/sub EventBus.\n\nSubscribers register for a specific event_type or '*' (wildcard).\nAll wildcard subscribers fire BEFORE type-specific subscribers.",
+      "last_modified": "2026-04-13T18:24:33.407514+00:00",
+      "complexity_score": 5.0,
+      "imports_count": 3,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/events.py",
+      "file_type": "python",
+      "size_bytes": 1246,
+      "lines": 51,
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "datetime",
+        "typing"
+      ],
+      "exports": [
+        "AgentEvent",
+        "AuditCompleted",
+        "AuditFailed",
+        "FixCompleted",
+        "FixFailed"
+      ],
+      "docstring": "orchestrator/events.py\n======================\nEvent dataclasses for the agent event bus.\n\nField ordering rule: agent_name (required) comes first, then\nevent_type (has a default), then all other defaulted fields.\nThis allows subclasses to override event_type without breaking\nPython dataclass ordering constraints.",
+      "last_modified": "2026-04-13T18:24:33.469786+00:00",
+      "complexity_score": 10.0,
+      "imports_count": 4,
+      "exports_count": 5
+    },
+    {
+      "path": "agents/orchestrator/logger.py",
+      "file_type": "python",
+      "size_bytes": 3039,
+      "lines": 89,
+      "imports": [
+        "__future__",
+        "json",
+        "sys",
+        "pathlib",
+        "typing",
+        "agents.orchestrator.bus",
+        "agents.orchestrator.events"
+      ],
+      "exports": [
+        "OrchestratorLogger"
+      ],
+      "docstring": "orchestrator/logger.py\n======================\nOrchestratorLogger \u2014 subscribes to all bus events and logs them.\n\nTerminal output: timestamped line with \u2713/\u2717 icon.\nJSON log file: append-only, one entry per event.\nsummary(): human-readable count of events by type.",
+      "last_modified": "2026-04-13T18:24:33.560522+00:00",
+      "complexity_score": 7.0,
+      "imports_count": 7,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/orchestrator.py",
+      "file_type": "python",
+      "size_bytes": 2288,
+      "lines": 68,
+      "imports": [
+        "__future__",
+        "typing",
+        "agents.orchestrator.bus",
+        "agents.orchestrator.logger",
+        "agents.orchestrator.registry",
+        "agents.orchestrator.state"
+      ],
+      "exports": [
+        "Orchestrator"
+      ],
+      "docstring": "orchestrator/orchestrator.py\n=============================\nOrchestrator \u2014 parses user commands and dispatches to the correct agent.\n\nINTENT_MAP ties CLI verbs to agent names. To add a new command:\n    INTENT_MAP[\"scrape\"] = (\"web_scraper\", \"url\")\n\nThe fix command automatically pulls the last audit result from state\nso the user can run \"audit ./src\" then \"fix\" without repeating the path.",
+      "last_modified": "2026-04-13T18:24:33.640797+00:00",
+      "complexity_score": 5.0,
+      "imports_count": 6,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/registry.py",
+      "file_type": "python",
+      "size_bytes": 1715,
+      "lines": 47,
+      "imports": [
+        "__future__",
+        "typing",
+        "agents.orchestrator.base_agent",
+        "agents.orchestrator.bus",
+        "agents.orchestrator.state"
+      ],
+      "exports": [
+        "AgentRegistry"
+      ],
+      "docstring": "orchestrator/registry.py\n========================\nAgentRegistry \u2014 discovers and instantiates agents by name.\n\nUsage:\n    registry = AgentRegistry()\n    registry.register(MyAgent)           # register once at startup\n    agent = registry.get(\"my_agent\", bus, state)  # instantiate on demand",
+      "last_modified": "2026-04-13T18:24:33.742946+00:00",
+      "complexity_score": 6.0,
+      "imports_count": 5,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/state.py",
+      "file_type": "python",
+      "size_bytes": 1375,
+      "lines": 51,
+      "imports": [
+        "__future__",
+        "json",
+        "pathlib",
+        "typing"
+      ],
+      "exports": [
+        "StateStore"
+      ],
+      "docstring": "orchestrator/state.py\n=====================\nJSON-backed key-value StateStore.\n\nPersists every set/delete immediately. Handles missing or\ncorrupted files gracefully by starting with an empty state.",
+      "last_modified": "2026-04-13T18:24:33.855055+00:00",
+      "complexity_score": 9.0,
+      "imports_count": 4,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/__init__.py",
+      "file_type": "python",
+      "size_bytes": 37,
+      "lines": 1,
+      "imports": [],
+      "exports": [],
+      "docstring": "Orchestrator framework package.",
+      "last_modified": "2026-04-13T18:24:35.502842+00:00",
       "complexity_score": 0.0,
       "imports_count": 0,
       "exports_count": 0
@@ -245,6 +554,200 @@
       "exports_count": 3
     },
     {
+      "path": "agents/code_auditor/core/phase2_analyzer.py",
+      "file_type": "python",
+      "size_bytes": 19128,
+      "lines": 515,
+      "imports": [
+        "__future__",
+        "json",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "exports": [
+        "TestCoverageVerifier",
+        "Phase2ReportGenerator"
+      ],
+      "docstring": "agents/code_auditor/core/phase2_analyzer.py\n============================================\nPhase 2 post-processing: adjusts detection findings based on observed\ntest coverage, and generates the final Phase 2 report.\n\nA finding with test coverage should be treated more cautiously \u2014 deleting\nsomething that is tested may break the test suite even if no production code\nimports it directly.  A finding *without* any test coverage is a stronger\ndeletion candidate.\n\nUsage::\n\n    from agents.code_auditor.core.phase2_analyzer import (\n        TestCoverageVerifier,\n        Phase2ReportGenerator,\n    )\n\n    verifier = TestCoverageVerifier(phase1_report, findings, verbose=True)\n    adjusted = verifier.adjust_findings_for_tests()\n\n    gen = Phase2ReportGenerator(adjusted, phase1_report)\n    gen.print_summary()\n    gen.export_to_json(\"phase2_report.json\")",
+      "last_modified": "2026-04-08T22:13:25.212977+00:00",
+      "complexity_score": 21.0,
+      "imports_count": 5,
+      "exports_count": 2
+    },
+    {
+      "path": "agents/code_auditor/core/phase2_detection.py",
+      "file_type": "python",
+      "size_bytes": 46878,
+      "lines": 1290,
+      "imports": [
+        "__future__",
+        "sys",
+        "dataclasses",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "exports": [
+        "UnusedExportFinding",
+        "UnusedExportFinder",
+        "OrphanFileFinding",
+        "OrphanFileFinder",
+        "UnusedImportFinding",
+        "UnusedImportFinder",
+        "CircularDependencyFinding",
+        "CircularDependencyAnalyzer"
+      ],
+      "docstring": "agents/code_auditor/core/phase2_detection.py\n=============================================\nPhase 2 Detection Engine -- finds unused exports, dead code, and other\ncode-quality issues from a Phase 1 JSON report.\n\nUsage::\n\n    from agents.code_auditor.core.phase2_detection import UnusedExportFinder\n\n    with open(\"audit_report.json\") as f:\n        report = json.load(f)\n\n    finder = UnusedExportFinder(report, verbose=True)\n    findings = finder.find_unused_exports()\n    for f in findings:\n        print(f[\"id\"], f[\"file\"], f[\"item\"], f[\"confidence\"])",
+      "last_modified": "2026-04-08T22:07:54.457042+00:00",
+      "complexity_score": 58.0,
+      "imports_count": 6,
+      "exports_count": 8
+    },
+    {
+      "path": "agents/code_auditor/core/phase3_analyzer.py",
+      "file_type": "python",
+      "size_bytes": 21437,
+      "lines": 540,
+      "imports": [
+        "__future__",
+        "json",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "exports": [
+        "SafetyAssessment",
+        "Phase3SafetyAnalyzer"
+      ],
+      "docstring": "agents/code_auditor/core/phase3_analyzer.py\n==========================================\nPhase 3 Safety Analyzer -- compiles STAP 1-5 verification results into a\nfinal risk assessment and human-readable safety report.\n\nThe analyzer is the last step before any removal decision is made.  It\nreads the Phase 2 findings (original) and the Phase 3 all_checks findings\n(which have been piped through all five Phase 3 checkers) and produces:\n\n* A per-finding safety verdict with removal guidance.\n* Aggregate statistics comparing Phase 2 vs Phase 3 confidence levels.\n* Three removal scenarios ordered from safest to most aggressive.\n* A flat recommendations dict split into four action buckets.\n\nUsage::\n\n    from agents.code_auditor.core.phase3_analyzer import Phase3SafetyAnalyzer\n\n    # all_checks = findings after chaining all Phase 3 checkers\n    analyzer = Phase3SafetyAnalyzer(phase2_findings, all_checks, verbose=True)\n    analyzer.print_summary()\n    analyzer.export_to_json(\"phase3_report.json\")",
+      "last_modified": "2026-04-09T06:35:43.878159+00:00",
+      "complexity_score": 21.0,
+      "imports_count": 5,
+      "exports_count": 2
+    },
+    {
+      "path": "agents/code_auditor/core/phase3_verification.py",
+      "file_type": "python",
+      "size_bytes": 58913,
+      "lines": 1565,
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "pathlib",
+        "typing",
+        "re"
+      ],
+      "exports": [
+        "TestDependencyResult",
+        "TestDependencyChecker",
+        "APIEndpointResult",
+        "APIEndpointChecker",
+        "ConfigurationResult",
+        "ConfigurationChecker",
+        "DatabaseMigrationChecker",
+        "DynamicImportDetector"
+      ],
+      "docstring": "agents/code_auditor/core/phase3_verification.py\n================================================\nPhase 3 Verification Engine -- safety checks before any code is removed.\n\nThe key principle: **if something is tested, deleting it is less safe**.\nRemoving tested code doesn't just delete lines \u2014 it also silently breaks\nthe test suite.  The TestDependencyChecker makes this cost explicit so the\ncaller can decide whether to proceed, update the tests first, or skip the\nfinding entirely.\n\nUsage::\n\n    from agents.code_auditor.core.phase3_verification import TestDependencyChecker\n\n    checker = TestDependencyChecker(phase1_report, phase2_findings, verbose=True)\n    results = checker.check_test_dependencies()\n    for r in results:\n        print(r[\"finding_id\"], r[\"has_tests\"], r[\"reason\"])",
+      "last_modified": "2026-04-09T06:31:54.905764+00:00",
+      "complexity_score": 71.0,
+      "imports_count": 5,
+      "exports_count": 8
+    },
+    {
+      "path": "agents/code_auditor/core/phase4_analyzer.py",
+      "file_type": "python",
+      "size_bytes": 17454,
+      "lines": 419,
+      "imports": [
+        "__future__",
+        "math",
+        "collections",
+        "typing"
+      ],
+      "exports": [
+        "RecommendationGenerator"
+      ],
+      "docstring": "agents/code_auditor/core/phase4_analyzer.py\n==========================================\nPhase 4 Recommendation Generator -- produce prioritised, actionable\nrecommendations from a completed audit report.\n\nThe generator is read-only: it never touches files or git.  It consumes\nthe dict produced by ``ReportGenerator.generate_json_report()`` (phase4_reporting.py)\nand returns a structured recommendation dict plus helper accessors.\n\nUsage::\n\n    from agents.code_auditor.core.phase4_analyzer import RecommendationGenerator\n\n    gen  = RecommendationGenerator(report_data)\n    recs = gen.generate_recommendations()\n\n``report_data`` expected top-level keys (all optional -- missing keys are\ntreated as empty / zero):\n\n    summary           dict   -- overall counts + line estimates\n    by_type           dict   -- per-type breakdown\n    by_risk           dict   -- CRITICAL / HIGH / MEDIUM / LOW counts\n    execution_history list   -- completed removal batches\n    recommendations   list   -- pre-ranked LOW-risk candidates\n    _findings_raw     list   -- raw Phase 2 / 3 finding dicts (for patterns)",
+      "last_modified": "2026-04-12T17:19:55.223257+00:00",
+      "complexity_score": 17.0,
+      "imports_count": 4,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/code_auditor/core/phase4_reporting.py",
+      "file_type": "python",
+      "size_bytes": 31460,
+      "lines": 800,
+      "imports": [
+        "csv",
+        "io",
+        "dataclasses",
+        "typing",
+        "datetime"
+      ],
+      "exports": [
+        "ReportGenerator",
+        "HTMLExporter",
+        "CSVExporter",
+        "DashboardGenerator"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-12T17:19:55.225957+00:00",
+      "complexity_score": 42.0,
+      "imports_count": 5,
+      "exports_count": 4
+    },
+    {
+      "path": "agents/code_auditor/core/phase5_analyzer.py",
+      "file_type": "python",
+      "size_bytes": 13743,
+      "lines": 362,
+      "imports": [
+        "__future__",
+        "json",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "exports": [
+        "Phase5BatchAnalyzer"
+      ],
+      "docstring": "agents/code_auditor/core/phase5_analyzer.py\n===========================================\nPhase 5 Batch Analyzer -- compile, display, and export a summary report\nafter a removal batch has been executed and committed.\n\nThe analyzer is intentionally read-only: it never modifies files or runs\ngit commands.  Its job is to make the batch outcome human-readable and to\nsuggest which items should go into the *next* removal batch.\n\nUsage::\n\n    from agents.code_auditor.core.phase5_analyzer import Phase5BatchAnalyzer\n\n    analyzer = Phase5BatchAnalyzer(batch_result, verbose=True)\n    report   = analyzer.generate_batch_report()\n    analyzer.print_summary()\n    suggestion = analyzer.suggest_next_batch()\n    analyzer.export_to_json(\"phase5_report.json\")\n\n``batch_result`` is the combined output dict produced by the STAP 1-5\npipeline.  Expected top-level keys (all optional -- missing keys are\ntreated as zero / unknown):\n\n    batch_id        str\n    dry_run         DryRunResult.to_dict()\n    batch           BatchRemover.remove_batch() output\n    import_cleanup  ImportCleaner.cleanup_imports() output\n    test_verify     TestVerifier.run_tests() output\n    commit          GitCommitter.commit_removal() output\n    phase3_verified Phase 3 all_checks list (for next-batch suggestions)",
+      "last_modified": "2026-04-12T17:19:55.228975+00:00",
+      "complexity_score": 10.0,
+      "imports_count": 5,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/code_auditor/core/phase5_executor.py",
+      "file_type": "python",
+      "size_bytes": 71526,
+      "lines": 1859,
+      "imports": [
+        "__future__",
+        "re",
+        "subprocess",
+        "dataclasses",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "exports": [
+        "DryRunResult",
+        "DryRunExecutor",
+        "BatchRemover",
+        "ImportCleaner",
+        "TestVerifier",
+        "GitCommitter"
+      ],
+      "docstring": "agents/code_auditor/core/phase5_executor.py\n===========================================\nPhase 5 Executor -- dry-run preview and staged batch removal of dead code.\n\nContains two classes:\n\n* :class:`DryRunExecutor` -- analyses what *would* happen if findings were\n  removed.  Produces a :class:`DryRunResult`.  **No files are modified.**\n\n* :class:`BatchRemover` -- actually executes staged deletions (up to 3 items\n  per batch) on a dedicated git feature branch.  Leaves committing to STAP 5.\n\nUsage::\n\n    from agents.code_auditor.core.phase5_executor import DryRunExecutor, BatchRemover\n\n    # Preview first\n    executor = DryRunExecutor(phase3_verified, phase1_report, phase2_report, verbose=True)\n    result = executor.run_dry_run([\"U001\", \"U002\"])\n    print(result.estimated_impact)\n\n    # Then actually remove (in a feature branch)\n    remover = BatchRemover(project_root=\"/path/to/repo\", phase2_report=phase2_report, verbose=True)\n    batch = remover.remove_batch([\"U001\", \"U002\"], phase3_verified)\n    print(batch[\"branch_created\"])",
+      "last_modified": "2026-04-12T17:19:55.231938+00:00",
+      "complexity_score": 63.0,
+      "imports_count": 7,
+      "exports_count": 6
+    },
+    {
       "path": "agents/code_auditor/core/__init__.py",
       "file_type": "python",
       "size_bytes": 375,
@@ -265,30 +768,6 @@
       "complexity_score": 0.0,
       "imports_count": 1,
       "exports_count": 6
-    },
-    {
-      "path": "agents/code_auditor/tests/test_phase1.py",
-      "file_type": "python",
-      "size_bytes": 14814,
-      "lines": 394,
-      "imports": [
-        "__future__",
-        "asyncio",
-        "json",
-        "textwrap",
-        "pathlib",
-        "pytest",
-        "agents.code_auditor.core.phase1_discovery",
-        "agents.code_auditor.core"
-      ],
-      "exports": [
-        "write"
-      ],
-      "docstring": "agents/code_auditor/tests/test_phase1.py\n=========================================\nTests for Phase 1 Discovery Engine.\n\nRun with::\n\n    pytest agents/code_auditor/tests/test_phase1.py -v",
-      "last_modified": "2026-04-08T21:27:36.718102+00:00",
-      "complexity_score": 15.0,
-      "imports_count": 8,
-      "exports_count": 1
     },
     {
       "path": "agents/code_auditor/tests/__init__.py",
@@ -333,6 +812,434 @@
       "exports": [],
       "docstring": null,
       "last_modified": "2026-04-08T19:34:02.538906+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "agents/code_fixer/core/git_orchestrator.py",
+      "file_type": "python",
+      "size_bytes": 5645,
+      "lines": 173,
+      "imports": [
+        "__future__",
+        "subprocess",
+        "pathlib",
+        "typing"
+      ],
+      "exports": [
+        "GitOrchestrator"
+      ],
+      "docstring": "GitOrchestrator \u2014 isolates all git/subprocess calls for Code Fixer.",
+      "last_modified": "2026-04-12T18:29:56.136351+00:00",
+      "complexity_score": 12.0,
+      "imports_count": 4,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/code_fixer/core/report_generator.py",
+      "file_type": "python",
+      "size_bytes": 6944,
+      "lines": 184,
+      "imports": [
+        "__future__",
+        "json",
+        "datetime",
+        "pathlib",
+        "typing"
+      ],
+      "exports": [
+        "ReportGenerator"
+      ],
+      "docstring": "ReportGenerator \u2014 produce HTML and JSON fix reports.",
+      "last_modified": "2026-04-12T18:36:21.271947+00:00",
+      "complexity_score": 7.0,
+      "imports_count": 5,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/code_fixer/core/safety_validator.py",
+      "file_type": "python",
+      "size_bytes": 7656,
+      "lines": 216,
+      "imports": [
+        "__future__",
+        "dataclasses",
+        "pathlib",
+        "typing",
+        "agents.code_fixer.core.git_orchestrator",
+        "agents.code_fixer.core.safety_validator",
+        "agents.code_auditor.core.phase5_executor"
+      ],
+      "exports": [
+        "ValidationResult",
+        "SafetyValidator"
+      ],
+      "docstring": "SafetyValidator \u2014 6-layer pre-flight checks before any code removal.",
+      "last_modified": "2026-04-12T18:33:15.615554+00:00",
+      "complexity_score": 11.0,
+      "imports_count": 7,
+      "exports_count": 2
+    },
+    {
+      "path": "agents/code_fixer/core/__init__.py",
+      "file_type": "python",
+      "size_bytes": 41,
+      "lines": 1,
+      "imports": [],
+      "exports": [],
+      "docstring": "Code Fixer Agent \u2014 core modules.",
+      "last_modified": "2026-04-12T18:27:43.653180+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "agents/code_fixer/tests/test_fixer_engine.py",
+      "file_type": "python",
+      "size_bytes": 11170,
+      "lines": 266,
+      "imports": [
+        "__future__",
+        "json",
+        "pathlib",
+        "pytest",
+        "agents.code_fixer.cli",
+        "unittest.mock"
+      ],
+      "exports": [
+        "TestLoadReport",
+        "TestBuildBatches",
+        "TestRun",
+        "TestDryRun"
+      ],
+      "docstring": "Unit tests for FixerEngine data layer (load_report + build_batches).",
+      "last_modified": "2026-04-12T18:42:47.021787+00:00",
+      "complexity_score": 28.0,
+      "imports_count": 6,
+      "exports_count": 4
+    },
+    {
+      "path": "agents/code_fixer/tests/test_git_orchestrator.py",
+      "file_type": "python",
+      "size_bytes": 6073,
+      "lines": 140,
+      "imports": [
+        "__future__",
+        "pathlib",
+        "unittest.mock",
+        "pytest",
+        "agents.code_fixer.core.git_orchestrator"
+      ],
+      "exports": [
+        "orch",
+        "TestIsClean",
+        "TestCurrentBranch",
+        "TestCommitBatch",
+        "TestCleanupBranch",
+        "TestMergeToMain",
+        "TestListAuditBranches",
+        "TestRunTests"
+      ],
+      "docstring": "Unit tests for GitOrchestrator \u2014 all git calls are mocked.",
+      "last_modified": "2026-04-12T18:29:24.075160+00:00",
+      "complexity_score": 31.0,
+      "imports_count": 5,
+      "exports_count": 8
+    },
+    {
+      "path": "agents/code_fixer/tests/test_report_generator.py",
+      "file_type": "python",
+      "size_bytes": 2917,
+      "lines": 92,
+      "imports": [
+        "__future__",
+        "json",
+        "pathlib",
+        "pytest",
+        "agents.code_fixer.core.report_generator"
+      ],
+      "exports": [
+        "run_data",
+        "TestWriteJson",
+        "TestWriteHtml"
+      ],
+      "docstring": "Unit tests for ReportGenerator \u2014 no mocking needed, just assert output.",
+      "last_modified": "2026-04-12T18:35:44.742651+00:00",
+      "complexity_score": 11.0,
+      "imports_count": 5,
+      "exports_count": 3
+    },
+    {
+      "path": "agents/code_fixer/tests/test_safety_validator.py",
+      "file_type": "python",
+      "size_bytes": 6574,
+      "lines": 158,
+      "imports": [
+        "__future__",
+        "json",
+        "pathlib",
+        "unittest.mock",
+        "pytest",
+        "agents.code_fixer.core.safety_validator"
+      ],
+      "exports": [
+        "validator",
+        "TestValidateReport",
+        "TestValidateGitClean",
+        "TestValidateItemsExist",
+        "TestValidateRiskFilter",
+        "TestValidateBatchDryRun",
+        "TestRunBaselineTests"
+      ],
+      "docstring": "Unit tests for SafetyValidator \u2014 all external calls are mocked.",
+      "last_modified": "2026-04-12T18:32:39.449277+00:00",
+      "complexity_score": 28.0,
+      "imports_count": 6,
+      "exports_count": 7
+    },
+    {
+      "path": "agents/code_fixer/tests/__init__.py",
+      "file_type": "python",
+      "size_bytes": 39,
+      "lines": 1,
+      "imports": [],
+      "exports": [],
+      "docstring": "Code Fixer Agent \u2014 test suite.",
+      "last_modified": "2026-04-12T18:27:44.073092+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "agents/orchestrator/agents/audit_agent.py",
+      "file_type": "python",
+      "size_bytes": 1296,
+      "lines": 39,
+      "imports": [
+        "__future__",
+        "typing",
+        "agents.orchestrator.base_agent",
+        "agents.orchestrator.events"
+      ],
+      "exports": [
+        "AuditAgent"
+      ],
+      "docstring": "orchestrator/agents/audit_agent.py\n====================================\nAuditAgent \u2014 adapter for the Code Auditor.\n\nCurrent implementation: stub that proves the framework plumbing works.\nReal implementation: invoke agents.code_auditor.cli subcommands via\nsubprocess or direct Python import.",
+      "last_modified": "2026-04-13T18:24:32.890436+00:00",
+      "complexity_score": 3.0,
+      "imports_count": 4,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/agents/fixer_agent.py",
+      "file_type": "python",
+      "size_bytes": 1438,
+      "lines": 45,
+      "imports": [
+        "__future__",
+        "typing",
+        "agents.orchestrator.base_agent",
+        "agents.orchestrator.events"
+      ],
+      "exports": [
+        "FixerAgent"
+      ],
+      "docstring": "orchestrator/agents/fixer_agent.py\n=====================================\nFixerAgent \u2014 adapter for the Code Fixer.\n\nCurrent implementation: stub that proves the framework plumbing works.\nReal implementation: invoke agents.code_fixer.cli subcommands via\nsubprocess or direct Python import.",
+      "last_modified": "2026-04-13T18:24:33.072633+00:00",
+      "complexity_score": 3.0,
+      "imports_count": 4,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/agents/__init__.py",
+      "file_type": "python",
+      "size_bytes": 35,
+      "lines": 1,
+      "imports": [],
+      "exports": [],
+      "docstring": "Orchestrator built-in agents.",
+      "last_modified": "2026-04-13T18:24:33.207564+00:00",
+      "complexity_score": 0.0,
+      "imports_count": 0,
+      "exports_count": 0
+    },
+    {
+      "path": "agents/orchestrator/tests/test_base_agent.py",
+      "file_type": "python",
+      "size_bytes": 1993,
+      "lines": 76,
+      "imports": [
+        "pytest",
+        "agents.orchestrator.base_agent",
+        "agents.orchestrator.bus",
+        "agents.orchestrator.events",
+        "agents.orchestrator.state"
+      ],
+      "exports": [
+        "ConcreteAgent",
+        "NoNameAgent"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-13T18:24:34.037726+00:00",
+      "complexity_score": 13.0,
+      "imports_count": 5,
+      "exports_count": 2
+    },
+    {
+      "path": "agents/orchestrator/tests/test_bus.py",
+      "file_type": "python",
+      "size_bytes": 1747,
+      "lines": 65,
+      "imports": [
+        "agents.orchestrator.bus",
+        "agents.orchestrator.events"
+      ],
+      "exports": [
+        "test_subscribe_and_publish"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-13T18:24:34.277870+00:00",
+      "complexity_score": 6.0,
+      "imports_count": 2,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/tests/test_events.py",
+      "file_type": "python",
+      "size_bytes": 1622,
+      "lines": 49,
+      "imports": [
+        "agents.orchestrator.events",
+        "re"
+      ],
+      "exports": [
+        "test_agent_event_defaults"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-13T18:24:34.468511+00:00",
+      "complexity_score": 7.0,
+      "imports_count": 2,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/tests/test_logger.py",
+      "file_type": "python",
+      "size_bytes": 3748,
+      "lines": 125,
+      "imports": [
+        "io",
+        "json",
+        "agents.orchestrator.bus",
+        "agents.orchestrator.events",
+        "agents.orchestrator.logger"
+      ],
+      "exports": [
+        "test_logger_prints_event_type_on_event"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-13T18:24:34.786487+00:00",
+      "complexity_score": 10.0,
+      "imports_count": 5,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/tests/test_orchestrator.py",
+      "file_type": "python",
+      "size_bytes": 3426,
+      "lines": 99,
+      "imports": [
+        "io",
+        "pytest",
+        "agents.orchestrator.base_agent",
+        "agents.orchestrator.bus",
+        "agents.orchestrator.events",
+        "agents.orchestrator.logger",
+        "agents.orchestrator.orchestrator",
+        "agents.orchestrator.registry",
+        "agents.orchestrator.state"
+      ],
+      "exports": [
+        "EchoAuditAgent",
+        "EchoFixAgent"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-13T18:24:34.910274+00:00",
+      "complexity_score": 15.0,
+      "imports_count": 9,
+      "exports_count": 2
+    },
+    {
+      "path": "agents/orchestrator/tests/test_registry.py",
+      "file_type": "python",
+      "size_bytes": 2486,
+      "lines": 90,
+      "imports": [
+        "pytest",
+        "agents.orchestrator.registry",
+        "agents.orchestrator.base_agent",
+        "agents.orchestrator.bus",
+        "agents.orchestrator.state"
+      ],
+      "exports": [
+        "AlphaAgent",
+        "BetaAgent",
+        "UnnamedAgent"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-13T18:24:35.039472+00:00",
+      "complexity_score": 18.0,
+      "imports_count": 5,
+      "exports_count": 3
+    },
+    {
+      "path": "agents/orchestrator/tests/test_state.py",
+      "file_type": "python",
+      "size_bytes": 1758,
+      "lines": 63,
+      "imports": [
+        "json",
+        "agents.orchestrator.state"
+      ],
+      "exports": [
+        "test_get_returns_default_when_key_missing"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-13T18:24:35.289846+00:00",
+      "complexity_score": 9.0,
+      "imports_count": 2,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/tests/test_stub_agents.py",
+      "file_type": "python",
+      "size_bytes": 2759,
+      "lines": 98,
+      "imports": [
+        "pytest",
+        "agents.orchestrator.agents.audit_agent",
+        "agents.orchestrator.agents.fixer_agent",
+        "agents.orchestrator.bus",
+        "agents.orchestrator.state"
+      ],
+      "exports": [
+        "make_deps"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-13T18:24:35.389129+00:00",
+      "complexity_score": 12.0,
+      "imports_count": 5,
+      "exports_count": 1
+    },
+    {
+      "path": "agents/orchestrator/tests/__init__.py",
+      "file_type": "python",
+      "size_bytes": 41,
+      "lines": 1,
+      "imports": [],
+      "exports": [],
+      "docstring": "Tests for the orchestrator package.",
+      "last_modified": "2026-04-13T18:24:35.446782+00:00",
       "complexity_score": 0.0,
       "imports_count": 0,
       "exports_count": 0
@@ -418,7 +1325,7 @@
     {
       "path": "src/components/CityskylineBackground.tsx",
       "file_type": "typescript",
-      "size_bytes": 8125,
+      "size_bytes": 8334,
       "lines": 209,
       "imports": [
         "framer-motion"
@@ -427,7 +1334,7 @@
         "CityskylineBackground"
       ],
       "docstring": null,
-      "last_modified": "2026-04-05T21:30:39.908211+00:00",
+      "last_modified": "2026-04-12T17:19:55.243959+00:00",
       "complexity_score": 2.0,
       "imports_count": 1,
       "exports_count": 1
@@ -435,7 +1342,7 @@
     {
       "path": "src/components/DataGrid.tsx",
       "file_type": "typescript",
-      "size_bytes": 1578,
+      "size_bytes": 1642,
       "lines": 64,
       "imports": [
         "framer-motion"
@@ -444,7 +1351,7 @@
         "DataGrid"
       ],
       "docstring": null,
-      "last_modified": "2026-04-05T21:24:47.511722+00:00",
+      "last_modified": "2026-04-12T17:19:55.243959+00:00",
       "complexity_score": 1.0,
       "imports_count": 1,
       "exports_count": 1
@@ -503,8 +1410,8 @@
     {
       "path": "src/components/Navbar.jsx",
       "file_type": "javascript",
-      "size_bytes": 9531,
-      "lines": 254,
+      "size_bytes": 9574,
+      "lines": 255,
       "imports": [
         "react",
         "framer-motion",
@@ -516,7 +1423,7 @@
         "Navbar"
       ],
       "docstring": null,
-      "last_modified": "2026-04-07T21:53:53.134808+00:00",
+      "last_modified": "2026-04-13T18:26:58.035877+00:00",
       "complexity_score": 1.0,
       "imports_count": 5,
       "exports_count": 1
@@ -695,6 +1602,26 @@
       "exports_count": 1
     },
     {
+      "path": "src/app/agents/page.js",
+      "file_type": "javascript",
+      "size_bytes": 15715,
+      "lines": 283,
+      "imports": [
+        "react",
+        "framer-motion",
+        "../../components/AnimateIn",
+        "../../components/StaggerChildren"
+      ],
+      "exports": [
+        "AgentsPage"
+      ],
+      "docstring": null,
+      "last_modified": "2026-04-13T18:26:52.749104+00:00",
+      "complexity_score": 2.0,
+      "imports_count": 4,
+      "exports_count": 1
+    },
+    {
       "path": "src/app/blog/page.js",
       "file_type": "javascript",
       "size_bytes": 4871,
@@ -716,14 +1643,15 @@
     {
       "path": "src/app/calendar/page.js",
       "file_type": "javascript",
-      "size_bytes": 11762,
-      "lines": 337,
+      "size_bytes": 9139,
+      "lines": 275,
       "imports": [
         "react",
         "next-auth/react",
         "framer-motion",
         "../../components/AnimateIn",
         "../../components/Calendar/CalendarHeader",
+        "../../components/Calendar/CalendarGrid",
         "../../components/Calendar/WeekView",
         "../../components/Calendar/EventDetailPanel",
         "../../components/Calendar/EventForm"
@@ -732,9 +1660,9 @@
         "CalendarPage"
       ],
       "docstring": null,
-      "last_modified": "2026-04-08T16:33:29.859768+00:00",
-      "complexity_score": 13.0,
-      "imports_count": 8,
+      "last_modified": "2026-04-09T16:58:41.276405+00:00",
+      "complexity_score": 10.0,
+      "imports_count": 9,
       "exports_count": 1
     },
     {
@@ -834,8 +1762,8 @@
     {
       "path": "src/components/Calendar/CalendarHeader.jsx",
       "file_type": "javascript",
-      "size_bytes": 5926,
-      "lines": 161,
+      "size_bytes": 6063,
+      "lines": 160,
       "imports": [
         "react",
         "framer-motion"
@@ -844,7 +1772,7 @@
         "CalendarHeader"
       ],
       "docstring": null,
-      "last_modified": "2026-04-08T05:53:00.318153+00:00",
+      "last_modified": "2026-04-09T16:58:41.276405+00:00",
       "complexity_score": 3.0,
       "imports_count": 2,
       "exports_count": 1
@@ -867,8 +1795,8 @@
     {
       "path": "src/components/Calendar/EventDetailPanel.jsx",
       "file_type": "javascript",
-      "size_bytes": 7930,
-      "lines": 205,
+      "size_bytes": 7678,
+      "lines": 195,
       "imports": [
         "framer-motion"
       ],
@@ -876,16 +1804,16 @@
         "EventDetailPanel"
       ],
       "docstring": null,
-      "last_modified": "2026-04-08T05:53:33.880251+00:00",
-      "complexity_score": 3.0,
+      "last_modified": "2026-04-09T16:58:41.292027+00:00",
+      "complexity_score": 2.0,
       "imports_count": 1,
       "exports_count": 1
     },
     {
       "path": "src/components/Calendar/EventForm.jsx",
       "file_type": "javascript",
-      "size_bytes": 13364,
-      "lines": 340,
+      "size_bytes": 10399,
+      "lines": 265,
       "imports": [
         "react",
         "framer-motion"
@@ -894,39 +1822,39 @@
         "EventForm"
       ],
       "docstring": null,
-      "last_modified": "2026-04-08T16:33:22.744943+00:00",
-      "complexity_score": 7.0,
+      "last_modified": "2026-04-09T16:58:41.307653+00:00",
+      "complexity_score": 6.0,
       "imports_count": 2,
       "exports_count": 1
     },
     {
       "path": "src/components/Calendar/WeekView.jsx",
       "file_type": "javascript",
-      "size_bytes": 28717,
-      "lines": 565,
+      "size_bytes": 5473,
+      "lines": 163,
       "imports": [
-        "react"
+        "./EventBlock"
       ],
       "exports": [
         "WeekView"
       ],
       "docstring": null,
-      "last_modified": "2026-04-08T16:33:17.414563+00:00",
-      "complexity_score": 10.0,
+      "last_modified": "2026-04-09T16:58:41.325597+00:00",
+      "complexity_score": 7.0,
       "imports_count": 1,
       "exports_count": 1
     }
   ],
   "statistics": {
-    "total_files": 50,
-    "total_lines": 7751,
-    "total_size_bytes": 296834,
-    "avg_lines_per_file": 155,
-    "largest_file": "agents/code_auditor/core/phase1_discovery.py (804 lines)",
+    "total_files": 95,
+    "total_lines": 28971,
+    "total_size_bytes": 1006525,
+    "avg_lines_per_file": 304,
+    "largest_file": "phase3_verified.json (3367 lines)",
     "by_language": {
-      "javascript": 33,
-      "json": 4,
-      "python": 10,
+      "json": 9,
+      "javascript": 34,
+      "python": 49,
       "typescript": 3
     },
     "scan_errors": 0
@@ -934,26 +1862,32 @@
   "circular_imports": [],
   "external_dependencies": [
     "__future__",
+    "abc",
     "argparse",
     "ast",
     "asyncio",
+    "collections",
     "csv",
     "dataclasses",
     "datetime",
     "fnmatch",
     "framer-motion",
     "googleapis",
+    "io",
     "json",
+    "math",
     "next",
     "next-auth",
     "pathlib",
     "pytest",
     "re",
     "react",
+    "subprocess",
     "sys",
-    "textwrap",
     "time",
+    "traceback",
     "typing",
+    "unittest",
     "warnings"
   ]
 }

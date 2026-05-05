@@ -26,6 +26,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
+# Force UTF-8 on Windows consoles that default to cp1252
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
 # Support both direct execution and package import
 if __name__ == "__main__" and __package__ is None:
     _repo_root = Path(__file__).resolve().parent.parent.parent

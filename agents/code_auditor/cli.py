@@ -43,6 +43,38 @@ from agents.code_auditor.core.config import get_config
 from agents.code_auditor.core.phase1_analyzer import ReportAnalyzer
 from agents.code_auditor.core.phase1_discovery import Phase1Discovery
 
+# Force UTF-8 on Windows consoles that default to cp1252
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+if hasattr(sys.stderr, "reconfigure"):
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
+
+# ---------------------------------------------------------------------------
+# discover subcommand (Phase 1)
+# ---------------------------------------------------------------------------
+
+
+def cmd_discover(args: argparse.Namespace) -> int:
+    """Run Phase 1 discovery: scan files, build dependency map, write JSON report."""
+    discovery = Phase1Discovery(args.project, verbose=args.verbose)
+    try:
+        registry = asyncio.run(discovery.scan_project())
+    except Exception as exc:
+        print(f"Error during scan: {exc}", file=sys.stderr)
+        return 1
+
+    output = Path(args.output)
+    output.write_text(
+        json.dumps(registry.to_dict(), indent=2, default=str),
+        encoding="utf-8",
+    )
+    print(f"Report written -> {output.resolve()} ({len(registry.files)} files)")
+
+    stats = registry.statistics
+    _print_stats_table(stats, registry, width=60)
+    return 0
+
 
 # ---------------------------------------------------------------------------
 # report subcommand (Phase 4)
@@ -883,6 +915,38 @@ examples:
         metavar="SUBCOMMAND",
     )
     subparsers.required = True
+
+    # ── discover (Phase 1) ────────────────────────────────────────────────
+    discover_parser = subparsers.add_parser(
+        "discover",
+        help="Phase 1: scan project files and build a dependency map.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="example: python -m agents.code_auditor.cli discover --project . --verbose",
+    )
+    discover_parser.add_argument(
+        "--project",
+        metavar="PATH",
+        default=".",
+        help="Root directory to scan (default: current directory).",
+    )
+    discover_parser.add_argument(
+        "--output",
+        metavar="PATH",
+        default="audit_report.json",
+        help="Path for the JSON report output (default: audit_report.json).",
+    )
+    discover_parser.add_argument(
+        "--config",
+        metavar="NAME",
+        default=None,
+        help="Named config profile to apply (e.g. ai-command-center).",
+    )
+    discover_parser.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Print progress messages during the scan.",
+    )
+    discover_parser.set_defaults(func=cmd_discover)
 
     # ── analyze ───────────────────────────────────────────────────────────
     analyze_parser = subparsers.add_parser(

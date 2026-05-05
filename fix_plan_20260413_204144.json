@@ -1,0 +1,361 @@
+{
+  "generated_at": "2026-04-13T20:41:44",
+  "report_input": "phase3_verified.json",
+  "risk_filter": "LOW",
+  "batch_size": 3,
+  "total_candidates": 95,
+  "total_batches": 32,
+  "batches": [
+    {
+      "batch_num": 1,
+      "item_ids": [
+        "O001",
+        "O002",
+        "O003"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.99,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items O001 O002 O003"
+    },
+    {
+      "batch_num": 2,
+      "item_ids": [
+        "O004",
+        "O006",
+        "O007"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.99,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items O004 O006 O007"
+    },
+    {
+      "batch_num": 3,
+      "item_ids": [
+        "O008",
+        "O009",
+        "O010"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.99,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items O008 O009 O010"
+    },
+    {
+      "batch_num": 4,
+      "item_ids": [
+        "O011",
+        "O012",
+        "O013"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.99,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items O011 O012 O013"
+    },
+    {
+      "batch_num": 5,
+      "item_ids": [
+        "O014",
+        "O015",
+        "O016"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.99,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items O014 O015 O016"
+    },
+    {
+      "batch_num": 6,
+      "item_ids": [
+        "O017",
+        "O018",
+        "O019"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.99,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items O017 O018 O019"
+    },
+    {
+      "batch_num": 7,
+      "item_ids": [
+        "O020",
+        "O021",
+        "O022"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.99,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items O020 O021 O022"
+    },
+    {
+      "batch_num": 8,
+      "item_ids": [
+        "O023",
+        "O024",
+        "I004"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.91,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items O023 O024 I004"
+    },
+    {
+      "batch_num": 9,
+      "item_ids": [
+        "I005",
+        "I001",
+        "I002"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.717,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I005 I001 I002"
+    },
+    {
+      "batch_num": 10,
+      "item_ids": [
+        "I007",
+        "I008",
+        "I009"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I007 I008 I009"
+    },
+    {
+      "batch_num": 11,
+      "item_ids": [
+        "I010",
+        "I011",
+        "I012"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I010 I011 I012"
+    },
+    {
+      "batch_num": 12,
+      "item_ids": [
+        "I013",
+        "I014",
+        "I015"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I013 I014 I015"
+    },
+    {
+      "batch_num": 13,
+      "item_ids": [
+        "I016",
+        "I017",
+        "I018"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I016 I017 I018"
+    },
+    {
+      "batch_num": 14,
+      "item_ids": [
+        "I019",
+        "I020",
+        "I021"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I019 I020 I021"
+    },
+    {
+      "batch_num": 15,
+      "item_ids": [
+        "I022",
+        "I023",
+        "I024"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I022 I023 I024"
+    },
+    {
+      "batch_num": 16,
+      "item_ids": [
+        "I025",
+        "I026",
+        "I027"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I025 I026 I027"
+    },
+    {
+      "batch_num": 17,
+      "item_ids": [
+        "I028",
+        "I029",
+        "I030"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I028 I029 I030"
+    },
+    {
+      "batch_num": 18,
+      "item_ids": [
+        "I031",
+        "I032",
+        "I033"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I031 I032 I033"
+    },
+    {
+      "batch_num": 19,
+      "item_ids": [
+        "I034",
+        "I035",
+        "I036"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I034 I035 I036"
+    },
+    {
+      "batch_num": 20,
+      "item_ids": [
+        "I037",
+        "I038",
+        "I039"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I037 I038 I039"
+    },
+    {
+      "batch_num": 21,
+      "item_ids": [
+        "I040",
+        "I041",
+        "I042"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I040 I041 I042"
+    },
+    {
+      "batch_num": 22,
+      "item_ids": [
+        "I043",
+        "I044",
+        "I045"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I043 I044 I045"
+    },
+    {
+      "batch_num": 23,
+      "item_ids": [
+        "I046",
+        "I047",
+        "I048"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I046 I047 I048"
+    },
+    {
+      "batch_num": 24,
+      "item_ids": [
+        "I049",
+        "I050",
+        "I051"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I049 I050 I051"
+    },
+    {
+      "batch_num": 25,
+      "item_ids": [
+        "I052",
+        "I053",
+        "I054"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I052 I053 I054"
+    },
+    {
+      "batch_num": 26,
+      "item_ids": [
+        "I055",
+        "I056",
+        "I057"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I055 I056 I057"
+    },
+    {
+      "batch_num": 27,
+      "item_ids": [
+        "I058",
+        "I059",
+        "I060"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I058 I059 I060"
+    },
+    {
+      "batch_num": 28,
+      "item_ids": [
+        "I061",
+        "I062",
+        "I063"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I061 I062 I063"
+    },
+    {
+      "batch_num": 29,
+      "item_ids": [
+        "I064",
+        "I065",
+        "I066"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I064 I065 I066"
+    },
+    {
+      "batch_num": 30,
+      "item_ids": [
+        "I067",
+        "I068",
+        "I069"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I067 I068 I069"
+    },
+    {
+      "batch_num": 31,
+      "item_ids": [
+        "I070",
+        "I071",
+        "I072"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I070 I071 I072"
+    },
+    {
+      "batch_num": 32,
+      "item_ids": [
+        "I073",
+        "I074"
+      ],
+      "estimated_lines": 0,
+      "avg_confidence": 0.7,
+      "command": "python agents/code_fixer/cli.py fix --report phase3_verified.json --items I073 I074"
+    }
+  ]
+}
