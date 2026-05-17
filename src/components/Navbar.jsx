@@ -48,6 +48,17 @@ export default function Navbar() {
           .nav-desktop   { display: none; }
           .nav-hamburger { display: flex; }
         }
+        @keyframes wifiPulse {
+          0%, 100% { opacity: 0.2; }
+          50% { opacity: 1; }
+        }
+        .wifi-dot  { animation: wifiPulse 2.4s ease-in-out infinite; animation-delay: 0s; }
+        .wifi-arc1 { animation: wifiPulse 2.4s ease-in-out infinite; animation-delay: 0.3s; }
+        .wifi-arc2 { animation: wifiPulse 2.4s ease-in-out infinite; animation-delay: 0.6s; }
+        .wifi-arc3 { animation: wifiPulse 2.4s ease-in-out infinite; animation-delay: 0.9s; }
+        @media (prefers-reduced-motion: reduce) {
+          .wifi-dot, .wifi-arc1, .wifi-arc2, .wifi-arc3 { animation: none; opacity: 0.6; }
+        }
       `}</style>
 
       <motion.header
@@ -173,12 +184,18 @@ export default function Navbar() {
               transition: 'opacity 0.3s ease',
               userSelect: 'none',
             }}>
-              <span style={{
-                width: 5, height: 5, borderRadius: '50%',
-                backgroundColor: 'rgba(34,197,94,0.85)',
-                boxShadow: '0 0 6px rgba(34,197,94,0.5)',
-                display: 'inline-block', flexShrink: 0,
-              }} />
+              <svg
+                width="13" height="11"
+                viewBox="0 0 24 20"
+                fill="none"
+                aria-hidden="true"
+                style={{ flexShrink: 0, display: 'inline-block' }}
+              >
+                <path className="wifi-arc3" d="M1.5 7.8a15 15 0 0 1 21 0" stroke="var(--accent-primary)" strokeWidth="2.2" strokeLinecap="round" />
+                <path className="wifi-arc2" d="M5.2 11.6a10 10 0 0 1 13.6 0" stroke="var(--accent-primary)" strokeWidth="2.2" strokeLinecap="round" />
+                <path className="wifi-arc1" d="M8.8 15.4a5 5 0 0 1 6.4 0" stroke="var(--accent-primary)" strokeWidth="2.2" strokeLinecap="round" />
+                <circle className="wifi-dot" cx="12" cy="19" r="2" fill="var(--accent-primary)" />
+              </svg>
               SYS.ONLINE
             </div>
 
